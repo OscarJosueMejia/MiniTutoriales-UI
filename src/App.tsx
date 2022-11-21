@@ -1,11 +1,16 @@
 import './App.css';
 //import Home from '@views/Home';
 //import Cards from '@views/Cards';
-import TodoList from '@views/TodoList';
+import Feed from '@views/Feed';
+import Tutorial from '@views/Tutorial';
+import TabNavigator from '@components/TabNavigator';
+import TutorialManagement from '@views/Tutorial/TutorialManagement';
+
 function App() {
   return (
     <>
-      <TodoList />
+      <TutorialManagement />
+      <TabNavigator/>
     </>
   );
 }
