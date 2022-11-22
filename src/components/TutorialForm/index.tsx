@@ -1,42 +1,75 @@
 import { useState } from 'react';
-import {Box, TextField, FormControl, Typography, Button, Container, Avatar} from '@mui/material';
+import {Box, TextField, FormControl, Typography, Button, Container, Avatar, Chip, IconButton, InputAdornment} from '@mui/material';
 import {useDropzone, FileWithPath} from 'react-dropzone';
+
+import ImgPicker from "./ImgPicker";
+
+import { uploadImage } from '@utils/firebase';
+import StepItem from './StepItem';
+
 import TitleIcon from '@mui/icons-material/Title';
 import DescriptionIcon from '@mui/icons-material/Description';
 import HandymanIcon from '@mui/icons-material/Handyman';
+import TagIcon from '@mui/icons-material/Tag';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
 
 const inputVariant = 'filled';
 
-interface steps {
+export interface IStep {
     id?:number;
     description:string;
     img?:File | string;
 }
 
+interface tags {
+    tagDescription: string;
+}
+
 const TutorialForm = () => {
     const [stepDescTmp, setStepDescTmp] = useState("");
-    const [steps, setSteps] = useState([] as Array<steps>);
+    const [steps, setSteps] = useState([] as Array<IStep>);
+    const [tagDescTmp, setTagDescTmp] = useState("");
+    const [refImg, setRefImg] = useState<File>();
+    const [tags, setTags] = useState([] as Array<tags>)
+    const [tagError, setTagError] = useState("")
     
-    const {getRootProps, getInputProps, open, acceptedFiles} = useDropzone({
-        accept: {
-            'image/jpeg': [],
-            'image/png': []
-        },
-        noClick: true,
-        noKeyboard: true
-      });
-
-    const files = acceptedFiles.map((file:FileWithPath) => (
-        <div style={{marginTop:'3vh', marginBottom:'2vh',textAlign:'center'}}>
-            <img style={{maxWidth:'40%', borderRadius:10}} src={URL.createObjectURL(file)} alt="" />
-        </div>
-    ));
 
     const addStep = () => {
         let tmpSteps = [...steps];
-        tmpSteps.push({id:steps.length + 1, description:stepDescTmp, img:acceptedFiles[0]})
+        tmpSteps.push({id:steps.length + 1, description:stepDescTmp, img:refImg})
         setSteps(tmpSteps);
+        setStepDescTmp("");
+        setRefImg(undefined);
+    }
+
+    const handleTags = ( mode:'ADD'|'DEL', tagDescription?:string) => {
+        let tmpTags = [...tags];
+
+        if( mode === 'ADD' && !(tmpTags.some(e => (e.tagDescription === tagDescTmp))) ){
+            tmpTags.push({tagDescription:tagDescTmp});
+        }else{
+            tmpTags = tmpTags.filter(tag => tag.tagDescription !== tagDescription);
+        }
+        setTagDescTmp("");
+        setTags(tmpTags);
+    }
+
+    const handleTagChange = (e:any) => {
+        
+        if (tags.some(tag => ((tag.tagDescription).toLowerCase() === (e.target.value).toLowerCase()))) {
+            setTagError(`Ya existe una etiqueta llamada "${e.target.value}"`);
+        }else{
+            setTagError("");
+        }
+        setTagDescTmp(e.target.value);
+    }
+
+    const uploadImages = async () => {
+        // let imgURI = await uploadImage(acceptedFiles[0]);
+        // alert(imgURI);
     }
 
     return ( 
@@ -68,57 +101,62 @@ const TutorialForm = () => {
                 </FormControl>
             </div>
 
-            <Typography onClick={()=>{console.log(steps)}} variant='h6' component='h6' sx={{mt:'2vh', display:'flex', alignItems:'center'}} >
-                <FormatListNumberedIcon sx={{ color: 'action.active', my: 0.5, mr:1}} />
-                Lista de Pasos
-            </Typography>
 
-            <Container sx={{mt:0.5, mb:3}} style={{display:'flex', alignItems:'center', flexDirection:'column'}} {...getRootProps({className: 'dropzone'})}>
-                
-                {
-                    steps.length > 0 ?
+            <Container sx={{mt:0.5, mb:3}} style={{display:'flex', alignItems:'center', flexDirection:'column', paddingLeft:8, paddingRight:8}} >
+                <Typography variant='h6' component='h6' sx={{mt:'2vh', display:'flex', alignItems:'center'}} alignSelf='flex-start' >
+                    <FormatListNumberedIcon sx={{ color: 'action.active', my: 0.5, mr:1}} />
+                    Lista de Pasos
+                </Typography>
+                {steps.length > 0 ?
                     steps.map(step=>{
-                        return(
-                            <Container key={step.id} sx={{mt:2, bgcolor:'#f0f0f0'}} style={{paddingRight:5, paddingLeft:5, borderRadius:5}} {...getRootProps({className: 'dropzone'})}>
-                                <div style={{width:'100%', display:'flex', flexDirection:'row', alignItems:'center', marginTop:'0.5vh'}}>
-                                    <Avatar sx={{ bgcolor: '#6B728E', width: 30, height: 30, mx:1}} aria-label="recipe">{step.id}</Avatar>
-                                    <FormControl fullWidth sx={{bgcolor:'#f0f0f0'}}>
-                                        <TextField id="filled-textarea" multiline
-                                        InputProps={{
-                                            readOnly: true,
-                                        }}
-                                        maxRows={10} label={`Paso ${step.id}`} variant={inputVariant} value={step.description}/>
-                                    </FormControl>
-                                </div>
-                                {step.img !== undefined
-                                    ?<div style={{marginTop:'3vh', marginBottom:'2vh',textAlign:'center'}}>
-                                        <img style={{maxWidth:'40%', borderRadius:10}} src={URL.createObjectURL(step.img as File)} alt="" />
-                                    </div>
-                                    :null
-                                }
-                                
-                            </Container>
-                        )
+                        return(< StepItem step={step} />)
                     })
-                    :<Container sx={{mt:2, bgcolor:'#f0f0f0', py:1, px:5, borderRadius:5, textAlign:'center'}} {...getRootProps({className: 'dropzone'})}>
-                        <Typography> <i> Agrega al menos 1 Paso </i></Typography>
+                    :<Container sx={{mt:2, bgcolor:'#f0f0f0', py:1,borderRadius:3, textAlign:'center'}} >
+                        <Typography  style={{color:'gray'}}> Agrega al menos 1 Paso </Typography>
                     </Container>
                 }
-               
             </Container>
+
             <FormControl fullWidth sx={{ m: 1 , bgcolor:'#f0f0f0'}}>
                 <TextField id="filled-textarea" multiline
-                maxRows={10} label={`Descripción del Paso ${steps.length+1}`} variant={inputVariant} onChange={e=>setStepDescTmp(e.target.value)} />
+                maxRows={10} label={`Descripción del Paso ${steps.length+1}`} value={stepDescTmp}  variant={inputVariant} onChange={e=>setStepDescTmp(e.target.value)} />
                 
-                <Container sx={{mt:2}} style={{paddingLeft:0}} {...getRootProps({className: 'dropzone'})}>
-                    <input accept="image/jpeg,image/png" type="file" {...getInputProps()} />
-                    <Button variant="contained" sx={{ml:1}} type='button' onClick={open}>Subir una Imagen de Referencia</Button>
-                    {files}
-                </Container>
-                <Button variant="contained" color="success" sx={{mt:1}} onClick={()=>{addStep()}}>
+                <ImgPicker setFile={setRefImg}  />
+
+                <Button variant="contained" color="success" disabled={stepDescTmp === ""} sx={{mt:1}} onClick={()=>{addStep()}}>
                     Agregar Paso #{steps.length+1}
                 </Button>
             </FormControl>
+
+
+            <Container sx={{pb:'4vh'}} style={{paddingLeft:0, paddingRight:0}}>
+                <Typography variant='h6' component='h6' sx={{mt:'2vh', display:'flex', alignItems:'center'}} >
+                    <TagIcon sx={{ color: 'action.active', my: 0.5, mr:1}} />
+                    Etiquetas
+                </Typography>
+                
+                <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}>
+                    <FormControl fullWidth sx={{ m: 1, width:'60vw' }}>
+                            <TextField error={tagError !== ""} helperText={tagError} id="filled-basic" label="Escribe una etiqueta" variant={inputVariant} value={tagDescTmp} onChange={(e)=>handleTagChange(e)} />
+                    </FormControl>
+                    <IconButton disabled={tagDescTmp === "" || tagError !== ""} aria-label="delete" size="large" onClick={()=>{handleTags('ADD')}}>
+                        <AddIcon fontSize="inherit" />
+                    </IconButton>
+                </div>
+
+
+                <Container sx={{mt:1}} >
+                        {
+                            tags.length > 0 
+                            ? tags.map(tag => {
+                                return(
+                                <Chip sx={{mx:1}} label={tag.tagDescription} onDelete={()=>{handleTags('DEL', tag.tagDescription)}} />
+                                )
+                            })
+                            :null
+                        }
+                </Container>
+            </Container>
         </Box>    
     )
 }
