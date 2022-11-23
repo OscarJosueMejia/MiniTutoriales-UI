@@ -11,7 +11,7 @@ interface CardProps {
 
 const FeedCard = ({children, title, ..._props}: PropsWithChildren<CardProps>)=>{
   return (
-    <Card sx={{maxWidth: 345, marginBottom:2, backgroundColor:'#e4e4e4', borderRadius:3}}>
+    <Card sx={{maxWidth: 450, marginBottom:2, backgroundColor:'#e4e4e4', borderRadius:3}}>
     <CardHeader
       avatar={
         <Avatar sx={{ bgcolor: 'red' }} aria-label="recipe">

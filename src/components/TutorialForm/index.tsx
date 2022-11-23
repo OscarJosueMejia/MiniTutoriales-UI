@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import {Box, TextField, FormControl, Typography, Button, Container, Avatar, Chip, IconButton, InputAdornment} from '@mui/material';
-import {useDropzone, FileWithPath} from 'react-dropzone';
+import {Box, TextField, FormControl, Typography, Button, Container, Dialog, Chip, IconButton, DialogTitle, DialogContent, DialogContentText, DialogActions} from '@mui/material';
 
 import ImgPicker from "./ImgPicker";
+import {FileWithPath} from 'react-dropzone'
 
 import { uploadImage } from '@utils/firebase';
 import StepItem from './StepItem';
+import StepUpdater from './StepUpdater';
 
 import TitleIcon from '@mui/icons-material/Title';
 import DescriptionIcon from '@mui/icons-material/Description';
@@ -35,8 +36,32 @@ const TutorialForm = () => {
     const [refImg, setRefImg] = useState<File>();
     const [tags, setTags] = useState([] as Array<tags>)
     const [tagError, setTagError] = useState("")
-    
 
+    //Upd
+    const [stepUpd, setStepUpd] = useState<IStep>();
+    const [stepUpdOpen, setStepUpdOpen] = useState(false);
+
+    const openStepUpdate = (step:IStep) => {
+      setStepUpd(step);
+      setStepUpdOpen(true);
+    };
+
+    const closeStepUpdate = (mode:'UPD'|'CANCEL', newStep?:IStep) => {
+        console.log(newStep);
+        if (mode === 'UPD' && newStep !== undefined) {
+            const updatedStepList = steps.map( step => {
+                if (step.id === newStep.id) {
+                  step.description = newStep.description;
+                  step.img = newStep.img;
+                }
+                return step;
+            });
+            setSteps(updatedStepList)
+        }
+
+        setStepUpdOpen(false);
+    };
+  
     const addStep = () => {
         let tmpSteps = [...steps];
         tmpSteps.push({id:steps.length + 1, description:stepDescTmp, img:refImg})
@@ -109,7 +134,7 @@ const TutorialForm = () => {
                 </Typography>
                 {steps.length > 0 ?
                     steps.map(step=>{
-                        return(< StepItem step={step} />)
+                        return(< StepItem key={step.id} step={step} updateStep={openStepUpdate} />)
                     })
                     :<Container sx={{mt:2, bgcolor:'#f0f0f0', py:1,borderRadius:3, textAlign:'center'}} >
                         <Typography  style={{color:'gray'}}> Agrega al menos 1 Paso </Typography>
@@ -120,8 +145,13 @@ const TutorialForm = () => {
             <FormControl fullWidth sx={{ m: 1 , bgcolor:'#f0f0f0'}}>
                 <TextField id="filled-textarea" multiline
                 maxRows={10} label={`Descripción del Paso ${steps.length+1}`} value={stepDescTmp}  variant={inputVariant} onChange={e=>setStepDescTmp(e.target.value)} />
+                <ImgPicker  buttonTitle='Subir Imagen de Referencia' setFile={setRefImg}  />
                 
-                <ImgPicker setFile={setRefImg}  />
+                {!refImg ? null
+                    :<div style={{marginTop:'3vh', marginBottom:'2vh',textAlign:'center'}}>
+                        <img style={{maxWidth:'50%', borderRadius:10}} src={URL.createObjectURL(refImg as FileWithPath)} alt="" />
+                    </div>
+                }
 
                 <Button variant="contained" color="success" disabled={stepDescTmp === ""} sx={{mt:1}} onClick={()=>{addStep()}}>
                     Agregar Paso #{steps.length+1}
@@ -139,11 +169,12 @@ const TutorialForm = () => {
                     <FormControl fullWidth sx={{ m: 1, width:'60vw' }}>
                             <TextField error={tagError !== ""} helperText={tagError} id="filled-basic" label="Escribe una etiqueta" variant={inputVariant} value={tagDescTmp} onChange={(e)=>handleTagChange(e)} />
                     </FormControl>
-                    <IconButton disabled={tagDescTmp === "" || tagError !== ""} aria-label="delete" size="large" onClick={()=>{handleTags('ADD')}}>
+                    <IconButton disabled={tagDescTmp === "" || tagError !== ""} aria-label="delete" size="large" 
+                    onClick={()=>{handleTags('ADD')}}
+                    >
                         <AddIcon fontSize="inherit" />
                     </IconButton>
                 </div>
-
 
                 <Container sx={{mt:1}} >
                         {
@@ -157,6 +188,9 @@ const TutorialForm = () => {
                         }
                 </Container>
             </Container>
+            
+            {stepUpdOpen ? <StepUpdater open={stepUpdOpen} stepUpd={stepUpd as IStep} handleClose={closeStepUpdate}/> : null}
+            
         </Box>    
     )
 }

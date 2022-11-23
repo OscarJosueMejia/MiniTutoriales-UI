@@ -14,9 +14,6 @@ const Feed = () => {
         <FeedCard/>
         <FeedCard/>
         <FeedCard/>
-        <FeedCard/>
-        <FeedCard/>
-        <FeedCard/>
       </Container>
       
     </>

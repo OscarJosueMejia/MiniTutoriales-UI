@@ -6,11 +6,12 @@ import Tutorial from '@views/Tutorial';
 import TabNavigator from '@components/TabNavigator';
 import TutorialManagement from '@views/Tutorial/TutorialManagement';
 import SignIn from '@views/Auth/SignIn';
+import SignUp from '@views/Auth/SignUp';
 
 function App() {
   return (
     <>
-      <TutorialManagement />
+      <Feed />
       <TabNavigator/>
     </>
   );

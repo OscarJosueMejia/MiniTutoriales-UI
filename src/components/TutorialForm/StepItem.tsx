@@ -4,32 +4,18 @@ import { Container, Avatar, FormControl, TextField, InputAdornment, IconButton, 
 import ImgDialog from "./ImgDialog";
 import EditIcon from '@mui/icons-material/Edit';
 
-interface IStepItemProps {
-    step:{
-        id?:number;
-        description:string;
-        img?:File | string;
-    };
+interface IStep {
+    id?:number;
+    description:string;
+    img?:File | string;
 }
 
-const StepItem = ({ step } : IStepItemProps) => {
-    const [updateActive, setUpdateActive] = useState(false);
-    const [updStepDesc, setUpdStepDesc] = useState(step.description);
-    const [updStepImg, setUpdStepImg] = useState(step.img);
+interface IStepProps {
+    step:IStep;
+    updateStep:(step:IStep)=>void;
+}
 
-    const [selectedValue, setSelectedValue] = useState("");
-    const [open, setOpen] = useState(false);
-
-    const handleClickOpen = () => {
-        setOpen(true);
-      };
-    
-    const handleClose = (value: string) => {
-        setOpen(false);
-        if(value === 'deleteImg'){
-            setUpdStepImg("");
-        }
-    };
+const StepItem = ({ step, updateStep } : IStepProps) => {
 
     return(
         <Container key={step.id} sx={{mt:2, bgcolor:'#e2e2e2'}} style={{paddingRight:5, paddingLeft:5, borderRadius:5}} >
@@ -40,40 +26,32 @@ const StepItem = ({ step } : IStepItemProps) => {
                 sx={{bgcolor:'#f0f0f0'}} 
                 
                 InputProps={{
-                    readOnly: !updateActive,
+                    readOnly: true,
                     endAdornment: <InputAdornment position="end">
                         <IconButton
                             aria-label="toggle password visibility"
                             edge="end"
-                            onClick={()=>{setUpdateActive(!updateActive)}}
+                            onClick={()=>{updateStep(step)}}
                             >
                             <EditIcon/>
                         </IconButton>
                     </InputAdornment>,
                 }}
-                maxRows={10} label={`Paso ${step.id}`} variant='filled' value={updStepDesc} onChange={(e)=>{setUpdStepDesc(e.target.value)}}/>
+                maxRows={10} label={`Paso ${step.id}`} variant='filled' value={step.description} />
             </FormControl>
             
         </div>
-        {updStepImg !== undefined && updStepImg !== ""
-            ?<div style={{marginTop:'3vh', marginBottom:'2vh',textAlign:'center'}}>
-                <img onClick={handleClickOpen} style={{maxWidth:'40%', borderRadius:10}} src={URL.createObjectURL(updStepImg as File)} alt=""></img>
+
+        {
+            !step.img
+            ?null
+            :<div style={{marginTop:'3vh', marginBottom:'2vh',textAlign:'center'}}>
+                <img style={{maxWidth:'40%', borderRadius:10}} src={URL.createObjectURL(step.img as File)} alt=""></img>
             </div>
-            :null
         }
+        
 
-        {updateActive 
-            ?<Container sx={{my:2, display:'flex', justifyContent:'center'}}>
-                <Button variant="contained" color="success" onClick={()=>{setUpdateActive(false)}} > Modificar Paso {step.id} </Button>
-            </Container>
-            :null
-        }
 
-        <ImgDialog
-            selectedValue={selectedValue}
-            open={open}
-            onClose={handleClose}
-        />
     </Container>
     )
 }

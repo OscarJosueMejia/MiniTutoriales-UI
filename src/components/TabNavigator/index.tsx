@@ -34,12 +34,12 @@ const TabNavigator = () => {
             />
             <BottomNavigationAction label="Folder" value="folder" icon={<FolderIcon />} />
         </BottomNavigation>
-        {/* <SpeedDial
+        <SpeedDial
           ariaLabel="SpeedDial basic example"
           sx={{ position: 'absolute', bottom: '8vh', right: '2vh'}}
           icon={<AddIcon />}
         >
-        </SpeedDial> */}
+        </SpeedDial>
       </Paper>
 
     );
