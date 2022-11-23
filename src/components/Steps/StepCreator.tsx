@@ -1,10 +1,9 @@
-import { useState } from 'react';
-import {TextField, FormControl, Button, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, CircularProgress} from '@mui/material';
-import ImgPicker from "./ImgPicker";
-import DeleteIcon from '@mui/icons-material/Delete';
-import {FileWithPath} from 'react-dropzone'
-import { Container } from '@mui/system';
+import { useState } from "react";
+import { Dialog, DialogTitle, Button, Container, DialogContent, FormControl, CircularProgress, TextField, DialogActions } from "@mui/material";
+import ImgPicker from "@components/TutorialForm/ImgPicker";
+import { FileWithPath } from 'react-dropzone';
 import ClearIcon from '@mui/icons-material/Clear';
+
 
 interface IStep {
     id:number;
@@ -12,31 +11,32 @@ interface IStep {
     img?:File | string;
 }
 
-interface IStepUpdaterProps {
+interface IStepCreatorProps {
     open: boolean;
-    stepUpd:IStep;
-    handleClose: (mode:'UPD'|'CANCEL'|'DEL', newStep?:IStep) => void;
+    stepNumber: number;
+    handleClose: (mode:'ADD'|'CANCEL', newStep?:IStep) => void;
 }
 
-const StepUpdater = (props:IStepUpdaterProps) => {
-    const { handleClose, stepUpd, open} = props;
+export const StepCreator = (props:IStepCreatorProps) => {
+
+    const { handleClose, stepNumber, open} = props;
     const [isLoading, setIsLoading] = useState(true);
 
-    const [newDescription, setNewDescription] = useState(stepUpd.description);
-    const [newImg, setNewImg] = useState(stepUpd.img);
+    const [newDescription, setNewDescription] = useState("");
+    const [newImg, setNewImg] = useState<File>();
 
     return(
         <Dialog fullWidth open={open} onClose={()=>{handleClose('CANCEL')}}>
-            <DialogTitle sx={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
-                Modificar Paso {stepUpd?.id}
-                <IconButton onClick={()=>{handleClose('DEL')}}><DeleteIcon/></IconButton>
-
+            <DialogTitle>
+                Agregar Paso #{stepNumber}
             </DialogTitle>
             <DialogContent>
+
                 <FormControl fullWidth sx={{ m: 0 , bgcolor:'#f0f0f0'}}>
                     <TextField id="filled-textarea" multiline
-                    maxRows={10} label={`Descripción del Paso ${stepUpd?.id}`} value={newDescription} variant='filled' onChange={(e)=>{setNewDescription(e.target.value)}} />
+                    maxRows={10} label={`Descripción del Paso ${stepNumber}`} value={newDescription} variant='filled' onChange={(e)=>{setNewDescription(e.target.value)}} />
                 </FormControl>
+
                 {!newImg ? null
                     :<div style={{marginTop:'3vh', marginBottom:'2vh',textAlign:'center' }}>
                         <CircularProgress style={(!isLoading ? {display:'none'} : {})}/>
@@ -47,13 +47,13 @@ const StepUpdater = (props:IStepUpdaterProps) => {
                     <ImgPicker buttonTitle={!newImg ? 'Subir Imagen de Referencia' : 'Reemplazar Imagen'} setFile={setNewImg} />
                     {!newImg ? null : <Button variant='contained' color='error' endIcon={<ClearIcon/>} onClick={()=>{setNewImg(undefined)}}>Eliminar Imagen</Button> }
                 </Container>
+
                 </DialogContent>
-            <DialogActions sx={{mt:'1vh'}}>
+            <DialogActions>
                 <Button onClick={()=>{handleClose('CANCEL')}}>Cancelar</Button>
-                <Button onClick={()=>{handleClose('UPD', {id:stepUpd.id, description:newDescription, img:newImg})}}>Aceptar</Button>
+                <Button onClick={()=>{handleClose('ADD', {id:stepNumber, description:newDescription, img:newImg}); setNewDescription(""); setNewImg(undefined)}}>Aceptar</Button>
             </DialogActions>
         </Dialog>
     )   
-}
 
-export default StepUpdater;
+}

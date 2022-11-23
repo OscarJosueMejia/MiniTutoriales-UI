@@ -1,7 +1,4 @@
-import { useState } from "react";
-import { Container, Avatar, FormControl, TextField, InputAdornment, IconButton, Button} from "@mui/material";
-
-import ImgDialog from "./ImgDialog";
+import { Container, Avatar, FormControl, TextField, InputAdornment, IconButton} from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 
 interface IStep {
