@@ -20,7 +20,7 @@ import EditIcon from '@mui/icons-material/Edit';
 const inputVariant = 'filled';
 
 export interface IStep {
-    id?:number;
+    id:number;
     description:string;
     img?:File | string;
 }
@@ -46,8 +46,7 @@ const TutorialForm = () => {
       setStepUpdOpen(true);
     };
 
-    const closeStepUpdate = (mode:'UPD'|'CANCEL', newStep?:IStep) => {
-        console.log(newStep);
+    const closeStepUpdate = (mode:'UPD'|'CANCEL'|'DEL', newStep?:IStep) => {
         if (mode === 'UPD' && newStep !== undefined) {
             const updatedStepList = steps.map( step => {
                 if (step.id === newStep.id) {
@@ -56,15 +55,21 @@ const TutorialForm = () => {
                 }
                 return step;
             });
-            setSteps(updatedStepList)
+            setSteps(updatedStepList) 
         }
 
+        if(mode === 'DEL' && stepUpd !== undefined){
+            const updatedStepList = steps.filter(step => step.id !== stepUpd.id);
+            const fixedIds = updatedStepList.map(o => { if(o.id > stepUpd.id){o.id--} return o})
+            setSteps(fixedIds) 
+        }
+        
         setStepUpdOpen(false);
     };
   
     const addStep = () => {
         let tmpSteps = [...steps];
-        tmpSteps.push({id:steps.length + 1, description:stepDescTmp, img:refImg})
+        tmpSteps.push({id:steps.length + 1, description:stepDescTmp, img:refImg as File})
         setSteps(tmpSteps);
         setStepDescTmp("");
         setRefImg(undefined);

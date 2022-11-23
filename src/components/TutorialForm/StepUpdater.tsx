@@ -3,9 +3,11 @@ import {TextField, FormControl, Button, IconButton, Dialog, DialogTitle, DialogC
 import ImgPicker from "./ImgPicker";
 import DeleteIcon from '@mui/icons-material/Delete';
 import {FileWithPath} from 'react-dropzone'
+import { Container } from '@mui/system';
+import ClearIcon from '@mui/icons-material/Clear';
 
 interface IStep {
-    id?:number;
+    id:number;
     description:string;
     img?:File | string;
 }
@@ -13,7 +15,7 @@ interface IStep {
 interface IStepUpdaterProps {
     open: boolean;
     stepUpd:IStep;
-    handleClose: (mode:'UPD'|'CANCEL', newStep?:IStep) => void;
+    handleClose: (mode:'UPD'|'CANCEL'|'DEL', newStep?:IStep) => void;
 }
 
 const StepUpdater = (props:IStepUpdaterProps) => {
@@ -27,7 +29,7 @@ const StepUpdater = (props:IStepUpdaterProps) => {
         <Dialog fullWidth open={open} onClose={()=>{handleClose('CANCEL')}}>
             <DialogTitle sx={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
                 Modificar Paso {stepUpd?.id}
-                <IconButton><DeleteIcon/></IconButton>
+                <IconButton onClick={()=>{handleClose('DEL')}}><DeleteIcon/></IconButton>
 
             </DialogTitle>
             <DialogContent>
@@ -38,16 +40,15 @@ const StepUpdater = (props:IStepUpdaterProps) => {
                 {!newImg ? null
                     :<div style={{marginTop:'3vh', marginBottom:'2vh',textAlign:'center' }}>
                         <CircularProgress style={(!isLoading ? {display:'none'} : {})}/>
-                        <div style={{display:'flex', justifyContent:'center'}}>
-                                <img style={(!isLoading ? {maxWidth:'40%', borderRadius:10} : {display:'none'})} src={URL.createObjectURL(newImg as FileWithPath)}  onLoad={()=>{setIsLoading(false);}} alt="" />
-                                <span style={{backgroundColor:'red', position:'absolute', top:0, left:0}}>hola</span>
-                        </div>
+                       <img style={(!isLoading ? {maxWidth:'40%', borderRadius:10} : {display:'none'})} src={URL.createObjectURL(newImg as FileWithPath)}  onLoad={()=>{setIsLoading(false);}} alt="" />
                     </div>
                 }
-                <ImgPicker buttonTitle={!newImg ? 'Subir Imagen de Referencia' : 'Reemplazar Imagen'} setFile={setNewImg} />
-                    
+                <Container sx={{textAlign:'center'}} >
+                    <ImgPicker buttonTitle={!newImg ? 'Subir Imagen de Referencia' : 'Reemplazar Imagen'} setFile={setNewImg} />
+                    {!newImg ? null : <Button variant='contained' color='error' endIcon={<ClearIcon/>} onClick={()=>{setNewImg(undefined)}}>Eliminar Imagen</Button> }
+                </Container>
                 </DialogContent>
-            <DialogActions>
+            <DialogActions sx={{mt:'1vh'}}>
                 <Button onClick={()=>{handleClose('CANCEL')}}>Cancelar</Button>
                 <Button onClick={()=>{handleClose('UPD', {id:stepUpd.id, description:newDescription, img:newImg})}}>Aceptar</Button>
             </DialogActions>

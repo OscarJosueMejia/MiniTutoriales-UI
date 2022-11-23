@@ -11,7 +11,7 @@ import SignUp from '@views/Auth/SignUp';
 function App() {
   return (
     <>
-      <Feed />
+      <TutorialManagement />
       <TabNavigator/>
     </>
   );

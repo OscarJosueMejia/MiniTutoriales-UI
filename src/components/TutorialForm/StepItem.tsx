@@ -5,7 +5,7 @@ import ImgDialog from "./ImgDialog";
 import EditIcon from '@mui/icons-material/Edit';
 
 interface IStep {
-    id?:number;
+    id:number;
     description:string;
     img?:File | string;
 }
