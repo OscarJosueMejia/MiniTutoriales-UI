@@ -1,15 +1,14 @@
 import { useState } from 'react';
 import {Box, TextField, FormControl, Typography, Button, Container, Dialog, Chip, IconButton, DialogTitle, DialogContent, DialogContentText, DialogActions} from '@mui/material';
+import { StepContainer, StepCreator, StepUpdater } from '@components/Steps';
+import { TagHandler } from '@components/Tags';
 
 import { uploadImage } from '@utils/firebase';
-
-import { StepContainer, StepCreator, StepUpdater } from '@components/Steps';
 
 import TitleIcon from '@mui/icons-material/Title';
 import DescriptionIcon from '@mui/icons-material/Description';
 import HandymanIcon from '@mui/icons-material/Handyman';
 import TagIcon from '@mui/icons-material/Tag';
-import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import AddIcon from '@mui/icons-material/Add';
 
 const inputVariant = 'filled';
@@ -26,12 +25,11 @@ interface tags {
 
 const TutorialForm = () => {
     const [ steps, setSteps ] = useState([] as Array<IStep>);
-    const [ tagDescTmp, setTagDescTmp ] = useState("");
     const [ tags, setTags ] = useState([] as Array<tags>)
-    const [ tagError, setTagError ] = useState("")
 
     //Add
     const [ stepCreatorOpen, setStepCreatorOpen ] = useState(false);
+    
     //Upd
     const [ stepUpd, setStepUpd ] = useState<IStep>();
     const [ stepUpdOpen, setStepUpdOpen ] = useState(false);
@@ -70,26 +68,16 @@ const TutorialForm = () => {
         setStepCreatorOpen(false);
     }
 
-    const handleTags = ( mode:'ADD'|'DEL', tagDescription?:string) => {
+    const handleTags = ( mode:'ADD'|'DEL', tagDescription:string) => {
         let tmpTags = [...tags];
 
-        if( mode === 'ADD' && !(tmpTags.some(e => (e.tagDescription === tagDescTmp))) ){
-            tmpTags.push({tagDescription:tagDescTmp});
-        }else{
+        if ( mode === 'ADD' && !(tmpTags.some(e => (e.tagDescription === tagDescription)))) {
+            tmpTags.push({tagDescription});
+        } else {
             tmpTags = tmpTags.filter(tag => tag.tagDescription !== tagDescription);
         }
-        setTagDescTmp("");
-        setTags(tmpTags);
-    }
 
-    const handleTagChange = (e:any) => {
-        
-        if (tags.some(tag => ((tag.tagDescription).toLowerCase() === (e.target.value).toLowerCase()))) {
-            setTagError(`Ya existe una etiqueta llamada "${e.target.value}"`);
-        }else{
-            setTagError("");
-        }
-        setTagDescTmp(e.target.value);
+        setTags(tmpTags);
     }
 
     const uploadImages = async () => {
@@ -131,35 +119,7 @@ const TutorialForm = () => {
                 <Button onClick={()=>{setStepCreatorOpen(true)}}>Agregar Paso</Button>
             </Container>
 
-            <Container sx={{pb:'4vh'}} style={{paddingLeft:0, paddingRight:0}}>
-                <Typography variant='h6' component='h6' sx={{mt:'2vh', display:'flex', alignItems:'center'}} >
-                    <TagIcon sx={{ color: 'action.active', my: 0.5, mr:1}} />
-                    Etiquetas
-                </Typography>
-                
-                <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}>
-                    <FormControl fullWidth sx={{ m: 1, width:'60vw' }}>
-                            <TextField error={tagError !== ""} helperText={tagError} id="filled-basic" label="Escribe una etiqueta" variant={inputVariant} value={tagDescTmp} onChange={(e)=>handleTagChange(e)} />
-                    </FormControl>
-                    <IconButton disabled={tagDescTmp === "" || tagError !== ""} aria-label="delete" size="large" 
-                    onClick={()=>{handleTags('ADD')}}
-                    >
-                        <AddIcon fontSize="inherit" />
-                    </IconButton>
-                </div>
-
-                <Container sx={{mt:1}} >
-                        {
-                            tags.length > 0 
-                            ? tags.map(tag => {
-                                return(
-                                <Chip sx={{mx:1}} label={tag.tagDescription} onDelete={()=>{handleTags('DEL', tag.tagDescription)}} />
-                                )
-                            })
-                            :null
-                        }
-                </Container>
-            </Container>
+            <TagHandler tags={tags} handleTag={handleTags}/>
             
             <StepCreator open={stepCreatorOpen} stepNumber={steps.length + 1} handleClose={closeStepCreator} />
             {stepUpdOpen ? <StepUpdater open={stepUpdOpen} stepUpd={stepUpd as IStep} handleClose={closeStepUpdate}/> : null}
