@@ -1,6 +1,6 @@
 import {Container, Typography} from '@mui/material';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
-import StepItem from '@components/TutorialForm/StepItem';
+import { StepItem } from './StepItem';
 
 export interface IStep {
     id:number;

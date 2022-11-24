@@ -2,14 +2,13 @@ import { useState } from 'react';
 import {Box, TextField, FormControl, Typography, Button, Container, Dialog, Chip, IconButton, DialogTitle, DialogContent, DialogContentText, DialogActions} from '@mui/material';
 import { StepContainer, StepCreator, StepUpdater } from '@components/Steps';
 import { TagHandler } from '@components/Tags';
+import { RequirementsHandler } from '@components/Requirements';
 
 import { uploadImage } from '@utils/firebase';
 
 import TitleIcon from '@mui/icons-material/Title';
 import DescriptionIcon from '@mui/icons-material/Description';
 import HandymanIcon from '@mui/icons-material/Handyman';
-import TagIcon from '@mui/icons-material/Tag';
-import AddIcon from '@mui/icons-material/Add';
 
 const inputVariant = 'filled';
 
@@ -106,14 +105,8 @@ const TutorialForm = () => {
                 </FormControl>
             </div>
 
-            <div style={{width:'100%', display:'flex', flexDirection:'row', alignItems:'center'}}>
-                <HandymanIcon sx={{ color: 'action.active', my: 0.5 }} />
-                <FormControl fullWidth sx={{ m: 1}}>
-                    <TextField id="filled-textarea" multiline
-                    maxRows={4} label="Requisitos o Materiales Necesarios" variant={inputVariant} required />
-                </FormControl>
-            </div>
-
+            {/* <RequirementsHandler /> */}
+            
             <StepContainer steps={steps} handleUpdate={openStepUpdate} />
             <Container style={{display:'flex', justifyContent:'center', marginBottom:'1vh'}} >
                 <Button onClick={()=>{setStepCreatorOpen(true)}}>Agregar Paso</Button>

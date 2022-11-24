@@ -12,7 +12,7 @@ interface IStepProps {
     updateStep:(step:IStep)=>void;
 }
 
-const StepItem = ({ step, updateStep } : IStepProps) => {
+export const StepItem = ({ step, updateStep } : IStepProps) => {
 
     return(
         <Container key={step.id} sx={{mt:2, bgcolor:'#e2e2e2'}} style={{paddingRight:5, paddingLeft:5, borderRadius:5}} >
@@ -53,5 +53,3 @@ const StepItem = ({ step, updateStep } : IStepProps) => {
     )
 }
 
-
-export default StepItem;
