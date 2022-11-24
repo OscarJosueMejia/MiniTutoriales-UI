@@ -1,18 +1,4 @@
-import { Container } from "@mui/material";
-import Header from "@components/Header";
-import TutorialBody from "@components/TutorialBody";
+import Tutorial from "./TutorialView";
+import TutorialManagement from "./TutorialManagement";
 
-import './tutorial.css';
-
-const Tutorial = () => {
-    return (
-        <>
-          <Header/>
-          <Container className='tutorialViewContainer'>
-            <TutorialBody/>
-          </Container>
-        </>
-      );
-}
-
-export default Tutorial;
+export {Tutorial, TutorialManagement};

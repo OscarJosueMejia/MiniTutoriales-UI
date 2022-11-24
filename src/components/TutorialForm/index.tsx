@@ -2,7 +2,7 @@ import { useState } from 'react';
 import {Box, TextField, FormControl, Typography, Button, Container, Dialog, Chip, IconButton, DialogTitle, DialogContent, DialogContentText, DialogActions} from '@mui/material';
 import { StepContainer, StepCreator, StepUpdater } from '@components/Steps';
 import { TagHandler } from '@components/Tags';
-import { RequirementsHandler } from '@components/Requirements';
+import { RequirementsList, RequirementCreator } from '@components/Requirements';
 
 import { uploadImage } from '@utils/firebase';
 
@@ -24,11 +24,11 @@ interface tags {
 
 const TutorialForm = () => {
     const [ steps, setSteps ] = useState([] as Array<IStep>);
-    const [ tags, setTags ] = useState([] as Array<tags>)
-
+    const [ requirements, setRequirements ] = useState([] as Array<string>);
+    const [ tags, setTags ] = useState([] as Array<tags>);
     //Add
     const [ stepCreatorOpen, setStepCreatorOpen ] = useState(false);
-    
+    const [ reqCreatorOpen, setReqCreatorOpen ] = useState(false);
     //Upd
     const [ stepUpd, setStepUpd ] = useState<IStep>();
     const [ stepUpdOpen, setStepUpdOpen ] = useState(false);
@@ -84,6 +84,17 @@ const TutorialForm = () => {
         // alert(imgURI);
     }
 
+    const handleRequirements = (mode:'ADD'|'DEL'|'CANCEL', description:string) =>{
+        let tmpReqList = [...requirements];
+        if (mode === 'ADD') {
+            tmpReqList.push(description);
+        }else{
+            tmpReqList = tmpReqList.filter(e => e !== description);
+        }
+        setRequirements(tmpReqList);
+        setReqCreatorOpen(false);
+    }
+
     return ( 
         <Box
             component="form"
@@ -94,7 +105,7 @@ const TutorialForm = () => {
             <div style={{width:'100%', display:'flex', flexDirection:'row', alignItems:'center'}}>
                 <TitleIcon sx={{ color: 'action.active', my: 0.5 }} />
                 <FormControl fullWidth sx={{ m: 1 }}>
-                        <TextField id="filled-basic" label="Título" variant={inputVariant} required/>
+                    <TextField id="filled-basic" label="Título" variant={inputVariant} required/>
                 </FormControl>
             </div>
             <div style={{width:'100%', display:'flex', flexDirection:'row', alignItems:'center'}}>
@@ -105,17 +116,22 @@ const TutorialForm = () => {
                 </FormControl>
             </div>
 
-            {/* <RequirementsHandler /> */}
+            <RequirementsList requirementsList={requirements} handleRequirements={handleRequirements} />
+            <RequirementCreator open={reqCreatorOpen} handleRequirements={handleRequirements}/>
+            <Container style={{marginBottom:'1vh'}} >
+                <Button onClick={()=>{setReqCreatorOpen(true)}}>Agregar Requisito o Material Necesario</Button>
+            </Container>
+
             
             <StepContainer steps={steps} handleUpdate={openStepUpdate} />
-            <Container style={{display:'flex', justifyContent:'center', marginBottom:'1vh'}} >
+            <StepCreator open={stepCreatorOpen} stepNumber={steps.length + 1} handleClose={closeStepCreator} />
+            {stepUpdOpen ? <StepUpdater open={stepUpdOpen} stepUpd={stepUpd as IStep} handleClose={closeStepUpdate}/> : null}
+            
+            <Container style={{marginBottom:'1vh'}} >
                 <Button onClick={()=>{setStepCreatorOpen(true)}}>Agregar Paso</Button>
             </Container>
 
             <TagHandler tags={tags} handleTag={handleTags}/>
-            
-            <StepCreator open={stepCreatorOpen} stepNumber={steps.length + 1} handleClose={closeStepCreator} />
-            {stepUpdOpen ? <StepUpdater open={stepUpdOpen} stepUpd={stepUpd as IStep} handleClose={closeStepUpdate}/> : null}
             
         </Box>    
     )

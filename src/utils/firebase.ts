@@ -2,12 +2,12 @@ import { initializeApp } from 'firebase/app';
 import {getStorage, ref, uploadBytes, getDownloadURL} from 'firebase/storage';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyD3et_6HhMcyG8St9EDp7D7uT8flTGSets",
-    authDomain: "minitutoriales-resources.firebaseapp.com",
-    projectId: "minitutoriales-resources",
-    storageBucket: "minitutoriales-resources.appspot.com",
-    messagingSenderId: "518591558577",
-    appId: "1:518591558577:web:36ffc9859dcde00b8a4390"
+    apiKey: "",
+    authDomain: "",
+    projectId: "",
+    storageBucket: "",
+    messagingSenderId: "",
+    appId: ""
 };
 
 /**
