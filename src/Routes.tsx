@@ -1,22 +1,34 @@
-import React from "react";
+import { BrowserRouter as Router, Route, Routes as Switch, Navigate } from 'react-router-dom';
+import PrivateRoute from '@components/PrivateRoute';
+import { PageNotFound } from '@components/Misc';
 
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-;
+import Feed from '@views/Feed';
+import { Tutorial, TutorialManagement } from '@views/Tutorial';
+import TabNavigator from '@components/TabNavigator';
+import SignIn from '@views/Auth/SignIn';
 
-export const Routing = () => {
-
+const Routes = () => {
   return (
-    <BrowserRouter>
-      <Routes>
+    <Router >
+      <Switch>
+        <Route path='/login' element={<SignIn />} />
+        <Route path="/home*" element={
+          <Switch>
+            <Route index element={<><Feed/><TabNavigator /></>}/>
+            <Route path="tutorial" element={<><Tutorial/><TabNavigator/></>}/>
+          </Switch>
+        }/>
 
-        {/* <Route path="/Login/*" element={<LoginRouting />}/>
-        <Route path="/Personal/*" element={<PersonalRouting />}/>
-
-          
-          <Route path="*" element={<ErrorNotFound />}/>  */}
-
-        {/* <Route index element={<LandingPage />}></Route> */}
-      </Routes>
-    </BrowserRouter>
+        <Route path="/creator*" element={
+          <Switch>
+            <Route index element={<PrivateRoute><TutorialManagement/><TabNavigator /></PrivateRoute>}/>
+          </Switch>
+        }/>
+        <Route path="*" element={<PageNotFound/>}/>
+      </Switch>
+      
+    </Router>
   );
-};
+}
+
+export default Routes;

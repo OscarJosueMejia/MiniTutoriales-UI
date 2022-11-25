@@ -1,43 +1,55 @@
 import {useState} from 'react';
+import { useNavigate } from "react-router-dom";
+
 import { BottomNavigation, BottomNavigationAction, Paper, SpeedDial} from '@mui/material';
 import FolderIcon from '@mui/icons-material/Folder';
 import Home from '@mui/icons-material/Home';
-import FavoriteIcon from '@mui/icons-material/Favorite';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import SearchSharpIcon from '@mui/icons-material/SearchSharp';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-
+import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
+import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
 import AddIcon from '@mui/icons-material/Add';
 
 const TabNavigator = () => {
-    const [value, setValue] = useState('recents');
+    const Navigator = useNavigate();
+
+    const [value, setValue] = useState('Principal');
   
     const handleChange = (event:any, newValue:any) => {
       setValue(newValue);
+      Navigator(newValue);
     };
   
     return (
     <Paper sx={{display:'flex', justifyContent:'center', position: 'fixed', bottom: 0, left: 0, right: 0, zIndex:10}} elevation={5}>
         <BottomNavigation   sx={{width: 500}} value={value} onChange={handleChange}>
             <BottomNavigationAction
-            label="Recents"
-            value="recents"
-            icon={<Home />}
+            label="Principal"
+            value="/home"
+            icon={<HomeOutlinedIcon />}
             />
             <BottomNavigationAction
-            label="Favorites"
-            value="favorites"
-            icon={<FavoriteIcon />}
+            label="Buscar"
+            value="/find"
+            icon={<SearchSharpIcon />}
             />
             <BottomNavigationAction
-            label="Nearby"
-            value="nearby"
-            icon={<LocationOnIcon />}
+            label="Categorías"
+            value="/categories"
+            icon={<FormatListBulletedOutlinedIcon />}
             />
-            <BottomNavigationAction label="Folder" value="folder" icon={<FolderIcon />} />
+            <BottomNavigationAction 
+            label="Mi Perfil" 
+            value="/profile" 
+            icon={<PersonOutlineOutlinedIcon />} 
+            />
         </BottomNavigation>
         <SpeedDial
           ariaLabel="SpeedDial basic example"
           sx={{ position: 'absolute', bottom: '8vh', right: '2vh'}}
           icon={<AddIcon />}
+          onClick={()=>{Navigator("/creator")}}
         >
         </SpeedDial>
       </Paper>
