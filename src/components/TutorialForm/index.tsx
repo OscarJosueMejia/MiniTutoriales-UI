@@ -5,18 +5,13 @@ import { TagHandler } from '@components/Tags';
 import { RequirementsList, RequirementCreator } from '@components/Requirements';
 
 import { uploadImage } from '@utils/firebase';
+import { IStep } from '@components/Steps/StepContainer';
 
 import TitleIcon from '@mui/icons-material/Title';
 import DescriptionIcon from '@mui/icons-material/Description';
 import HandymanIcon from '@mui/icons-material/Handyman';
 
 const inputVariant = 'filled';
-
-export interface IStep {
-    id:number;
-    description:string;
-    img?:File | string;
-}
 
 interface tags {
     tagDescription: string;
@@ -42,16 +37,16 @@ const TutorialForm = () => {
         let newSteps: Array<IStep> = [];
         if (mode === 'UPD' && newStep !== undefined){
             newSteps = steps.map( step => {
-                if (step.id === newStep.id) {
+                if (step.stepNumber === newStep.stepNumber) {
                     step.description = newStep.description;
-                    step.img = newStep.img;
+                    step.imgURL = newStep.imgURL;
                 }
                 return step;
             });
         }
         if(mode === 'DEL' && stepUpd !== undefined){
-            newSteps = steps.filter(step => step.id !== stepUpd.id);
-            newSteps = newSteps.map(o => { if(o.id > stepUpd.id){o.id--} return o})
+            newSteps = steps.filter(step => step.stepNumber !== stepUpd.stepNumber);
+            newSteps = newSteps.map(o => { if(o.stepNumber > stepUpd.stepNumber){o.stepNumber--} return o})
         }
         setSteps(newSteps);
         setStepUpdOpen(false);
@@ -60,7 +55,7 @@ const TutorialForm = () => {
     const closeStepCreator = (mode:'ADD'|'CANCEL', newStep?:IStep) => {
         if(mode === 'ADD' && newStep !== undefined){
             let tmpSteps = [...steps];
-            tmpSteps.push({id:newStep.id, description:newStep.description, img:newStep.img as File});
+            tmpSteps.push({stepNumber:newStep.stepNumber, description:newStep.description, imgURL:newStep.imgURL as File});
     
             setSteps(tmpSteps);
         }
@@ -124,7 +119,7 @@ const TutorialForm = () => {
 
             
             <StepContainer steps={steps} handleUpdate={openStepUpdate} />
-            <StepCreator open={stepCreatorOpen} stepNumber={steps.length + 1} handleClose={closeStepCreator} />
+            <StepCreator open={stepCreatorOpen} newStepNumber={steps.length + 1} handleClose={closeStepCreator} />
             {stepUpdOpen ? <StepUpdater open={stepUpdOpen} stepUpd={stepUpd as IStep} handleClose={closeStepUpdate}/> : null}
             
             <Container style={{marginBottom:'1vh'}} >

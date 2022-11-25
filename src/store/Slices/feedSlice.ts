@@ -1,20 +1,23 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
+import { IStep } from '@components/Steps/StepContainer';
 
-interface FeedItem {
+export interface IFeedItem {
   authorId: unknown;
   createdAt: string;
   description:string;
-  reactionsCount:unknown;
+  reactionsCount:{reaction_IsUtil:Array<string>,reaction_Dislike:Array<string>};
   requirements:string;
-  steps:unknown;
+  steps:Array<IStep>;
   tags:unknown;
   title:string;
+  userLiked?:boolean;
+  userDisliked?:boolean;
   _id:unknown;
 }
 
 interface FeedData {
-    items:Array<FeedItem>;
+    items:Array<IFeedItem>;
     itemsPerPage:number;
     page:number;
     total:number;

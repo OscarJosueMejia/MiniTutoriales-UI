@@ -1,12 +1,7 @@
 import {Container, Typography} from '@mui/material';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import { StepItemLite } from './StepItemLite';
-
-export interface IStep {
-    id:number;
-    description:string;
-    img?:File | string;
-}
+import { IStep } from '@components/Steps/StepContainer';
 
 interface IStepContainer {
     steps:Array<IStep>
@@ -21,7 +16,7 @@ export const StepContainerLite = ({steps}:IStepContainer) => {
             </Typography>
             {steps.length > 0 ?
                 steps.map(step=>{
-                    return(< StepItemLite key={step.id} step={step} />)
+                    return(< StepItemLite key={step.stepNumber} step={step} />)
                 })
                 :null
             }

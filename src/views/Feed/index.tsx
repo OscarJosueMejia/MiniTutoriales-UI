@@ -1,37 +1,51 @@
-import { useEffect } from "react";
 import { useGetAllQuery } from "@store/Services/Feed";
-import { useDispatch, useSelector } from "react-redux";
-import { setFeedItems, selectFeedItems } from "@store/Slices/feedSlice";
+import { useDispatch } from "react-redux";
+import { setFeedItems } from "@store/Slices/feedSlice";
+import { FeedContainer } from "@components/Feed";
+import { useReactionMutation, useFeedForLoggedQuery } from "@store/Services/Feed";
 
-import { Container, Button} from "@mui/material";
-import FeedCard from "@components/Card";
+import { ContentLoadingIndicator } from "@components/Misc";
 import Header from "@components/Header";
 
 import './feed.css';
 
+export interface IReactionBody {
+  mode:'ADD'|'REMOVE';
+  userId:unknown;
+  tutorialId:unknown;
+  reactionName:'LIKE'|'DISLIKE';
+}
+
+
 const Feed = () => {
-  const { data } = useGetAllQuery(null);
+  const { data, isLoading } = useFeedForLoggedQuery(null);
+  const [ reaction, { status, error } ] = useReactionMutation();
   const dispatch = useDispatch();
-  const tutorialItems = useSelector(selectFeedItems);;
 
   async function getAllData(){
     let feedData = await data;
     dispatch(setFeedItems(feedData));
-
   }
-  useEffect(()=>{
-    getAllData();
-  },[])
+  
+  const handleReaction = async ({tutorialId, reactionName, userId, mode}:IReactionBody) => {
+    try {
+      const items = await reaction({tutorialId, reactionName, userId, mode}).unwrap();
+      dispatch(setFeedItems(items));
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
+  getAllData();
 
   return (
     <>
       <Header/>
-      <Container className="feedContainer">
-        <FeedCard/>
-        <FeedCard/>
-        <FeedCard/>
-        <FeedCard/>
-      </Container>
+      {isLoading ?
+        <ContentLoadingIndicator />
+        :<FeedContainer handleReaction={handleReaction} />
+      }
     </>
   );
 }

@@ -3,9 +3,9 @@ import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import { StepItem } from './StepItem';
 
 export interface IStep {
-    id:number;
+    stepNumber:number;
     description:string;
-    img?:File | string;
+    imgURL?:File | string;
 }
 
 interface IStepContainer {
@@ -22,7 +22,7 @@ export const StepContainer = ({steps, handleUpdate}:IStepContainer) => {
             </Typography>
             {steps.length > 0 ?
                 steps.map(step=>{
-                    return(< StepItem key={step.id} step={step} updateStep={handleUpdate} />)
+                    return(< StepItem key={step.stepNumber} step={step} updateStep={handleUpdate} />)
                 })
                 :<Container sx={{mt:2, bgcolor:'#f0f0f0', py:1,borderRadius:3, textAlign:'center'}} >
                     <Typography  style={{color:'gray'}}> Agrega al menos 1 Paso </Typography>
