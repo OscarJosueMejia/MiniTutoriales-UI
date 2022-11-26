@@ -15,9 +15,13 @@ export const feedApi = createApi({
       })
     }),
     feedForLogged: builder.query({
-      query: () => ({
+      query: (page) => ({
         url: `logged_user/6355bf4a972277413bb7ddca`,
         method: 'get',
+        params:{
+          page,
+          items:5
+        },
         headers: {
           apikey: process.env.REACT_APP_API_KEY,
         },

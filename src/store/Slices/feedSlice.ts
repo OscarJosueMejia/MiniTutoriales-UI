@@ -13,6 +13,7 @@ export interface IFeedItem {
   title:string;
   userLiked?:boolean;
   userDisliked?:boolean;
+  author_info:Array<{_id:unknown, name:string, username:string}>
   _id:unknown;
 }
 

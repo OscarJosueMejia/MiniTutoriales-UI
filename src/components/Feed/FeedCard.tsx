@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import { Card, CardContent, CardActions, CardMedia, Button, Typography, CardHeader, Avatar, IconButton } from "@mui/material";
-import { PropsWithChildren } from "react";
+import { green } from "@mui/material/colors";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import {IFeedItem} from '@store/Slices/feedSlice';
 import { useNavigate } from "react-router-dom";
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 
 interface IReactionBody {
   mode:'ADD'|'REMOVE'; 
@@ -19,14 +21,22 @@ interface IFeedCardProps {
 
 const FeedCard = ({itemData, handleReaction}:IFeedCardProps)=>{
   const Navigate = useNavigate();
-  const {_id ,title, createdAt, description, reactionsCount, userLiked} = itemData;
+  const {_id ,title, createdAt, description, reactionsCount, userLiked, author_info} = itemData;
+  const [isUserLiked, setIsUserLiked] = useState(userLiked);
+  const [userLikesCount, setUserLikesCount] = useState(reactionsCount.reaction_IsUtil.length);
+
+  const HandleReactionClick = () => {
+    handleReaction({mode:!isUserLiked ? 'ADD' : 'REMOVE', tutorialId:_id, userId:'6355bf4a972277413bb7ddca', reactionName:'LIKE'});
+    setIsUserLiked(!isUserLiked);
+    setUserLikesCount(!isUserLiked ? userLikesCount + 1 : userLikesCount - 1)
+  }
 
   return (
     <Card sx={{maxWidth: 450, marginBottom:2, backgroundColor:'#e4e4e4', borderRadius:2}}>
     <CardHeader
       avatar={
-        <Avatar sx={{ bgcolor: 'red' }} aria-label="recipe">
-          R
+        <Avatar sx={{ bgcolor: green[500] }} aria-label="recipe">
+        {`${(author_info[0].name).split(' ')[0][0]}${(author_info[0].name).split(' ')[1][0]}`}
         </Avatar>
       }
       action={
@@ -45,17 +55,16 @@ const FeedCard = ({itemData, handleReaction}:IFeedCardProps)=>{
     />
     <CardContent>
       <Typography variant="body2" sx={{minWidth:'120vw'}} color="text.secondary">
-        {description}
+        {description} 
       </Typography>
     </CardContent>
     <CardActions disableSpacing>
       <div style={{display:'flex', alignItems:'center', marginRight:'2vw'}}>
         <IconButton aria-label="add to favorites"
-        onClick={()=>{handleReaction({mode:!userLiked ? 'ADD' : 'REMOVE', tutorialId:_id, userId:'6355bf4a972277413bb7ddca', reactionName:'LIKE'})}}
-        >
-          <FavoriteIcon color={userLiked ? 'info' : "disabled"} />
+        onClick={HandleReactionClick}>
+          <ThumbUpIcon color={isUserLiked ? 'info' : "disabled"} />
         </IconButton>
-        <Typography sx={{ml:0.4, mt:'0.2vh'}}>{reactionsCount.reaction_IsUtil.length}</Typography>
+        <Typography sx={{ml:0.4, mt:'0.2vh'}}>{userLikesCount}</Typography>
       </div>
       <IconButton aria-label="share">
         <ShareIcon  />
