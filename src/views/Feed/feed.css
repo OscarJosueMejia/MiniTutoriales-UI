@@ -4,6 +4,13 @@
     justify-content: space-around;
     flex-wrap: wrap;
     flex-direction: row;
-    margin-top: 9vh;
-    margin-bottom: 9vh;
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+    -ms-overflow-style: none; /* for Internet Explorer, Edge */
+    scrollbar-width: none; /* for Firefox */
+    overflow-y: scroll; 
 }
+
+.feedContainer::-webkit-scrollbar {
+    display: none; /* for Chrome, Safari, and Opera */
+  }

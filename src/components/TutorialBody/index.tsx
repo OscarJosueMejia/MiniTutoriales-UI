@@ -2,19 +2,17 @@ import {useState} from 'react';
 import { Card, CardContent, CardActions, CardMedia, Button, Typography, CardHeader, Avatar, IconButton } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
+import {IFeedItem} from '@store/Slices/feedSlice';
 import { RequirementsLiteList } from '@components/Requirements';
 import { StepContainerLite } from '@components/Steps';
+import { useLocation } from 'react-router-dom';
 
 const TutorialBody = () => {
+    const Location = useLocation();
+    const {title, createdAt, steps, description, reactionsCount} = Location.state.itemData as IFeedItem;;
+
     const [requirements, setRequirements] = useState([
       "Requisito 1", "Requisito 2", "Requisito 3"
-    ]);
-
-    const [steps, setSteps] = useState([
-      {id:1, description:'Step 1', img: undefined},
-      {id:2, description:'Step 1', img: undefined},
-      {id:3, description:'Step 1', img: undefined},
-      {id:4, description:'Step 1', img: undefined},
     ]);
 
     return (
@@ -29,9 +27,9 @@ const TutorialBody = () => {
             <IconButton aria-label="settings">
             </IconButton>
           }
-          title="Shrimp and Chorizo Paella"
-          subheader="September 14, 2016"
-        />
+          title={title}
+          subheader={new Date(createdAt).toLocaleString('es-ES', {day:'2-digit',month:'long', year:'numeric', hour:'numeric', hour12:true, minute:'2-digit'})}
+          />
         <CardMedia
           component="img"
           height="194"
@@ -39,15 +37,12 @@ const TutorialBody = () => {
           alt="Paella dish"
         />
         <CardContent>
-          <Typography variant="body2" color="text.secondary">
-            This impressive paella is a perfect party dish and a fun meal to cook
-            together with your guests. Add 1 cup of frozen peas along with the mussels,
-            if you like.
+          <Typography variant="body1" sx={{minWidth:'150vw'}} color="text.secondary">
+            {description}
           </Typography>
           <RequirementsLiteList requirementsList={requirements} />
           <StepContainerLite steps={steps} />
         </CardContent>
-
 
         <CardActions disableSpacing>
           <IconButton aria-label="add to favorites">

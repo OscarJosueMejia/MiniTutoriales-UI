@@ -3,23 +3,17 @@ import { Dialog, DialogTitle, Button, Container, DialogContent, FormControl, Cir
 import ImgPicker from "@components/TutorialForm/ImgPicker";
 import { FileWithPath } from 'react-dropzone';
 import ClearIcon from '@mui/icons-material/Clear';
-
-
-interface IStep {
-    id:number;
-    description:string;
-    img?:File | string;
-}
+import { IStep } from '@components/Steps/StepContainer';
 
 interface IStepCreatorProps {
     open: boolean;
-    stepNumber: number;
+    newStepNumber: number;
     handleClose: (mode:'ADD'|'CANCEL', newStep?:IStep) => void;
 }
 
 export const StepCreator = (props:IStepCreatorProps) => {
 
-    const { handleClose, stepNumber, open} = props;
+    const { handleClose, newStepNumber, open} = props;
     const [isLoading, setIsLoading] = useState(true);
 
     const [newDescription, setNewDescription] = useState("");
@@ -28,13 +22,13 @@ export const StepCreator = (props:IStepCreatorProps) => {
     return(
         <Dialog fullWidth open={open} onClose={()=>{handleClose('CANCEL')}}>
             <DialogTitle>
-                Agregar Paso #{stepNumber}
+                Agregar Paso #{newStepNumber}
             </DialogTitle>
             <DialogContent>
 
                 <FormControl fullWidth sx={{ m: 0 , bgcolor:'#f0f0f0'}}>
                     <TextField id="filled-textarea" multiline
-                    maxRows={10} label={`Descripción del Paso ${stepNumber}`} value={newDescription} variant='filled' onChange={(e)=>{setNewDescription(e.target.value)}} />
+                    maxRows={10} label={`Descripción del Paso ${newStepNumber}`} value={newDescription} variant='filled' onChange={(e)=>{setNewDescription(e.target.value)}} />
                 </FormControl>
 
                 {!newImg ? null
@@ -51,7 +45,7 @@ export const StepCreator = (props:IStepCreatorProps) => {
                 </DialogContent>
             <DialogActions>
                 <Button onClick={()=>{handleClose('CANCEL')}}>Cancelar</Button>
-                <Button onClick={()=>{handleClose('ADD', {id:stepNumber, description:newDescription, img:newImg}); setNewDescription(""); setNewImg(undefined)}}>Aceptar</Button>
+                <Button onClick={()=>{handleClose('ADD', {stepNumber:newStepNumber, description:newDescription, imgURL:newImg}); setNewDescription(""); setNewImg(undefined)}}>Aceptar</Button>
             </DialogActions>
         </Dialog>
     )   
