@@ -17,6 +17,9 @@
       "@views/*": [
         "./src/views/*"
       ],
+      "@layouts/*": [
+        "./src/layouts/*"
+      ],
     },
   }
 }
