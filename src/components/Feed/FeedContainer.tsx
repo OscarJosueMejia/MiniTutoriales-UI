@@ -1,6 +1,6 @@
 import {  MutableRefObject } from 'react';
 
-import { Container, Button } from "@mui/material";
+import { Container, Button, Chip} from "@mui/material";
 import FeedCard from "./FeedCard";
 import { useSelector } from "react-redux";
 import { selectFeedItems } from "@store/Slices/feedSlice";
@@ -23,10 +23,16 @@ const FeedContainer = ({handleReaction, handleScroll, scrollRef}:IFeedContainerP
 
     return(
         <Container sx={{display:'flex', justifyContent:'center', alignItems:'center', flexDirection:'column'}}>
+            
             <Container  className="feedContainer" >
+            <Container sx={{textAlign:'center'}}>
+                <Chip label="Categoria1" sx={{mb:2, mx:0.5}} />
+                <Chip label="Categoria2" sx={{mb:2, mx:0.5}} />
+                <Chip label="Categoria3" sx={{mb:2, mx:0.5}} />
+            </Container>
                 {
                     tutorialItems.map(item=>{
-                        return(<FeedCard itemData={item} handleReaction={handleReaction} />)
+                        return(<FeedCard key={item._id as string } itemData={item} handleReaction={handleReaction} />)
                     })
                 }
             </Container>

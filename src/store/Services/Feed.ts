@@ -27,6 +27,15 @@ export const feedApi = createApi({
         },
       })
     }),
+    getOne: builder.query({
+      query: (tutorialId) => ({
+        url: `one/${tutorialId}`,
+        method: 'get',
+        headers: {
+          apikey: process.env.REACT_APP_API_KEY,
+        },
+      })
+    }),
     reaction: builder.mutation({
       query: (params) => ({
         url: `reaction/${params.tutorialId}`,
@@ -40,4 +49,4 @@ export const feedApi = createApi({
   }),
 });
 
-export const { useGetAllQuery, useReactionMutation, useFeedForLoggedQuery } = feedApi;
+export const { useGetAllQuery, useReactionMutation, useFeedForLoggedQuery, useGetOneQuery } = feedApi;

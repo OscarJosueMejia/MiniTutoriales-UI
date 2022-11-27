@@ -4,8 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setFeedItems, IFeedItem, selectFeedItems } from "@store/Slices/feedSlice";
 import { FeedContainer } from "@components/Feed";
 import { useReactionMutation, useFeedForLoggedQuery } from "@store/Services/Feed";
-import { feedApi } from "@store/Services/Feed";
-import Button from "@mui/material/Button";
 import { ContentLoadingIndicator } from "@components/Misc";
 import Header from "@components/Header";
 
@@ -17,7 +15,6 @@ export interface IReactionBody {
   tutorialId:unknown;
   reactionName:'LIKE'|'DISLIKE';
 }
-
 
 const Feed = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -62,7 +59,7 @@ const Feed = () => {
 
   return (
     <>
-      <Header/>
+      <Header title="MiniTutoriales" />
       {result.isLoading ?
         <ContentLoadingIndicator />
         :<FeedContainer handleReaction={handleReaction} handleScroll={handleScroll} scrollRef={listInnerRef} />

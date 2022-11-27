@@ -5,6 +5,7 @@ import { securitySlice } from './Slices/securitySlice';
 import { feedSlice } from './Slices/feedSlice';
 import { securityApi } from './Services/Security';
 import { feedApi } from './Services/Feed';
+import { creatorApi } from './Services/Creator';
 
 export const store = configureStore({
   reducer: {
@@ -13,9 +14,10 @@ export const store = configureStore({
     feed: feedSlice.reducer,
     [securityApi.reducerPath]: securityApi.reducer,
     [feedApi.reducerPath]: feedApi.reducer,
+    [creatorApi.reducerPath]: creatorApi.reducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware()
-  .concat([securityApi.middleware, feedApi.middleware])
+  .concat([securityApi.middleware, feedApi.middleware, creatorApi.middleware])
 });
 
 setupListeners(store.dispatch);

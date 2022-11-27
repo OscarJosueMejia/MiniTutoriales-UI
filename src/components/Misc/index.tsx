@@ -1,4 +1,5 @@
 import PageNotFound from "./PageNotFound";
-import {ContentLoadingIndicator} from "./LoadingIndicator";
+import {ContentLoadingIndicator, ModalLoadingIndicator} from "./LoadingIndicator";
+import AlertDialog from "./ModalView";
 
-export {PageNotFound, ContentLoadingIndicator};
+export {PageNotFound, ContentLoadingIndicator, AlertDialog, ModalLoadingIndicator};

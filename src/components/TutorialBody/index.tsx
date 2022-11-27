@@ -1,26 +1,31 @@
 import {useState} from 'react';
-import { Card, CardContent, CardActions, CardMedia, Button, Typography, CardHeader, Avatar, IconButton } from "@mui/material";
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
 import {IFeedItem} from '@store/Slices/feedSlice';
+
+import { Card, CardContent, CardActions, CardMedia, Typography, CardHeader, Avatar, IconButton } from "@mui/material";
+import { green } from "@mui/material/colors";
 import { RequirementsLiteList } from '@components/Requirements';
 import { StepContainerLite } from '@components/Steps';
-import { useLocation } from 'react-router-dom';
 
-const TutorialBody = () => {
-    const Location = useLocation();
-    const {title, createdAt, steps, description, reactionsCount} = Location.state.itemData as IFeedItem;;
+import ShareIcon from '@mui/icons-material/Share';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 
-    const [requirements, setRequirements] = useState([
-      "Requisito 1", "Requisito 2", "Requisito 3"
-    ]);
+interface ITutorialBodyParams {
+  itemData:IFeedItem;
+}
+
+const TutorialBody = ({itemData}:ITutorialBodyParams) => {
+    
+    const {_id ,title, createdAt, description, requirements, reactionsCount, steps, userLiked, author_info} = itemData;
+    // const [requirements2, setRequirements] = useState([
+    //   "Requisito 1", "Requisito 2", "Requisito 3"
+    // ]);
 
     return (
-        <Card sx={{maxWidth: 500, marginBottom:2, backgroundColor:'#e4e4e4', borderRadius:3}}>
+        <Card sx={{width: '100vw', marginBottom:2, backgroundColor:'#f5f5f5', borderRadius:3}}>
         <CardHeader
           avatar={
-            <Avatar sx={{ bgcolor: 'red' }} aria-label="recipe">
-              R
+            <Avatar sx={{ bgcolor: green[500] }} aria-label="recipe">
+            {`${(author_info[0].name).split(' ')[0][0]}${(author_info[0].name).split(' ')[1][0]}`}
             </Avatar>
           }
           action={
@@ -28,7 +33,8 @@ const TutorialBody = () => {
             </IconButton>
           }
           title={title}
-          subheader={new Date(createdAt).toLocaleString('es-ES', {day:'2-digit',month:'long', year:'numeric', hour:'numeric', hour12:true, minute:'2-digit'})}
+          
+          subheader={new Date(createdAt).toLocaleString('es-ES', {day:'2-digit',month:'long', year:'numeric', hour:'numeric', hour12:true, minute:'2-digit'})} 
           />
         <CardMedia
           component="img"
@@ -38,18 +44,24 @@ const TutorialBody = () => {
         />
         <CardContent>
           <Typography variant="body1" sx={{minWidth:'150vw'}} color="text.secondary">
+            Autor: {author_info[0].name}
+          </Typography>
+          <Typography variant="body1" sx={{minWidth:'150vw', mt:2, mb:2}} color="text.primary">
             {description}
           </Typography>
-          <RequirementsLiteList requirementsList={requirements} />
+          <RequirementsLiteList requirementsList={requirements as unknown} />
           <StepContainerLite steps={steps} />
         </CardContent>
 
         <CardActions disableSpacing>
-          <IconButton aria-label="add to favorites">
-            <FavoriteIcon />
-          </IconButton>
+          <div style={{display:'flex', alignItems:'center', marginRight:'2vw'}}>
+            <IconButton aria-label="add to favorites">
+              <ThumbUpIcon/>
+            </IconButton>
+            <Typography sx={{ml:0.4, mt:'0.2vh'}}>0</Typography>
+          </div>
           <IconButton aria-label="share">
-            <ShareIcon />
+            <ShareIcon  />
           </IconButton>
         </CardActions>
       </Card>

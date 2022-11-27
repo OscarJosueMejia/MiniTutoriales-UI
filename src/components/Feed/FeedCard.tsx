@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Card, CardContent, CardActions, CardMedia, Button, Typography, CardHeader, Avatar, IconButton } from "@mui/material";
 import { green } from "@mui/material/colors";
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import {IFeedItem} from '@store/Slices/feedSlice';
 import { useNavigate } from "react-router-dom";
@@ -32,7 +31,7 @@ const FeedCard = ({itemData, handleReaction}:IFeedCardProps)=>{
   }
 
   return (
-    <Card sx={{maxWidth: 450, marginBottom:2, backgroundColor:'#e4e4e4', borderRadius:2}}>
+    <Card sx={{width: '100vw', marginBottom:2, backgroundColor:'#eceff1', borderRadius:2}}>
     <CardHeader
       avatar={
         <Avatar sx={{ bgcolor: green[500] }} aria-label="recipe">
@@ -43,7 +42,7 @@ const FeedCard = ({itemData, handleReaction}:IFeedCardProps)=>{
         <IconButton aria-label="settings">
         </IconButton>
       }
-      onClick={()=>{Navigate('/home/tutorial',{state:{itemData}})}}
+      onClick={()=>{Navigate('/home/tutorial',{state:{_id}})}}
       title={title}
       subheader={new Date(createdAt).toLocaleString('es-ES', {day:'2-digit',month:'long', year:'numeric', hour:'numeric', hour12:true, minute:'2-digit'})}
     />

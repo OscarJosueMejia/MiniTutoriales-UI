@@ -3,7 +3,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import HandymanIcon from '@mui/icons-material/Handyman';
 
 interface IRequirementsHandlerProps {
-    requirementsList: Array<string>;
+    requirementsList: unknown;
 }
 
 export const RequirementsLiteList = ({requirementsList}:IRequirementsHandlerProps) => {
@@ -16,10 +16,10 @@ export const RequirementsLiteList = ({requirementsList}:IRequirementsHandlerProp
             </Typography>
         
             <List sx={{width:'100%', bgcolor: 'background.paper', borderRadius:1, mt:1}}>
-                {requirementsList.length > 0 ?
-                    requirementsList.map((value) => (
-                    <ListItem key={value} sx={{pl:2}} disableGutters>
-                        <ListItemText primary={`- ${value}`} />
+                {(requirementsList as Array<unknown>).length > 0 ?
+                    (requirementsList as Array<unknown>).map((value) => (
+                    <ListItem key={value as string} sx={{pl:2}} disableGutters>
+                        <ListItemText primary={`- ${value as string}`} />
                     </ListItem>
                 )) : null }
             </List>

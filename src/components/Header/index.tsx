@@ -1,8 +1,7 @@
-import { Box, AppBar, Toolbar, IconButton, Typography, InputBase} from "@mui/material";
-import MenuIcon from '@mui/icons-material/Menu';
+import { Box, AppBar, Toolbar, IconButton,Button, Typography, InputBase} from "@mui/material";
 import { styled, alpha } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
-
+import CheckIcon from '@mui/icons-material/Check';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -46,8 +45,18 @@ const Search = styled('div')(({ theme }) => ({
     },
   }));
 
+interface IHeaderOptions {
+  title?:string;
+  showActionBtn?:boolean;
+  btnTitle?:string;
+  btnAction?:()=>void;
+  showSearchBar?:boolean;
+  searchBarOnChange?:(e:unknown)=>void;
+}
 
-const Header = () => {
+
+const Header = (props:IHeaderOptions) => {
+    const {showActionBtn, showSearchBar, title, btnAction, btnTitle, searchBarOnChange} = props;
 
     return(
         <Box sx={{ flexGrow: 1, marginBottom:4 }}>
@@ -57,20 +66,29 @@ const Header = () => {
               variant="h6"
               noWrap
               component="div"
-              sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+              sx={{ flexGrow: 1, display: {sm: 'block' } }}
             >
-              MiniTutoriales
+              {title}
             </Typography>
             
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Search…"
-                inputProps={{ 'aria-label': 'search' }}
-              />
-            </Search>
+            {showSearchBar ?
+              <Search>
+                <SearchIconWrapper>
+                  <SearchIcon />
+                </SearchIconWrapper>
+                <StyledInputBase
+                  placeholder="Search…"
+                  inputProps={{ 'aria-label': 'search' }}
+                  onChange={searchBarOnChange}
+                />
+              </Search>
+              :null
+            }
+            {
+              showActionBtn ?  <Button color="inherit" onClick={btnAction} endIcon={<CheckIcon />} >{btnTitle}</Button>
+              :null
+            }
+           
           </Toolbar>
         </AppBar>
       </Box>

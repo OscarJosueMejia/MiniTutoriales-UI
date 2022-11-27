@@ -21,7 +21,8 @@ const Routes = () => {
 
         <Route path="/creator*" element={
           <Switch>
-            <Route index element={<PrivateRoute><TutorialManagement/><TabNavigator /></PrivateRoute>}/>
+            {/* <Route index element={<PrivateRoute><TutorialManagement/><TabNavigator /></PrivateRoute>}/> */}
+            <Route index element={<><TutorialManagement/><TabNavigator /></>}/>
           </Switch>
         }/>
         <Route path="*" element={<PageNotFound/>}/>
