@@ -27,7 +27,7 @@ const FeedCard = ({itemData, handleReaction, viewMode}:IFeedCardProps)=>{
   }
 
   return (
-    <Card sx={{width: '100vw', marginBottom:2, backgroundColor:'#eceff1', borderRadius:2}}>
+    <Card sx={{width: '110vw', maxWidth:500,  marginBottom:2, backgroundColor:'#eceff1', borderRadius:2}}>
     <CardHeader
       avatar={
         <Avatar sx={{ bgcolor: green[500] }} aria-label="recipe">

@@ -24,7 +24,7 @@ const FeedContainer = ({handleReaction, handleLoader, querySelector, viewMode, h
     const tutorialItems = useSelector(querySelector) as Array<IFeedItem>;
 
     return(
-        <Container sx={{display:'flex', justifyContent:'center', alignItems:'center', flexDirection:'column'}}>
+        <Container sx={{display:'flex', paddingLeft:0, paddingRight:0, justifyContent:'center', alignItems:'center', flexDirection:'column'}}>
             
             <Container  className="feedContainer" >
             <Container sx={{textAlign:'center'}}>

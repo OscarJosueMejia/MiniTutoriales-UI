@@ -53,10 +53,12 @@ const TutorialManagement = () => {
     const formik = useFormik({
       initialValues: initialValues,
       validationSchema:Yup.object(validationSchema()),
+      
       onSubmit: async (formValues) => {
+          setUploadingImgs(true);
           const dataPreparation = {
-          tutorialId: formValues.tutorialId,
-          userId:'6355bf4a972277413bb7ddca', 
+            tutorialId: formValues.tutorialId,
+            userId:'6355bf4a972277413bb7ddca', 
           title:formValues.title,
           description:formValues.description, 
           categoryId:'6355bf4a972277423bb7ddca', 
@@ -64,6 +66,7 @@ const TutorialManagement = () => {
           steps:await uploadImagesFB(formValues.steps), 
           tags:formValues.tags
         }
+        setUploadingImgs(false);
 
         if (isUpdate) {
           await updateContent(dataPreparation);
@@ -72,14 +75,6 @@ const TutorialManagement = () => {
           await uploadContent(dataPreparation);
           Navigator('/home/');
         }
-
-          // await uploadContent({userId:'6355bf4a972277413bb7ddca', 
-          // title:formValues.title,
-          // description:formValues.description, 
-          // categoryId:1, 
-          // requirements:formValues.requirements, 
-          // steps:await uploadImagesFB(formValues.steps), 
-          // tags:formValues.tags});
       } 
     })
 
@@ -91,7 +86,7 @@ const TutorialManagement = () => {
               formik={formik}
             />
           </Container>
-          <ModalLoadingIndicator show={isLoading || isUpdating} />
+          <ModalLoadingIndicator show={isLoading || isUpdating || uploadingImgs} />
         </>
     );
 }

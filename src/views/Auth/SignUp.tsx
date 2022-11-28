@@ -1,42 +1,43 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
+import {Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Link, Grid, Box, Typography, Container} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useSigninMutation } from '@store/Services/Security';
+import { LoadingButton } from '@mui/lab';
 
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import { useFormik } from "formik";
+import * as Yup from 'yup';
+import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
 
+interface IFormValues {
+  firstName:string;
+  lastName:string;
+  username:string;
+  email:string;
+  password:string;
+}
+
 export default function SignUp() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
+  const Navigator = useNavigate();
+  const [signUp, { isLoading, status, error }] = useSigninMutation();
+
+  const initialValues:IFormValues = { firstName:"", lastName:"", username:"", email:"", password:"" }
+
+
+  const formik = useFormik({
+    initialValues: initialValues,
+    validationSchema:Yup.object(validationSchema()),
+    
+    onSubmit: async (formValues) => {
+      await signUp(
+        {name:`${formValues.firstName} ${formValues.lastName}`,
+          username:formValues.username,
+          email:formValues.email,
+          password:formValues.password
+      });
+      Navigator('/home/');
+    } 
+  })
 
   return (
     <ThemeProvider theme={theme}>
@@ -50,82 +51,111 @@ export default function SignUp() {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
+          <Avatar sx={{ m: 1, bgcolor:'#e4e4e4', width:'70px', height:'70px', pb:0.5 }} >
+            <img src="https://cdn-icons-png.flaticon.com/512/3176/3176369.png" alt="" width='50px' />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign up
+            Crear Cuenta
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box component="form" noValidate onSubmit={formik.handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  autoComplete="given-name"
                   name="firstName"
                   required
                   fullWidth
+                  value={formik.values.firstName}
+                  onChange={(e)=>{formik.setFieldValue('firstName', e.target.value)}}
+                  error={formik.errors.firstName !== undefined}
+                  helperText={formik.errors.firstName}
                   id="firstName"
-                  label="First Name"
+                  label="Nombre"
                   autoFocus
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  required
-                  fullWidth
                   id="lastName"
-                  label="Last Name"
                   name="lastName"
-                  autoComplete="family-name"
+                  label="Apellido"
+                  value={formik.values.lastName}
+                  onChange={(e)=>{formik.setFieldValue('lastName', e.target.value)}}
+                  error={formik.errors.lastName !== undefined}
+                  helperText={formik.errors.lastName}
+                  required
+                  fullWidth
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  id="username"
+                  name="username"
+                  label="Nombre de Usuario"
+                  value={formik.values.username}
+                  onChange={(e)=>{formik.setFieldValue('username', e.target.value)}}
+                  error={formik.errors.username !== undefined}
+                  helperText={formik.errors.username}
                   required
                   fullWidth
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
                   id="email"
-                  label="Email Address"
                   name="email"
-                  autoComplete="email"
+                  label="Email"
+                  value={formik.values.email}
+                  onChange={(e)=>{formik.setFieldValue('email', e.target.value)}}
+                  error={formik.errors.email !== undefined}
+                  helperText={formik.errors.email}
+                  required
+                  fullWidth
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  id="password"
+                  name="password"
+                  label="Contraseña"
+                  type="password"
+                  value={formik.values.password}
+                  onChange={(e)=>{formik.setFieldValue('password', e.target.value)}}
+                  error={formik.errors.password !== undefined}
+                  helperText={formik.errors.password}
                   required
                   fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
                 />
               </Grid>
             </Grid>
-            <Button
+            <LoadingButton
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              loading={isLoading}
+              sx={{ mt: 5, mb: 2 }}
             >
-              Sign Up
-            </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
+              Registrarme
+            </LoadingButton>
+            <Grid container justifyContent="flex-end" sx={{mt:2}}>
+              <Grid item >
                 <Link href="#" variant="body2">
-                  Already have an account? Sign in
+                  Ya tienes una cuenta? Inicia Sesión
                 </Link>
               </Grid>
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
       </Container>
     </ThemeProvider>
   );
+}
+
+function validationSchema(){
+  return {
+      firstName: Yup.string().required("Campo Requerido"),
+      lastName: Yup.string().required("Campo Requerido"),
+      username: Yup.string().required("Campo requerido"),
+      email: Yup.string().email('Correo No Válido').required("Campo requerido"),
+      password: Yup.string().matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, 'Contraseña Débil').required("Campo requerido"),
+  }
 }

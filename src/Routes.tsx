@@ -7,12 +7,14 @@ import { Tutorial, TutorialManagement } from '@views/Tutorial';
 import ProfileView from '@views/Profile';
 import TabNavigator from '@components/TabNavigator';
 import SignIn from '@views/Auth/SignIn';
-
+import SignUp from '@views/Auth/SignUp';
 const Routes = () => {
   return (
     <Router >
       <Switch>
         <Route path='/login' element={<SignIn />} />
+        <Route path='/signup' element={<SignUp />} />
+        
         <Route path="/home/*" element={
           <Switch>
             <Route index element={<><Feed/><TabNavigator /></>}/>
