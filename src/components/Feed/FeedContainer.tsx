@@ -1,9 +1,9 @@
-import {  MutableRefObject } from 'react';
-
+import { TViewMode } from '@views/Feed/FeedLoader';
 import { Container, Button, Chip} from "@mui/material";
 import FeedCard from "./FeedCard";
 import { useSelector } from "react-redux";
-import { selectFeedItems } from "@store/Slices/feedSlice";
+import { IFeedItem, selectFeedItems } from "@store/Slices/feedSlice";
+
 
 interface IReactionBody {
     mode:'ADD'|'REMOVE';
@@ -14,12 +14,13 @@ interface IReactionBody {
 
 interface IFeedContainerProps {
     handleReaction: (params:IReactionBody) => {};
-    handleScroll: () => void;
-    scrollRef: MutableRefObject<HTMLInputElement>
+    viewMode:TViewMode;
+    querySelector: any;
+    handleLoader: () => void;
 }
 
-const FeedContainer = ({handleReaction, handleScroll, scrollRef}:IFeedContainerProps) => {
-    const tutorialItems = useSelector(selectFeedItems);
+const FeedContainer = ({handleReaction, handleLoader, querySelector, viewMode}:IFeedContainerProps) => {
+    const tutorialItems = useSelector(querySelector) as Array<IFeedItem>;
 
     return(
         <Container sx={{display:'flex', justifyContent:'center', alignItems:'center', flexDirection:'column'}}>
@@ -32,11 +33,11 @@ const FeedContainer = ({handleReaction, handleScroll, scrollRef}:IFeedContainerP
             </Container>
                 {
                     tutorialItems.map(item=>{
-                        return(<FeedCard key={item._id as string } itemData={item} handleReaction={handleReaction} />)
+                        return(<FeedCard key={item._id as string } itemData={item} handleReaction={handleReaction} viewMode={viewMode} />)
                     })
                 }
             </Container>
-            <Button onClick={handleScroll} sx={{mt:'-2vh', mb:'10vh', alignSelf:'center'}} >Mostrar Más</Button>
+            <Button onClick={handleLoader} sx={{mt:'-2vh', mb:'10vh', alignSelf:'center'}} >Mostrar Más</Button>
         </Container>
     )
 } 

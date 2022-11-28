@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {IFeedItem} from '@store/Slices/feedSlice';
-
+import { TViewMode } from '@views/Feed/FeedLoader';
 import { Card, CardContent, CardActions, CardMedia, Typography, CardHeader, Avatar, IconButton } from "@mui/material";
 import { green } from "@mui/material/colors";
 import { RequirementsLiteList } from '@components/Requirements';
@@ -11,15 +11,12 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 
 interface ITutorialBodyParams {
   itemData:IFeedItem;
+  viewMode:TViewMode;
 }
 
-const TutorialBody = ({itemData}:ITutorialBodyParams) => {
+const TutorialBody = ({itemData, viewMode}:ITutorialBodyParams) => {
     
     const {_id ,title, createdAt, description, requirements, reactionsCount, steps, userLiked, author_info} = itemData;
-    // const [requirements2, setRequirements] = useState([
-    //   "Requisito 1", "Requisito 2", "Requisito 3"
-    // ]);
-
     return (
         <Card sx={{width: '100vw', marginBottom:2, backgroundColor:'#f5f5f5', borderRadius:3}}>
         <CardHeader

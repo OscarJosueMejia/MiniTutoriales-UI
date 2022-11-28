@@ -48,8 +48,11 @@ const TutorialForm = ({formik}:ITutorialFormProps) => {
             newSteps = steps.filter(step => step.stepNumber !== stepUpd.stepNumber);
             newSteps = newSteps.map(o => { if(o.stepNumber > stepUpd.stepNumber){o.stepNumber--} return o})
         }
+
+        if(mode !== 'CANCEL'){
+            formik.setFieldValue('steps',newSteps);
+        }
         // setSteps(newSteps);
-        formik.setFieldValue('steps',newSteps);
         setStepUpdOpen(false);
     };
   

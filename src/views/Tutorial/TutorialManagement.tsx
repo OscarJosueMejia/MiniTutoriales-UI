@@ -1,9 +1,10 @@
 //Logic
 import {useState} from 'react';
 import { useUploadContentMutation } from '@store/Services/Creator';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { uploadImage } from '@utils/firebase';
 import { IStep } from '@components/Steps/StepContainer';
+import { IFeedItem } from '@store/Slices/feedSlice';
 //Components
 import { Container } from "@mui/material";
 import { AlertDialog, ModalLoadingIndicator } from "@components/Misc";
@@ -19,15 +20,31 @@ interface IFormValues {
   title:string;
   description:string;
   steps:Array<IStep>;
-  requirements:Array<string>;
+  requirements:unknown;
   tags:Array<{tagDescription: string}>;
 }
 
 const TutorialManagement = () => {
+    const Location = useLocation();
     const Navigator = useNavigate();
+
+    const isUpdate = Location.state.isUpdate;
+    const itemData = Location.state.itemData as IFeedItem;
+
+    const [uploadingImgs, setUploadingImgs] = useState(false);
     const [uploadContent, { isLoading, status, error }] = useUploadContentMutation();
 
-    const initialValues:IFormValues = {title:"", description:"", steps:[], requirements:[], tags:[]}
+    let initialValues:IFormValues = {title:"", description:"", steps:[], requirements:[], tags:[]}
+
+    if (isUpdate && itemData !== undefined) {
+      initialValues = {
+        title:itemData.title, 
+        description:itemData.description,
+        steps:itemData.steps,
+        requirements:itemData.requirements as unknown,
+        tags:itemData.tags as Array<{tagDescription: string}>
+      }
+    }
 
     const formik = useFormik({
       initialValues: initialValues,
@@ -38,20 +55,15 @@ const TutorialManagement = () => {
           description:formValues.description, 
           categoryId:1, 
           requirements:formValues.requirements, 
-          steps:formValues.steps, 
+          steps:await uploadImagesFB(formValues.steps), 
           tags:formValues.tags});
           Navigator('/home/')
       } 
     })
 
-    const uploadImages = async () => {
-      // let imgURI = await uploadImage(acceptedFiles[0]);
-      // alert(imgURI);
-    }
-
     return (
         <>
-          <Header title="Crear un Tutorial" showActionBtn={true} btnTitle="Publicar" btnAction={()=>{formik.handleSubmit()}} />
+          <Header title={!isUpdate ? "Crear un Tutorial" : "Editar Tutorial"} showActionBtn={true} btnTitle={!isUpdate ? "Publicar" : " Aplicar Cambios"} btnAction={()=>{formik.handleSubmit()}} />
           <Container className="tutorialViewContainer"  >
             <TutorialForm  
               formik={formik}
@@ -73,3 +85,16 @@ function validationSchema(){
       tags: Yup.array().min(1, 'Agregue al menos una etiqueta.'),
   }
 }
+
+async function uploadImagesFB(steps:Array<IStep>){
+  const stepsWithURL = steps.map(async (o) => {
+    if (o.imgURL !== undefined && typeof o.imgURL !== 'string') {
+      o.imgURL = await uploadImage(o.imgURL as File, 'StepImages');
+    }
+    return o;
+  });
+
+  return Promise.all(stepsWithURL);
+}
+
+//{{HOST}}/tutorial/update/:id

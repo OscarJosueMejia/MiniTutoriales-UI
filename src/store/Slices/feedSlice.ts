@@ -17,7 +17,7 @@ export interface IFeedItem {
   _id:unknown;
 }
 
-interface FeedData {
+export interface FeedData {
     items:Array<IFeedItem>;
     itemsPerPage:number;
     page:number;

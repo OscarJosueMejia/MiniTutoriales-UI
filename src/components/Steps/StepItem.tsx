@@ -36,7 +36,12 @@ export const StepItem = ({ step, updateStep } : IStepProps) => {
 
         {!step.imgURL ? null
             :<div style={{marginTop:'3vh', marginBottom:'2vh',textAlign:'center'}}>
-                <img style={{maxWidth:'40%', borderRadius:10}} src={URL.createObjectURL(step.imgURL as File)} alt=""></img>
+                {
+                    (typeof step.imgURL === 'string') 
+                    ?<img style={{maxWidth:'40%', borderRadius:10}} src={step.imgURL as string} alt=""></img>
+                    :<img style={{maxWidth:'40%', borderRadius:10}} src={URL.createObjectURL(step.imgURL as File)} alt=""></img>
+                }
+                
             </div>
         }
     </Container>

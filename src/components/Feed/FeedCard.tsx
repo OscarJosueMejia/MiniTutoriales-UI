@@ -4,6 +4,7 @@ import { green } from "@mui/material/colors";
 import ShareIcon from '@mui/icons-material/Share';
 import {IFeedItem} from '@store/Slices/feedSlice';
 import { useNavigate } from "react-router-dom";
+import { TViewMode } from '@views/Feed/FeedLoader';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 
 interface IReactionBody {
@@ -15,10 +16,11 @@ interface IReactionBody {
 
 interface IFeedCardProps {
   itemData:IFeedItem
+  viewMode:TViewMode
   handleReaction: (params:IReactionBody) => {}
 }
 
-const FeedCard = ({itemData, handleReaction}:IFeedCardProps)=>{
+const FeedCard = ({itemData, handleReaction, viewMode}:IFeedCardProps)=>{
   const Navigate = useNavigate();
   const {_id ,title, createdAt, description, reactionsCount, userLiked, author_info} = itemData;
   const [isUserLiked, setIsUserLiked] = useState(userLiked);
@@ -42,7 +44,7 @@ const FeedCard = ({itemData, handleReaction}:IFeedCardProps)=>{
         <IconButton aria-label="settings">
         </IconButton>
       }
-      onClick={()=>{Navigate('/home/tutorial',{state:{_id}})}}
+      onClick={()=>{Navigate('/home/tutorial',{state:{_id, viewMode}})}}
       title={title}
       subheader={new Date(createdAt).toLocaleString('es-ES', {day:'2-digit',month:'long', year:'numeric', hour:'numeric', hour12:true, minute:'2-digit'})}
     />

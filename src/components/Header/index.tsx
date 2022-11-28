@@ -1,4 +1,5 @@
-import { Box, AppBar, Toolbar, IconButton,Button, Typography, InputBase} from "@mui/material";
+import { Box, AppBar, Toolbar, IconButton, Typography, InputBase} from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import { styled, alpha } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import CheckIcon from '@mui/icons-material/Check';
@@ -49,6 +50,7 @@ interface IHeaderOptions {
   title?:string;
   showActionBtn?:boolean;
   btnTitle?:string;
+  btnLoading?:boolean;
   btnAction?:()=>void;
   showSearchBar?:boolean;
   searchBarOnChange?:(e:unknown)=>void;
@@ -56,7 +58,7 @@ interface IHeaderOptions {
 
 
 const Header = (props:IHeaderOptions) => {
-    const {showActionBtn, showSearchBar, title, btnAction, btnTitle, searchBarOnChange} = props;
+    const {showActionBtn, showSearchBar, title, btnAction, btnTitle, btnLoading, searchBarOnChange} = props;
 
     return(
         <Box sx={{ flexGrow: 1, marginBottom:4 }}>
@@ -85,7 +87,7 @@ const Header = (props:IHeaderOptions) => {
               :null
             }
             {
-              showActionBtn ?  <Button color="inherit" onClick={btnAction} endIcon={<CheckIcon />} >{btnTitle}</Button>
+              showActionBtn ?  <LoadingButton color="inherit" onClick={btnAction} endIcon={<CheckIcon />} loading={btnLoading} loadingPosition='end'>{btnTitle}</LoadingButton>
               :null
             }
            

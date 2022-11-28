@@ -26,32 +26,25 @@ const TabNavigator = () => {
         <BottomNavigation   sx={{width: 500}} value={value} onChange={handleChange}>
             <BottomNavigationAction
             label="Principal"
-            value="/home"
+            value="/home/"
             icon={<HomeOutlinedIcon />}
             />
             <BottomNavigationAction
             label="Buscar"
-            value="/find"
+            value="/find/"
             icon={<SearchSharpIcon />}
             />
             <BottomNavigationAction
             label="Categorías"
-            value="/categories"
+            value="/categories/"
             icon={<FormatListBulletedOutlinedIcon />}
             />
             <BottomNavigationAction 
             label="Mi Perfil" 
-            value="/profile" 
+            value="/user/" 
             icon={<PersonOutlineOutlinedIcon />} 
             />
         </BottomNavigation>
-        <SpeedDial
-          ariaLabel="SpeedDial basic example"
-          sx={{ position: 'absolute', bottom: '8vh', right: '2vh'}}
-          icon={<AddIcon />}
-          onClick={()=>{Navigator("/creator")}}
-        >
-        </SpeedDial>
       </Paper>
 
     );

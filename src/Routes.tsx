@@ -4,6 +4,7 @@ import { PageNotFound } from '@components/Misc';
 
 import Feed from '@views/Feed';
 import { Tutorial, TutorialManagement } from '@views/Tutorial';
+import ProfileView from '@views/Profile';
 import TabNavigator from '@components/TabNavigator';
 import SignIn from '@views/Auth/SignIn';
 
@@ -12,17 +13,23 @@ const Routes = () => {
     <Router >
       <Switch>
         <Route path='/login' element={<SignIn />} />
-        <Route path="/home*" element={
+        <Route path="/home/*" element={
           <Switch>
             <Route index element={<><Feed/><TabNavigator /></>}/>
             <Route path="tutorial" element={<><Tutorial/><TabNavigator/></>}/>
           </Switch>
         }/>
 
-        <Route path="/creator*" element={
+        <Route path="/creator/*" element={
           <Switch>
             {/* <Route index element={<PrivateRoute><TutorialManagement/><TabNavigator /></PrivateRoute>}/> */}
             <Route index element={<><TutorialManagement/><TabNavigator /></>}/>
+          </Switch>
+        }/>
+        <Route path="/user/*" element={
+          <Switch>
+            {/* <Route index element={<PrivateRoute><TutorialManagement/><TabNavigator /></PrivateRoute>}/> */}
+            <Route index element={<><ProfileView/><TabNavigator /></>}/>
           </Switch>
         }/>
         <Route path="*" element={<PageNotFound/>}/>
