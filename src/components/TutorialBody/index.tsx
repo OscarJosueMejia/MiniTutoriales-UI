@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {IFeedItem} from '@store/Slices/feedSlice';
-import { TViewMode } from '@views/Feed/FeedLoader';
+import { TViewMode, IReactionBody } from '@views/Feed/FeedLoader';
 import { Card, CardContent, CardActions, CardMedia, Typography, CardHeader, Avatar, IconButton } from "@mui/material";
 import { green } from "@mui/material/colors";
 import { RequirementsLiteList } from '@components/Requirements';
@@ -12,11 +12,21 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 interface ITutorialBodyParams {
   itemData:IFeedItem;
   viewMode:TViewMode;
+  handleReaction: (params:IReactionBody) => {};
 }
 
-const TutorialBody = ({itemData, viewMode}:ITutorialBodyParams) => {
-    
+const TutorialBody = ({itemData, handleReaction}:ITutorialBodyParams) => {
     const {_id ,title, createdAt, description, requirements, reactionsCount, steps, userLiked, author_info} = itemData;
+      
+    const [isUserLiked, setIsUserLiked] = useState(userLiked);
+    const [userLikesCount, setUserLikesCount] = useState(reactionsCount.reaction_IsUtil.length);
+
+    const HandleReactionClick = () => {
+      handleReaction({mode:!isUserLiked ? 'ADD' : 'REMOVE', tutorialId:_id, userId:'6355bf4a972277413bb7ddca', reactionName:'LIKE'});
+      setIsUserLiked(!isUserLiked);
+      setUserLikesCount(!isUserLiked ? userLikesCount + 1 : userLikesCount - 1)
+    }
+    
     return (
         <Card sx={{width: '100vw', marginBottom:2, backgroundColor:'#f5f5f5', borderRadius:3}}>
         <CardHeader
@@ -52,10 +62,11 @@ const TutorialBody = ({itemData, viewMode}:ITutorialBodyParams) => {
 
         <CardActions disableSpacing>
           <div style={{display:'flex', alignItems:'center', marginRight:'2vw'}}>
-            <IconButton aria-label="add to favorites">
-              <ThumbUpIcon/>
+            <IconButton aria-label="add to favorites"
+            onClick={HandleReactionClick}>
+              <ThumbUpIcon color={isUserLiked ? 'info' : "disabled"} />
             </IconButton>
-            <Typography sx={{ml:0.4, mt:'0.2vh'}}>0</Typography>
+            <Typography sx={{ml:0.4, mt:'0.2vh'}}>{userLikesCount}</Typography>
           </div>
           <IconButton aria-label="share">
             <ShareIcon  />

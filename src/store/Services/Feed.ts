@@ -31,6 +31,9 @@ export const feedApi = createApi({
       query: (tutorialId) => ({
         url: `one/${tutorialId}`,
         method: 'get',
+        params:{
+          userId:'6355bf4a972277413bb7ddca'
+        },
         headers: {
           apikey: process.env.REACT_APP_API_KEY,
         },

@@ -17,9 +17,10 @@ interface IFeedContainerProps {
     viewMode:TViewMode;
     querySelector: any;
     handleLoader: () => void;
+    hideLoaderBtn?:boolean;
 }
 
-const FeedContainer = ({handleReaction, handleLoader, querySelector, viewMode}:IFeedContainerProps) => {
+const FeedContainer = ({handleReaction, handleLoader, querySelector, viewMode, hideLoaderBtn}:IFeedContainerProps) => {
     const tutorialItems = useSelector(querySelector) as Array<IFeedItem>;
 
     return(
@@ -37,7 +38,7 @@ const FeedContainer = ({handleReaction, handleLoader, querySelector, viewMode}:I
                     })
                 }
             </Container>
-            <Button onClick={handleLoader} sx={{mt:'-2vh', mb:'10vh', alignSelf:'center'}} >Mostrar Más</Button>
+            { !hideLoaderBtn ? <Button onClick={handleLoader} sx={{mt:'-2vh', mb:'10vh', alignSelf:'center'}} >Mostrar Más</Button> : null}
         </Container>
     )
 } 

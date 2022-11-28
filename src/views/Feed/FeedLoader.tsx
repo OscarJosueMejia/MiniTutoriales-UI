@@ -21,9 +21,10 @@ interface IFeedProps{
   isLoading:boolean;
   isError:boolean;
   error:any;
+  hideLoaderBtn?:boolean;
 }
 
-export const FeedLoader = ({viewMode='MAIN', querySelector, currentPage, setCurrentPage, isLoading, isError, error}:IFeedProps) => {
+export const FeedLoader = ({viewMode='MAIN', querySelector, currentPage, setCurrentPage, isLoading, isError, error, hideLoaderBtn}:IFeedProps) => {
   const [ reaction ] = useReactionMutation();
   
   const handleLoader = () => {
@@ -42,7 +43,12 @@ export const FeedLoader = ({viewMode='MAIN', querySelector, currentPage, setCurr
     <>
       {(isLoading) ?
         <ContentLoadingIndicator />
-        :<FeedContainer viewMode={viewMode} handleReaction={handleReaction} querySelector={querySelector} handleLoader={handleLoader} />
+        :<FeedContainer 
+        hideLoaderBtn={ hideLoaderBtn }
+        viewMode={viewMode} 
+        handleReaction={handleReaction} 
+        querySelector={querySelector} 
+        handleLoader={handleLoader} />
       }
     </>
   );

@@ -26,4 +26,5 @@ export const userFeedSlice = createSlice({
 
 export const { setUserFeedItems } = userFeedSlice.actions;
 export const selectUserFeedItems = (state: RootState) => state.userFeed.items;
+export const selectUserFeedDetails = (state: RootState) => state.userFeed;
 export default userFeedSlice.reducer;

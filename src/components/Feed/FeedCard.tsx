@@ -4,15 +4,8 @@ import { green } from "@mui/material/colors";
 import ShareIcon from '@mui/icons-material/Share';
 import {IFeedItem} from '@store/Slices/feedSlice';
 import { useNavigate } from "react-router-dom";
-import { TViewMode } from '@views/Feed/FeedLoader';
+import { TViewMode, IReactionBody } from '@views/Feed/FeedLoader';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-
-interface IReactionBody {
-  mode:'ADD'|'REMOVE'; 
-  userId:unknown;
-  tutorialId:unknown;
-  reactionName:'LIKE'|'DISLIKE';
-}
 
 interface IFeedCardProps {
   itemData:IFeedItem
@@ -23,6 +16,7 @@ interface IFeedCardProps {
 const FeedCard = ({itemData, handleReaction, viewMode}:IFeedCardProps)=>{
   const Navigate = useNavigate();
   const {_id ,title, createdAt, description, reactionsCount, userLiked, author_info} = itemData;
+  
   const [isUserLiked, setIsUserLiked] = useState(userLiked);
   const [userLikesCount, setUserLikesCount] = useState(reactionsCount.reaction_IsUtil.length);
 
