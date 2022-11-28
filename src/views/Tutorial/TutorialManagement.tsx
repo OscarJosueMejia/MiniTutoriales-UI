@@ -1,6 +1,6 @@
 //Logic
 import {useState} from 'react';
-import { useUploadContentMutation } from '@store/Services/Creator';
+import { useUploadContentMutation, useUpdateContentMutation} from '@store/Services/Creator';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { uploadImage } from '@utils/firebase';
 import { IStep } from '@components/Steps/StepContainer';
@@ -17,6 +17,7 @@ import * as Yup from 'yup';
 import './tutorial.css';
 
 interface IFormValues {
+  tutorialId?:string;
   title:string;
   description:string;
   steps:Array<IStep>;
@@ -32,12 +33,15 @@ const TutorialManagement = () => {
     const itemData = Location.state.itemData as IFeedItem;
 
     const [uploadingImgs, setUploadingImgs] = useState(false);
+
     const [uploadContent, { isLoading, status, error }] = useUploadContentMutation();
+    const [updateContent, { isLoading:isUpdating}] = useUpdateContentMutation();
 
     let initialValues:IFormValues = {title:"", description:"", steps:[], requirements:[], tags:[]}
 
     if (isUpdate && itemData !== undefined) {
       initialValues = {
+        tutorialId:itemData._id as string,
         title:itemData.title, 
         description:itemData.description,
         steps:itemData.steps,
@@ -50,26 +54,44 @@ const TutorialManagement = () => {
       initialValues: initialValues,
       validationSchema:Yup.object(validationSchema()),
       onSubmit: async (formValues) => {
-          await uploadContent({userId:'6355bf4a972277413bb7ddca', 
+          const dataPreparation = {
+          tutorialId: formValues.tutorialId,
+          userId:'6355bf4a972277413bb7ddca', 
           title:formValues.title,
           description:formValues.description, 
-          categoryId:1, 
+          categoryId:'6355bf4a972277423bb7ddca', 
           requirements:formValues.requirements, 
           steps:await uploadImagesFB(formValues.steps), 
-          tags:formValues.tags});
-          Navigator('/home/')
+          tags:formValues.tags
+        }
+
+        if (isUpdate) {
+          await updateContent(dataPreparation);
+          Navigator('/user/');
+        }else{
+          await uploadContent(dataPreparation);
+          Navigator('/home/');
+        }
+
+          // await uploadContent({userId:'6355bf4a972277413bb7ddca', 
+          // title:formValues.title,
+          // description:formValues.description, 
+          // categoryId:1, 
+          // requirements:formValues.requirements, 
+          // steps:await uploadImagesFB(formValues.steps), 
+          // tags:formValues.tags});
       } 
     })
 
     return (
         <>
-          <Header title={!isUpdate ? "Crear un Tutorial" : "Editar Tutorial"} showActionBtn={true} btnTitle={!isUpdate ? "Publicar" : " Aplicar Cambios"} btnAction={()=>{formik.handleSubmit()}} />
+          <Header title={!isUpdate ? "Crear un Tutorial" : "Editar Tutorial"} showActionBtn={true} btnTitle={!isUpdate ? "Publicar" : " Aplicar Cambios"} btnIconType='CHECK' btnAction={()=>{formik.handleSubmit()}} />
           <Container className="tutorialViewContainer"  >
             <TutorialForm  
               formik={formik}
             />
           </Container>
-          <ModalLoadingIndicator show={isLoading} />
+          <ModalLoadingIndicator show={isLoading || isUpdating} />
         </>
     );
 }

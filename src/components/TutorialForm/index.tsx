@@ -103,7 +103,7 @@ const TutorialForm = ({formik}:ITutorialFormProps) => {
                     <TextField id="filled-basic" label="Título" variant={inputVariant} required
                     value={formik.values['title']} 
                     onChange={(e)=>{formik.setFieldValue('title',e.target.value)}} 
-                    error={formik.errors['title']}
+                    error={formik.errors['title'] !== undefined}
                     helperText={formik.errors['title']}/>
                     
                 </FormControl>
@@ -114,7 +114,7 @@ const TutorialForm = ({formik}:ITutorialFormProps) => {
                     <TextField id="filled-textarea" multiline
                     value={formik.values['description']} 
                     onChange={(e)=>{formik.setFieldValue('description',e.target.value)}}
-                    error={formik.errors['description']}
+                    error={formik.errors['description'] !== undefined}
                     helperText={formik.errors['description']}
                     maxRows={10} label="Descripción" variant={inputVariant} required/>
                 </FormControl>

@@ -19,7 +19,7 @@ const Tutorial = () => {
 
     return (
         <>
-          <Header title="MiniTutorial" showActionBtn={ viewMode === "USER" } btnTitle="Editar Tutorial" btnAction={()=>{Navigator("/creator", {state:{itemData:result.data, isUpdate:true}})}} />
+          <Header title="MiniTutorial" showActionBtn={ viewMode === "USER" } btnIconType='UPD' btnTitle="Editar Tutorial" btnAction={()=>{Navigator("/creator", {state:{itemData:result.data, isUpdate:true}})}} />
           {result.isLoading ?
             <ContentLoadingIndicator />
             :<Container className='tutorialViewContainer'>

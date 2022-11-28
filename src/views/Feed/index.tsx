@@ -35,7 +35,7 @@ const Feed = () => {
 
     return (
     <>
-      <Header title="MiniTutoriales" showActionBtn={true} btnTitle="Crear Tutorial" btnAction={()=>{Navigator("/creator", {state:{isUpdate:false}})}} />
+      <Header title="MiniTutoriales" showActionBtn={true} btnTitle="Crear Tutorial" btnIconType='ADD' btnAction={()=>{Navigator("/creator", {state:{isUpdate:false}})}} />
       <FeedLoader viewMode="MAIN"
         querySelector={selectFeedItems}
         currentPage={currentPage}

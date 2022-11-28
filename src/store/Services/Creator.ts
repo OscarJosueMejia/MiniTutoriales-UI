@@ -15,7 +15,17 @@ export const creatorApi = createApi({
         },
       })
     }),
+    updateContent: builder.mutation({
+      query: (body) => ({
+        url: `update/${body.tutorialId}`,
+        method: 'put',
+        body,
+        headers: {
+          apikey: process.env.REACT_APP_API_KEY,
+        },
+      })
+    }),
   }),
 });
 
-export const { useUploadContentMutation } = creatorApi;
+export const { useUploadContentMutation, useUpdateContentMutation } = creatorApi;

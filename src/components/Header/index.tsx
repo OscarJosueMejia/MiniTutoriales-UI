@@ -1,8 +1,9 @@
-import { Box, AppBar, Toolbar, IconButton, Typography, InputBase} from "@mui/material";
-import { LoadingButton } from "@mui/lab";
+import { Box, AppBar, Container, Toolbar, Typography, InputBase, Button} from "@mui/material";
 import { styled, alpha } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import CheckIcon from '@mui/icons-material/Check';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -52,26 +53,43 @@ interface IHeaderOptions {
   btnTitle?:string;
   btnLoading?:boolean;
   btnAction?:()=>void;
+  btnIconType?:'CHECK'|'ADD'|'UPD';
   showSearchBar?:boolean;
   searchBarOnChange?:(e:unknown)=>void;
 }
 
 
 const Header = (props:IHeaderOptions) => {
-    const {showActionBtn, showSearchBar, title, btnAction, btnTitle, btnLoading, searchBarOnChange} = props;
+    const {showActionBtn, showSearchBar, title, btnAction, btnTitle, btnIconType, searchBarOnChange} = props;
+    let iconForButton;
+    switch (btnIconType){
+      case 'CHECK':
+        iconForButton=<CheckIcon sx={{mt:-0.4}}/>
+      break;
+      case 'ADD':
+        iconForButton=<AddIcon sx={{mt:-0.4}}/>
+      break;
+      case 'UPD':
+        iconForButton=<EditIcon sx={{mt:-0.4}}/>
+      break;
+      default:
+        iconForButton=<></>
+      ;
+    }
 
     return(
         <Box sx={{ flexGrow: 1, marginBottom:4 }}>
         <AppBar position="fixed">
           <Toolbar>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ flexGrow: 1, display: {sm: 'block' } }}
-            >
-              {title}
-            </Typography>
+              <Typography
+                variant="h6"
+                noWrap
+                component="div"
+                sx={{ flexGrow: 1, display: {display:'flex', alignItems:'center' } }}
+              >
+                <img src="https://cdn-icons-png.flaticon.com/512/3176/3176369.png" alt="mini.png" width='30px' style={{marginRight:'0.5rem'}} />
+                {title}
+              </Typography>
             
             {showSearchBar ?
               <Search>
@@ -87,7 +105,7 @@ const Header = (props:IHeaderOptions) => {
               :null
             }
             {
-              showActionBtn ?  <LoadingButton color="inherit" onClick={btnAction} endIcon={<CheckIcon />} loading={btnLoading} loadingPosition='end'>{btnTitle}</LoadingButton>
+              showActionBtn ?  <Button color="inherit" onClick={btnAction} endIcon={iconForButton}>{btnTitle}</Button>
               :null
             }
            
