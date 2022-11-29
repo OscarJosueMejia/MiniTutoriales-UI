@@ -34,7 +34,7 @@ const SearchView = () => {
     return (
     <>
       <Header title="Buscar Tutoriales" />
-      <Container sx={{display:'flex', justifyContent:'center', mt:'12vh'}}> 
+      <Container sx={{display:'flex', justifyContent:'center', mt:'8vh'}}> 
         <Search>
           <SearchIconWrapper>
             <SearchIcon />

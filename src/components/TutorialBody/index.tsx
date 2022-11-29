@@ -1,13 +1,16 @@
+//Logic
 import {useState} from 'react';
 import {IFeedItem} from '@store/Slices/feedSlice';
-import { TViewMode, IReactionBody } from '@views/Feed/FeedLoader';
-import { Card, CardContent, CardActions, CardMedia, Typography, CardHeader, Avatar, IconButton } from "@mui/material";
-import { green } from "@mui/material/colors";
-import { RequirementsLiteList } from '@components/Requirements';
 import { StepContainerLite } from '@components/Steps';
-
-import ShareIcon from '@mui/icons-material/Share';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import { useAddCommentMutation, useDeleteCommentMutation } from '@store/Services/Feed';
+//Components
+import { Card, CardContent, Container, CardActions, CardMedia, Divider, Typography, CardHeader, FormControl, Avatar, IconButton, TextField, Button } from "@mui/material";
+import { green } from "@mui/material/colors";
+import { TViewMode, IReactionBody } from '@views/Feed/FeedLoader';
+import { RequirementsLiteList } from '@components/Requirements';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface ITutorialBodyParams {
   itemData:IFeedItem;
@@ -15,16 +18,47 @@ interface ITutorialBodyParams {
   handleReaction: (params:IReactionBody) => {};
 }
 
+export interface ITutorialComment{
+  _id?: unknown;
+  userId: unknown; 
+  authorName:string;
+  text: string;
+}
+
 const TutorialBody = ({itemData, handleReaction}:ITutorialBodyParams) => {
-    const {_id ,title, createdAt, description, requirements, reactionsCount, steps, userLiked, author_info} = itemData;
-      
+    const [ addComment ] = useAddCommentMutation();
+    const [ deleteComment ] = useDeleteCommentMutation();
+    const {_id ,title, createdAt, description, requirements, comments, reactionsCount, steps, userLiked, author_info} = itemData;
+    
+    const currentUserId = '6355bf4a972277413bb7ddca';
+    const currentUserName = 'Oscar Mejia';
+
     const [isUserLiked, setIsUserLiked] = useState(userLiked);
     const [userLikesCount, setUserLikesCount] = useState(reactionsCount.reaction_IsUtil.length);
 
+    const [postComments, setPostComments] = useState<Array<ITutorialComment>>(comments);
+    const [newComment, setNewComment] = useState("");
+
     const HandleReactionClick = () => {
-      handleReaction({mode:!isUserLiked ? 'ADD' : 'REMOVE', tutorialId:_id, userId:'6355bf4a972277413bb7ddca', reactionName:'LIKE'});
+      handleReaction({mode:!isUserLiked ? 'ADD' : 'REMOVE', tutorialId:_id, userId:currentUserId, reactionName:'LIKE'});
       setIsUserLiked(!isUserLiked);
       setUserLikesCount(!isUserLiked ? userLikesCount + 1 : userLikesCount - 1)
+    }
+
+    const HandleAddComment = async () => {
+      const commentStructure = {tutorialId:_id as string, userId:currentUserId, authorName:currentUserName, text:newComment}
+      await addComment(commentStructure);
+      let newLocalComments = [...postComments];
+      newLocalComments.push(commentStructure);
+      setPostComments(newLocalComments);
+      setNewComment("");
+    }
+    const HandleDeleteComment = async (commentId:string) => {
+      const commentStructure = {tutorialId:_id as string, commentId}
+
+      await deleteComment(commentStructure);
+      let newLocalComments = postComments.filter(e => e._id !== commentId);
+      setPostComments(newLocalComments);
     }
     
     return (
@@ -34,10 +68,6 @@ const TutorialBody = ({itemData, handleReaction}:ITutorialBodyParams) => {
             <Avatar sx={{ bgcolor: green[500] }} aria-label="recipe">
             {`${(author_info[0].name).split(' ')[0][0]}${(author_info[0].name).split(' ')[1][0]}`}
             </Avatar>
-          }
-          action={
-            <IconButton aria-label="settings">
-            </IconButton>
           }
           title={title}
           
@@ -64,14 +94,52 @@ const TutorialBody = ({itemData, handleReaction}:ITutorialBodyParams) => {
           <div style={{display:'flex', alignItems:'center', marginRight:'2vw'}}>
             <IconButton aria-label="add to favorites"
             onClick={HandleReactionClick}>
-              <ThumbUpIcon color={isUserLiked ? 'info' : "disabled"} />
+              {isUserLiked 
+                ?<FavoriteIcon color='info' />
+                :<FavoriteBorderIcon />
+              }
             </IconButton>
             <Typography sx={{ml:0.4, mt:'0.2vh'}}>{userLikesCount}</Typography>
           </div>
-          <IconButton aria-label="share">
-            <ShareIcon  />
-          </IconButton>
         </CardActions>
+        
+        <Divider />
+        <Typography sx={{mt:2, ml:'0.8rem'}}>Comentarios</Typography>
+        <CardContent sx={{display:'flex', alignItems:'center'}}>
+        <FormControl fullWidth sx={{ m: 0 , bgcolor:'#f0f0f0'}}>
+              <TextField id="filled-textarea" multiline
+              maxRows={10} label="Escribe un Comentario..." variant='standard' onChange={(e)=>{setNewComment(e.target.value)}} />
+          </FormControl>
+          <Button sx={{ml:2}} variant='contained' disabled={newComment == ""} onClick={()=>{HandleAddComment()}}>Agregar</Button>
+        
+        </CardContent>
+          { postComments !== undefined && postComments.length > 0
+            ?<CardContent sx={{display:'flex', alignItems:'center', flexDirection:'column'}}>
+              {
+                postComments.map(comment=>{
+                  return(
+                    <Container sx={{px:0, my:0.5, py:0.7, bgcolor: 'background.paper', borderRadius:1, display:'flex', justifyContent:'space-between'}}>
+                      <div>
+                        <Typography color='#1976d2' sx={{fontSize:15, pl:"0.8rem"}}>{comment.authorName} {currentUserId === author_info[0]._id ? <span style={{marginLeft:2, color:"#787A91"}}>(Autor)</span>  : null } </Typography>
+                        <Typography sx={{pt:0.5, pl:"1rem"}}>{comment.text}</Typography>
+                      </div>
+                      { comment.userId === currentUserId 
+                        ? <IconButton sx={{mx:2}}  onClick={()=>{HandleDeleteComment(comment._id as string)}}>
+                            <DeleteIcon />
+                          </IconButton>
+                        : null
+                      }
+                      
+                    </Container>
+                  )
+                })
+              }
+              
+            </CardContent>
+            :<Typography sx={{textAlign:'center', my:2}}>Aún no hay Comentarios.</Typography>
+          }
+          
+          
       </Card>
       )
 } 

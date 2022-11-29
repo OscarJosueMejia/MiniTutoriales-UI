@@ -9,6 +9,7 @@ export interface IFeedItem {
   reactionsCount:{reaction_IsUtil:Array<string>,reaction_Dislike:Array<string>};
   requirements:string;
   steps:Array<IStep>;
+  comments:Array<{_id:string, userId:string, tutorialId:string, authorName:string, text:string}>
   tags:unknown;
   title:string;
   userLiked?:boolean;

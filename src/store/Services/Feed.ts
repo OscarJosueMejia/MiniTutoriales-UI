@@ -74,12 +74,33 @@ export const feedApi = createApi({
         },
       })
     }),
+    AddComment: builder.mutation({
+      query: (params:{userId:string, text:string, authorName:string, tutorialId:string}) => ({
+        url: `comment/${params.tutorialId}`,
+        method: 'put',
+        body:params,
+        headers: {
+          apikey: process.env.REACT_APP_API_KEY,
+        },
+      })
+    }),
+    DeleteComment: builder.mutation({
+      query: (params:{commentId:string, tutorialId:string}) => ({
+        url: `comment/remove/${params.tutorialId}/${params.commentId}`,
+        method: 'put',
+        headers: {
+          apikey: process.env.REACT_APP_API_KEY,
+        },
+      })
+    }),
   }),
 });
 
 export const { 
   useGetAllQuery, 
   useReactionMutation, 
+  useAddCommentMutation,
+  useDeleteCommentMutation,
   useFeedForLoggedQuery, 
   useLazyFeedForLoggedQuery,
   useGetOneQuery, 

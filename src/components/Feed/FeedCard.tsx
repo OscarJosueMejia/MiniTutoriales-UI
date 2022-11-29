@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Card, CardContent, CardActions, CardMedia, Button, Typography, CardHeader, Avatar, IconButton } from "@mui/material";
 import { green } from "@mui/material/colors";
-import ShareIcon from '@mui/icons-material/Share';
 import {IFeedItem} from '@store/Slices/feedSlice';
 import { useNavigate } from "react-router-dom";
 import { TViewMode, IReactionBody } from '@views/Feed/FeedLoader';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 interface IFeedCardProps {
   itemData:IFeedItem
@@ -57,13 +57,14 @@ const FeedCard = ({itemData, handleReaction, viewMode}:IFeedCardProps)=>{
       <div style={{display:'flex', alignItems:'center', marginRight:'2vw'}}>
         <IconButton aria-label="add to favorites"
         onClick={HandleReactionClick}>
-          <ThumbUpIcon color={isUserLiked ? 'info' : "disabled"} />
+          {isUserLiked 
+            ?<FavoriteIcon color='info' />
+            :<FavoriteBorderIcon />
+          }
+          
         </IconButton>
         <Typography sx={{ml:0.4, mt:'0.2vh'}}>{userLikesCount}</Typography>
       </div>
-      <IconButton aria-label="share">
-        <ShareIcon  />
-      </IconButton>
     </CardActions>
   </Card>
   )
