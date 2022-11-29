@@ -1,0 +1,17 @@
+h2{
+    text-align: center;
+}
+
+.form-control{
+    width: 45%;
+}
+
+
+
+@media only screen and (max-width: 524px) {
+    .form-control{
+        width: 90%;
+    }
+
+    
+}

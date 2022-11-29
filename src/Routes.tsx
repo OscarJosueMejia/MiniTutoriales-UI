@@ -2,10 +2,12 @@ import { BrowserRouter as Router, Route, Routes as Switch, Navigate } from 'reac
 import PrivateRoute from '@components/PrivateRoute';
 import { PageNotFound } from '@components/Misc';
 
+import Admin from '@layouts/Admin/index';
 import Feed from '@views/Feed';
 import { Tutorial, TutorialManagement } from '@views/Tutorial';
 import TabNavigator from '@components/TabNavigator';
 import SignIn from '@views/Auth/SignIn';
+import {CategoryList, CategoryManagement} from '@views/Categorias/index';
 
 const Routes = () => {
   return (
@@ -25,6 +27,11 @@ const Routes = () => {
           </Switch>
         }/>
         <Route path="*" element={<PageNotFound/>}/>
+        <Route path="/admin*" element={
+          <Switch>
+            <Route path='categorias' element={<Admin><CategoryManagement/></Admin>}></Route>
+          </Switch>
+        }/>
       </Switch>
       
     </Router>
