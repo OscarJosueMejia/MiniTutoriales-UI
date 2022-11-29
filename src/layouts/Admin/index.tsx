@@ -81,11 +81,11 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== "open" 
 
 const mdTheme = createTheme();
 
-interface Props {
+interface IProps {
   children: any;
 }
 
-const DashboardContent: React.FC<Props> = ({ children }) => {
+const DashboardContent = ({ children }:IProps) => {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
