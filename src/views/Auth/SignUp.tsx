@@ -12,16 +12,15 @@ const theme = createTheme();
 interface IFormValues {
   firstName:string;
   lastName:string;
-  username:string;
   email:string;
   password:string;
 }
 
 export default function SignUp() {
   const Navigator = useNavigate();
-  const [signUp, { isLoading, status, error }] = useSigninMutation();
+  const [signUp, { isLoading, status, isError, error }] = useSigninMutation();
 
-  const initialValues:IFormValues = { firstName:"", lastName:"", username:"", email:"", password:"" }
+  const initialValues:IFormValues = { firstName:"", lastName:"", email:"", password:"" }
 
 
   const formik = useFormik({
@@ -31,11 +30,12 @@ export default function SignUp() {
     onSubmit: async (formValues) => {
       await signUp(
         {name:`${formValues.firstName} ${formValues.lastName}`,
-          username:formValues.username,
           email:formValues.email,
           password:formValues.password
-      });
-      Navigator('/home/');
+      }).unwrap();
+      if(!isError){
+        Navigator('/auth/validate', {replace:true, state:{emailToVerify:formValues.email}});
+      }
     } 
   })
 
@@ -57,7 +57,7 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Crear Cuenta
           </Typography>
-          <Box component="form" noValidate onSubmit={formik.handleSubmit} sx={{ mt: 3 }}>
+          <Box component="form" noValidate onSubmit={formik.handleSubmit} sx={{ mt: 5 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -82,19 +82,6 @@ export default function SignUp() {
                   onChange={(e)=>{formik.setFieldValue('lastName', e.target.value)}}
                   error={formik.errors.lastName !== undefined}
                   helperText={formik.errors.lastName}
-                  required
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  id="username"
-                  name="username"
-                  label="Nombre de Usuario"
-                  value={formik.values.username}
-                  onChange={(e)=>{formik.setFieldValue('username', e.target.value)}}
-                  error={formik.errors.username !== undefined}
-                  helperText={formik.errors.username}
                   required
                   fullWidth
                 />
@@ -136,9 +123,12 @@ export default function SignUp() {
             >
               Registrarme
             </LoadingButton>
+            {isError?<Typography sx={{color:'red'}}>{(error as {data:{error:string}}).data.error}</Typography> 
+            : null
+          }
             <Grid container justifyContent="flex-end" sx={{mt:2}}>
               <Grid item >
-                <Link href="#" variant="body2">
+                <Link href="#" variant="body2" onClick={()=>{Navigator('/login/');}}>
                   Ya tienes una cuenta? Inicia Sesión
                 </Link>
               </Grid>
@@ -154,7 +144,6 @@ function validationSchema(){
   return {
       firstName: Yup.string().required("Campo Requerido"),
       lastName: Yup.string().required("Campo Requerido"),
-      username: Yup.string().required("Campo requerido"),
       email: Yup.string().email('Correo No Válido').required("Campo requerido"),
       password: Yup.string().matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, 'Contraseña Débil').required("Campo requerido"),
   }

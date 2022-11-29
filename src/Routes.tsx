@@ -8,17 +8,28 @@ import ProfileView from '@views/Profile';
 import TabNavigator from '@components/TabNavigator';
 import SignIn from '@views/Auth/SignIn';
 import SignUp from '@views/Auth/SignUp';
+import ValidateAccount from '@views/Auth/ValidateAccount';
+
 const Routes = () => {
   return (
     <Router >
       <Switch>
-        <Route path='/login' element={<SignIn />} />
-        <Route path='/signup' element={<SignUp />} />
-        
+        <Route path="/" element={<Navigate to="/auth" />} />
+
+        <Route path="/auth/*" index element={
+          <Switch>
+            <Route index element={<SignIn/>}/>
+            <Route path="signup" element={<SignUp/>}/>
+            <Route path="validate" element={<ValidateAccount/>}/>
+            <Route path="/*" element={<PageNotFound/>}/>
+          </Switch>
+        }/>
+
         <Route path="/home/*" element={
           <Switch>
             <Route index element={<><Feed/><TabNavigator /></>}/>
             <Route path="tutorial" element={<><Tutorial/><TabNavigator/></>}/>
+            <Route path="/*" element={<PageNotFound/>}/>
           </Switch>
         }/>
 
@@ -26,15 +37,18 @@ const Routes = () => {
           <Switch>
             {/* <Route index element={<PrivateRoute><TutorialManagement/><TabNavigator /></PrivateRoute>}/> */}
             <Route index element={<><TutorialManagement/><TabNavigator /></>}/>
+            <Route path="/*" element={<PageNotFound/>}/>
           </Switch>
         }/>
         <Route path="/user/*" element={
           <Switch>
             {/* <Route index element={<PrivateRoute><TutorialManagement/><TabNavigator /></PrivateRoute>}/> */}
             <Route index element={<><ProfileView/><TabNavigator /></>}/>
+            <Route path="/*" element={<PageNotFound/>}/>
           </Switch>
         }/>
-        <Route path="*" element={<PageNotFound/>}/>
+
+        <Route path="/*" element={<PageNotFound/>}/>
       </Switch>
       
     </Router>

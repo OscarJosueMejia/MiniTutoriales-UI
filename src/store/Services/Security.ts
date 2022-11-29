@@ -24,7 +24,17 @@ export const securityApi = createApi({
         },
       })
     }),
+    verifyAccount: builder.mutation({
+      query: (credentials) => ({
+        url: 'verifyAccount',
+        method: 'POST',
+        body: credentials,
+        headers: {
+          apikey: process.env.REACT_APP_API_KEY,
+        },
+      })
+    }),
   }),
 });
 
-export const {useLoginMutation, useSigninMutation} = securityApi;
+export const {useLoginMutation, useSigninMutation, useVerifyAccountMutation} = securityApi;
