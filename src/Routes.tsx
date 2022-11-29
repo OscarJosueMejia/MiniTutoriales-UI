@@ -9,6 +9,7 @@ import TabNavigator from '@components/TabNavigator';
 import SignIn from '@views/Auth/SignIn';
 import SignUp from '@views/Auth/SignUp';
 import ValidateAccount from '@views/Auth/ValidateAccount';
+import SearchView from '@views/Search';
 
 const Routes = () => {
   return (
@@ -40,6 +41,15 @@ const Routes = () => {
             <Route path="/*" element={<PageNotFound/>}/>
           </Switch>
         }/>
+        
+        <Route path="/find/*" element={
+          <Switch>
+            {/* <Route index element={<PrivateRoute><TutorialManagement/><TabNavigator /></PrivateRoute>}/> */}
+            <Route index element={<><SearchView/><TabNavigator /></>}/>
+            <Route path="/*" element={<PageNotFound/>}/>
+          </Switch>
+        }/>
+
         <Route path="/user/*" element={
           <Switch>
             {/* <Route index element={<PrivateRoute><TutorialManagement/><TabNavigator /></PrivateRoute>}/> */}

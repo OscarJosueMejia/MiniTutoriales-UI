@@ -1,5 +1,5 @@
 import { TViewMode } from '@views/Feed/FeedLoader';
-import { Container, Button, Chip} from "@mui/material";
+import { Container, Button, Chip, Typography} from "@mui/material";
 import FeedCard from "./FeedCard";
 import { useSelector } from "react-redux";
 import { IFeedItem, selectFeedItems } from "@store/Slices/feedSlice";
@@ -27,15 +27,17 @@ const FeedContainer = ({handleReaction, handleLoader, querySelector, viewMode, h
         <Container sx={{display:'flex', paddingLeft:0, paddingRight:0, justifyContent:'center', alignItems:'center', flexDirection:'column'}}>
             
             <Container  className="feedContainer" >
-            <Container sx={{textAlign:'center'}}>
+            {/* <Container sx={{textAlign:'center'}}>
                 <Chip label="Categoria1" sx={{mb:2, mx:0.5}} />
                 <Chip label="Categoria2" sx={{mb:2, mx:0.5}} />
                 <Chip label="Categoria3" sx={{mb:2, mx:0.5}} />
-            </Container>
-                {
+            </Container> */}
+                {tutorialItems.length > 0 ?
+
                     tutorialItems.map(item=>{
                         return(<FeedCard key={item._id as string } itemData={item} handleReaction={handleReaction} viewMode={viewMode} />)
                     })
+                :<Typography>No se encontraron Tutoriales</Typography>
                 }
             </Container>
             { !hideLoaderBtn ? <Button onClick={handleLoader} sx={{mt:'-2vh', mb:'10vh', alignSelf:'center'}} >Mostrar Más</Button> : null}

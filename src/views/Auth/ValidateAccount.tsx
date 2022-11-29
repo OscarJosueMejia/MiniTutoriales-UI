@@ -36,6 +36,7 @@ export default function ValidateAccount() {
       const data = await verifyAccount(
         {email:formValues.email, pin:formValues.pin});
       if(!isError){
+        //
         Navigator('/home/');
       }
     } 

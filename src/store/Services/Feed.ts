@@ -52,6 +52,18 @@ export const feedApi = createApi({
         },
       })
     }),
+    search: builder.query({
+      query: (params:{search:string, userId:string}) => ({
+        url: `custom/${params.search}`,
+        method: 'get',
+        params:{
+          userId:params.userId
+        },
+        headers: {
+          apikey: process.env.REACT_APP_API_KEY,
+        },
+      })
+    }),
     reaction: builder.mutation({
       query: (params) => ({
         url: `reaction/${params.tutorialId}`,
@@ -72,4 +84,6 @@ export const {
   useLazyFeedForLoggedQuery,
   useGetOneQuery, 
   useByUserQuery, 
-  useLazyByUserQuery} = feedApi;
+  useLazyByUserQuery,
+  useLazySearchQuery,
+} = feedApi;
