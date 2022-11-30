@@ -1,17 +1,20 @@
 import { useState } from 'react';
 import { Card, CardContent, CardActions, CardMedia, Button, Typography, CardHeader, Avatar, IconButton } from "@mui/material";
-import { green } from "@mui/material/colors";
+import { green, lightBlue, lightGreen, indigo, orange, teal} from "@mui/material/colors";
 import {IFeedItem} from '@store/Slices/feedSlice';
 import { useNavigate } from "react-router-dom";
 import { TViewMode, IReactionBody } from '@views/Feed/FeedLoader';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { motion } from 'framer-motion';
 
 interface IFeedCardProps {
   itemData:IFeedItem
   viewMode:TViewMode
   handleReaction: (params:IReactionBody) => {}
 }
+
+const colors = [green[500], lightBlue[500], lightGreen[500], indigo[500], orange[500], teal[500]];
 
 const FeedCard = ({itemData, handleReaction, viewMode}:IFeedCardProps)=>{
   const Navigate = useNavigate();
@@ -27,10 +30,11 @@ const FeedCard = ({itemData, handleReaction, viewMode}:IFeedCardProps)=>{
   }
 
   return (
-    <Card sx={{width: '110vw', maxWidth:500,  marginBottom:2, backgroundColor:'#eceff1', borderRadius:2}}>
+    <motion.div style={{width: '90vw', maxWidth:500}} initial={{ scale: 0 }} animate={{ rotate: 0, scale: 1 }} transition={{type:'spring', stiffness: 180, damping: 20}}>
+    <Card sx={{marginBottom:2, backgroundColor:'#eceff1', borderRadius:2}}>
     <CardHeader
       avatar={
-        <Avatar sx={{ bgcolor: green[500] }} aria-label="recipe">
+        <Avatar sx={{ bgcolor: colors[4] }} aria-label="recipe">
         {`${(author_info[0].name).split(' ')[0][0]}${(author_info[0].name).split(' ')[1][0]}`}
         </Avatar>
       }
@@ -67,6 +71,7 @@ const FeedCard = ({itemData, handleReaction, viewMode}:IFeedCardProps)=>{
       </div>
     </CardActions>
   </Card>
+  </motion.div>
   )
 }
 export default FeedCard;
