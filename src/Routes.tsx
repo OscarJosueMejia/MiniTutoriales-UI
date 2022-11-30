@@ -29,7 +29,12 @@ const Routes = () => {
         <Route path="*" element={<PageNotFound/>}/>
         <Route path="/admin*" element={
           <Switch>
-            <Route path='categorias' element={<Admin><CategoryManagement/></Admin>}></Route>
+            <Route path='categorias*' element={
+              <Switch>
+                <Route path='list' element={<Admin><CategoryList/></Admin>}/>
+                <Route path='management' element={<Admin><CategoryManagement/></Admin>}/>
+              </Switch>
+            }/>
           </Switch>
         }/>
       </Switch>

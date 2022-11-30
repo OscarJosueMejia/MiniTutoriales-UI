@@ -2,9 +2,9 @@ import { useState } from "react";
 import { CategoryUpdate } from "./CategoryUpdate";
 import * as yup from "yup";
 import { useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
 
 import { Box, Button, TextField, FormControl } from "@mui/material";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
@@ -26,6 +26,7 @@ export const CategoryCreator = () => {
       console.log(values);
     },
   });
+  const Navigator = useNavigate();
 
   return (
     <Box
@@ -46,7 +47,8 @@ export const CategoryCreator = () => {
       >
         <FormControl sx={{ m: 1 }} className="form-control">
           <TextField
-            id="outlined-basic"
+            id="title"
+            name="title"
             label="Título"
             required
             value={formik.values.title}
@@ -67,7 +69,8 @@ export const CategoryCreator = () => {
       >
         <FormControl sx={{ m: 1 }} className="form-control">
           <TextField
-            id="filled-textarea"
+            id="description"
+            name="description"
             multiline
             maxRows={4}
             label="Descripción"
@@ -93,7 +96,8 @@ export const CategoryCreator = () => {
       >
         <FormControl sx={{ m: 1 }} className="form-control">
           <TextField
-            id="outlined-basic"
+            id="status"
+            name="status"
             label="Estado"
             defaultValue="Activo"
             InputProps={{ readOnly: true }}
@@ -124,6 +128,11 @@ export const CategoryCreator = () => {
             variant="outlined"
             color="error"
             startIcon={<HighlightOffIcon />}
+            onClick={() => {
+              Navigator("/admin/categorias/list", {
+                state: { mode: "CAN" },
+              });
+            }}
           >
             Cancelar
           </Button>
