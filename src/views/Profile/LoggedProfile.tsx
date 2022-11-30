@@ -9,10 +9,13 @@ import Header from "@components/Header";
 import {Button, ButtonGroup, Container} from "@mui/material";
 import { ProfileInfo } from '@components/Profile';
 
+type mode = 'LIKED'|'LIST';
+
 const ProfileView = () => {
     const [ currentPage, setCurrentPage ] = useState(1);
-    const [ TriggerFeedByUser, {isLoading, isError, error}] = useLazyByUserQuery()
+    const [ currentMode, setCurrentMode ] = useState<mode>('LIKED');
 
+    const [ TriggerFeedByUser, {isLoading, isError, error}] = useLazyByUserQuery()
     const userId='6355bf4a972277413bb7ddca'
     const tutorialItems = useSelector(selectUserFeedItems);
     const feedDetails = useSelector(selectUserFeedDetails);
@@ -21,21 +24,25 @@ const ProfileView = () => {
     
     useEffect(()=>{
       async function getData() {
-  
-          const { data:newData } = await TriggerFeedByUser({page:currentPage, userId});
-          if(currentPage > feedDetails.page){
+
+          const { data:newData } = await TriggerFeedByUser({page:currentPage, userId, mode:currentMode});
+          // if(currentPage > feedDetails.page){
             dispatch(setUserFeedItems({
-              items:[...tutorialItems, ...newData.items as Array<IFeedItem> ],
+              items:feedDetails.currentMode === currentMode && currentPage > feedDetails.page 
+              ? [...tutorialItems, ...newData.items as Array<IFeedItem> ] 
+              : newData.items as Array<IFeedItem>,
+
               itemsPerPage: newData.itemsPerPage,
               total: newData.total,
               totalPages: newData.totalPages,
               page: newData.page,
+              currentMode
             }));
-          }
+          // }
       }
       getData();
     
-    },[currentPage]);
+    },[currentMode, currentPage]);
 
     return (
     <>
@@ -45,8 +52,8 @@ const ProfileView = () => {
         <ButtonGroup
           disableElevation
           variant="outlined" >
-          <Button>Mis Tutoriales</Button>
-          <Button>Me Gusta</Button>
+          <Button  onClick={()=>{setCurrentMode('LIST')}}>Mis Tutoriales</Button>
+          <Button onClick={()=>{setCurrentMode('LIKED')}}>Me Gusta</Button>
         </ButtonGroup>
       </Container>
       <FeedLoader viewMode="USER"

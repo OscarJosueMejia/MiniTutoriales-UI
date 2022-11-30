@@ -1,5 +1,7 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 
+const ITEMS_PER_PAGE = 10;
+
 export const feedApi = createApi({
   reducerPath: 'feedApi',
   baseQuery: fetchBaseQuery({baseUrl: `${process.env.REACT_APP_API_BASE_URL}/tutorial`}),
@@ -20,7 +22,7 @@ export const feedApi = createApi({
         method: 'get',
         params:{
           page,
-          items:5
+          items:ITEMS_PER_PAGE
         },
         headers: {
           apikey: process.env.REACT_APP_API_KEY,
@@ -40,12 +42,12 @@ export const feedApi = createApi({
       })
     }),
     byUser: builder.query({
-      query: (params:{userId:string, page:number}) => ({
-        url: `list/${params.userId}`,
+      query: (params:{userId:string, page:number, mode:'LIKED'|'LIST'}) => ({
+        url: `list/${params.userId}/${params.mode}`,
         method: 'get',
         params:{
           page:params.page,
-          items:10
+          items:ITEMS_PER_PAGE
         },
         headers: {
           apikey: process.env.REACT_APP_API_KEY,

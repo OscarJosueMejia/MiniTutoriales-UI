@@ -7,13 +7,7 @@ import { useLazyByUserQuery} from "@store/Services/Feed";
 import Header from "@components/Header";
 import { useLocation } from 'react-router-dom';
 
-interface IProfileViewParams{
-  mode:'LOGGED_USER'|'COMMON_PROFILE'
-}
-
-
-const CommonProfileView = ({mode}:IProfileViewParams) => {
-    // window.location.reload();
+const CommonProfileView = () => {
     const Location = useLocation();
     const [ currentPage, setCurrentPage ] = useState(1);
     const [ TriggerFeedByUser, {isLoading, isError, error}] = useLazyByUserQuery()
@@ -24,7 +18,7 @@ const CommonProfileView = ({mode}:IProfileViewParams) => {
     const dispatch = useDispatch();
 
     async function getData(userId:string) {
-        const { data:newData } = await TriggerFeedByUser({page:currentPage, userId});
+        const { data:newData } = await TriggerFeedByUser({page:currentPage, userId, mode:'LIST'});
         dispatch(setCommUserItems({
           items: feedDetails.currentUser === currentUser && currentPage > feedDetails.page 
                 ? [...tutorialItems, ...newData.items as Array<IFeedItem> ] 
