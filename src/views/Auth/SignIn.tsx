@@ -16,8 +16,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "@store/Services/Security";
 import { setSecData } from "@store/Slices/securitySlice";
-import { selectAuth } from "@store/Slices/securitySlice";
-import { useSelector } from "react-redux";
+import CryptoJS from "crypto-js";
 
 function Copyright(props: any) {
   return (
@@ -63,6 +62,8 @@ const SignIn = () => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       const data = await login(values).unwrap();
+      const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(data), process.env.REACT_APP_API_KEY as string).toString();
+      localStorage.setItem("sec-info", encryptedData);
       dispatch(setSecData(data));
       Navigator("/admin");
     },
