@@ -7,15 +7,18 @@ import { useNavigate } from 'react-router-dom';
 //Components
 import { FeedLoader } from '@views/Feed/FeedLoader';
 import Header from "@components/Header";
+import { AlertDialog } from '@components/Misc';
 
 const Feed = () => {
     const Navigator = useNavigate();
     const [ currentPage, setCurrentPage ] = useState(1);
     const [ trigger, {isLoading, isError, error}] = useLazyFeedForLoggedQuery()
-
+    
     const dispatch = useDispatch();
     const tutorialItems = useSelector(selectFeedItems);
     const feedDetails = useSelector(selectFeedDetails);
+  
+
     useEffect(()=>{
         async function getData() {
 
@@ -46,6 +49,7 @@ const Feed = () => {
         isError={isError}
         error={error}
       />
+      <AlertDialog isOpen={isError} type='ERROR' title="Ups!" description='Algo no salió como debería...' />
     </>
     );
 }

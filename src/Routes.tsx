@@ -4,7 +4,7 @@ import { PageNotFound } from '@components/Misc';
 
 import Feed from '@views/Feed';
 import { Tutorial, TutorialManagement } from '@views/Tutorial';
-import ProfileView from '@views/Profile';
+import {ProfileView, CommonProfileView} from '@views/Profile';
 import TabNavigator from '@components/TabNavigator';
 import SignIn from '@views/Auth/SignIn';
 import SignUp from '@views/Auth/SignUp';
@@ -28,8 +28,9 @@ const Routes = () => {
 
         <Route path="/home/*" element={
           <Switch>
-            <Route index element={<><Feed/><TabNavigator /></>}/>
-            <Route path="tutorial" element={<><Tutorial/><TabNavigator/></>}/>
+            <Route index element={<><Feed/><TabNavigator tab="/home/" /></>}/>
+            <Route path="tutorial" element={<><Tutorial/><TabNavigator tab="/home/"/></>}/>
+            <Route path="profile" element={<><CommonProfileView mode='COMMON_PROFILE' /><TabNavigator tab="/home/" /></>}/>
             <Route path="/*" element={<PageNotFound/>}/>
           </Switch>
         }/>
@@ -37,7 +38,7 @@ const Routes = () => {
         <Route path="/creator/*" element={
           <Switch>
             {/* <Route index element={<PrivateRoute><TutorialManagement/><TabNavigator /></PrivateRoute>}/> */}
-            <Route index element={<><TutorialManagement/><TabNavigator /></>}/>
+            <Route index element={<><TutorialManagement/><TabNavigator tab="/home/" /></>}/>
             <Route path="/*" element={<PageNotFound/>}/>
           </Switch>
         }/>
@@ -45,7 +46,7 @@ const Routes = () => {
         <Route path="/find/*" element={
           <Switch>
             {/* <Route index element={<PrivateRoute><TutorialManagement/><TabNavigator /></PrivateRoute>}/> */}
-            <Route index element={<><SearchView/><TabNavigator /></>}/>
+            <Route index element={<><SearchView/><TabNavigator tab="/find/" /></>}/>
             <Route path="/*" element={<PageNotFound/>}/>
           </Switch>
         }/>
@@ -53,7 +54,7 @@ const Routes = () => {
         <Route path="/user/*" element={
           <Switch>
             {/* <Route index element={<PrivateRoute><TutorialManagement/><TabNavigator /></PrivateRoute>}/> */}
-            <Route index element={<><ProfileView/><TabNavigator /></>}/>
+            <Route index element={<><ProfileView/><TabNavigator tab="/user/" /></>}/>
             <Route path="/*" element={<PageNotFound/>}/>
           </Switch>
         }/>

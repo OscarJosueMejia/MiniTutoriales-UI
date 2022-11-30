@@ -6,6 +6,7 @@ import { securitySlice } from './Slices/securitySlice';
 import { feedSlice } from './Slices/feedSlice';
 import { searchFeedSlice } from './Slices/searchFeed';
 import { userFeedSlice } from './Slices/userFeedSlice';
+import { commUserSlice } from './Slices/commUserSlice';
 //Services
 import { securityApi } from './Services/Security';
 import { feedApi } from './Services/Feed';
@@ -18,6 +19,7 @@ export const store = configureStore({
     feed: feedSlice.reducer,
     userFeed: userFeedSlice.reducer,
     searchFeed: searchFeedSlice.reducer,
+    commUser: commUserSlice.reducer,
     [securityApi.reducerPath]: securityApi.reducer,
     [feedApi.reducerPath]: feedApi.reducer,
     [creatorApi.reducerPath]: creatorApi.reducer,

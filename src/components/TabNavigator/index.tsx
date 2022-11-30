@@ -11,10 +11,15 @@ import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
 import AddIcon from '@mui/icons-material/Add';
 
-const TabNavigator = () => {
+interface ITabNavProps {
+  tab:string;
+}
+
+
+const TabNavigator = ({tab}:ITabNavProps) => {
     const Navigator = useNavigate();
 
-    const [value, setValue] = useState('Principal');
+    const [value, setValue] = useState(tab);
   
     const handleChange = (event:any, newValue:any) => {
       setValue(newValue);

@@ -11,6 +11,7 @@ import { RequirementsLiteList } from '@components/Requirements';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useNavigate } from 'react-router-dom';
 
 interface ITutorialBodyParams {
   itemData:IFeedItem;
@@ -26,9 +27,10 @@ export interface ITutorialComment{
 }
 
 const TutorialBody = ({itemData, handleReaction}:ITutorialBodyParams) => {
+    const Navigator = useNavigate();
     const [ addComment ] = useAddCommentMutation();
     const [ deleteComment ] = useDeleteCommentMutation();
-    const {_id ,title, createdAt, description, requirements, comments, reactionsCount, steps, userLiked, author_info} = itemData;
+    const {_id ,title, authorId, createdAt, description, requirements, comments, reactionsCount, steps, userLiked, author_info} = itemData;
     
     const currentUserId = '6355bf4a972277413bb7ddca';
     const currentUserName = 'Oscar Mejia';
@@ -47,9 +49,9 @@ const TutorialBody = ({itemData, handleReaction}:ITutorialBodyParams) => {
 
     const HandleAddComment = async () => {
       const commentStructure = {tutorialId:_id as string, userId:currentUserId, authorName:currentUserName, text:newComment}
-      await addComment(commentStructure);
+      const result = await addComment(commentStructure);
       let newLocalComments = [...postComments];
-      newLocalComments.push(commentStructure);
+      newLocalComments.push({...commentStructure, ...{_id:(result as {data:{newId:string}}).data.newId}});
       setPostComments(newLocalComments);
       setNewComment("");
     }
@@ -65,7 +67,7 @@ const TutorialBody = ({itemData, handleReaction}:ITutorialBodyParams) => {
         <Card sx={{width: '100vw', marginBottom:2, backgroundColor:'#f5f5f5', borderRadius:3}}>
         <CardHeader
           avatar={
-            <Avatar sx={{ bgcolor: green[500] }} aria-label="recipe">
+            <Avatar sx={{ bgcolor: green[500] }} aria-label="recipe" onClick={()=>{Navigator('/home/profile', {state:{userId:authorId}})}}>
             {`${(author_info[0].name).split(' ')[0][0]}${(author_info[0].name).split(' ')[1][0]}`}
             </Avatar>
           }
@@ -108,7 +110,7 @@ const TutorialBody = ({itemData, handleReaction}:ITutorialBodyParams) => {
         <CardContent sx={{display:'flex', alignItems:'center'}}>
         <FormControl fullWidth sx={{ m: 0 , bgcolor:'#f0f0f0'}}>
               <TextField id="filled-textarea" multiline
-              maxRows={10} label="Escribe un Comentario..." variant='standard' onChange={(e)=>{setNewComment(e.target.value)}} />
+              maxRows={10} label="Escribe un Comentario..." variant='standard' value={newComment} onChange={(e)=>{setNewComment(e.target.value)}} />
           </FormControl>
           <Button sx={{ml:2}} variant='contained' disabled={newComment == ""} onClick={()=>{HandleAddComment()}}>Agregar</Button>
         

@@ -2,6 +2,7 @@ import {Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Link
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useSigninMutation } from '@store/Services/Security';
 import { LoadingButton } from '@mui/lab';
+import { AlertDialog } from '@components/Misc';
 
 import { useFormik } from "formik";
 import * as Yup from 'yup';
@@ -123,9 +124,7 @@ export default function SignUp() {
             >
               Registrarme
             </LoadingButton>
-            {isError?<Typography sx={{color:'red'}}>{(error as {data:{error:string}}).data.error}</Typography> 
-            : null
-          }
+            
             <Grid container justifyContent="flex-end" sx={{mt:2}}>
               <Grid item >
                 <Link href="#" variant="body2" onClick={()=>{Navigator('/login/');}}>
@@ -136,6 +135,12 @@ export default function SignUp() {
           </Box>
         </Box>
       </Container>
+      {isError
+        ?<AlertDialog isOpen={isError} type='ERROR' title="Ups!" description={(error as {data:{error:string}}).data.error} /> 
+        : null
+      }
+      
+
     </ThemeProvider>
   );
 }
