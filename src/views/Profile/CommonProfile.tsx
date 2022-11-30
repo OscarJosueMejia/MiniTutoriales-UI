@@ -25,16 +25,17 @@ const CommonProfileView = ({mode}:IProfileViewParams) => {
 
     async function getData(userId:string) {
         const { data:newData } = await TriggerFeedByUser({page:currentPage, userId});
-        console.log(newData);
         dispatch(setCommUserItems({
-          items:newData.items as Array<IFeedItem>,
+          items: feedDetails.currentUser === currentUser && currentPage > feedDetails.page 
+                ? [...tutorialItems, ...newData.items as Array<IFeedItem> ] 
+                : newData.items as Array<IFeedItem>,
           itemsPerPage: newData.itemsPerPage,
           total: newData.total,
           totalPages: newData.totalPages,
           page: newData.page,
+          currentUser
         }));
     }
-    
     useEffect(()=>{
       getData(currentUser);
     
