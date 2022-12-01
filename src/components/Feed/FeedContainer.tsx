@@ -26,7 +26,7 @@ const FeedContainer = ({handleReaction, handleLoader, querySelector, viewMode, h
     return(
         <Container sx={{display:'flex', paddingLeft:0, paddingRight:0, justifyContent:'center', alignItems:'center', flexDirection:'column'}}>
             
-            <Container  className="feedContainer" >
+            <Container  className="feedContainer" sx={{mt:3}} >
                 {tutorialItems.length > 0 ?
 
                     tutorialItems.map(item=>{

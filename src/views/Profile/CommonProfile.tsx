@@ -1,11 +1,13 @@
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { FeedLoader } from '@views/Feed/FeedLoader';
-import {useState, useEffect} from 'react';
 import { IFeedItem } from "@store/Slices/feedSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { setCommUserItems, selectCommUserData, selectCommUserItems } from '@store/Slices/commUserSlice';
 import { useLazyByUserQuery} from "@store/Services/Feed";
+//Components
 import Header from "@components/Header";
-import { useLocation } from 'react-router-dom';
+import { ProfileInfo } from '@components/Profile';
 
 const CommonProfileView = () => {
     const Location = useLocation();
@@ -38,6 +40,7 @@ const CommonProfileView = () => {
     return (
     <>
       <Header title="Mi Perfil" />
+      <ProfileInfo userData={{name:"John Doe", email:"oj_mejias@unicah.edu"}} uploadCount={tutorialItems.length} />
       <FeedLoader viewMode="USER"
         hideLoaderBtn={feedDetails.page === feedDetails.totalPages }
         querySelector={selectCommUserItems}

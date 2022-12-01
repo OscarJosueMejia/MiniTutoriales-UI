@@ -8,12 +8,14 @@ import { useLazyByUserQuery } from "@store/Services/Feed";
 import Header from "@components/Header";
 import {Button, ButtonGroup, Container} from "@mui/material";
 import { ProfileInfo } from '@components/Profile';
+import DescriptionIcon from '@mui/icons-material/Description';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 type mode = 'LIKED'|'LIST';
 
 const ProfileView = () => {
     const [ currentPage, setCurrentPage ] = useState(1);
-    const [ currentMode, setCurrentMode ] = useState<mode>('LIKED');
+    const [ currentMode, setCurrentMode ] = useState<mode>('LIST');
 
     const [ TriggerFeedByUser, {isLoading, isError, error}] = useLazyByUserQuery()
     const userId='6355bf4a972277413bb7ddca'
@@ -26,19 +28,19 @@ const ProfileView = () => {
       async function getData() {
 
           const { data:newData } = await TriggerFeedByUser({page:currentPage, userId, mode:currentMode});
-          // if(currentPage > feedDetails.page){
+            if(feedDetails.currentMode !== currentMode){
+              setCurrentPage(1);
+            }
             dispatch(setUserFeedItems({
               items:feedDetails.currentMode === currentMode && currentPage > feedDetails.page 
               ? [...tutorialItems, ...newData.items as Array<IFeedItem> ] 
               : newData.items as Array<IFeedItem>,
-
               itemsPerPage: newData.itemsPerPage,
               total: newData.total,
               totalPages: newData.totalPages,
               page: newData.page,
               currentMode
             }));
-          // }
       }
       getData();
     
@@ -47,13 +49,13 @@ const ProfileView = () => {
     return (
     <>
       <Header title="Mi Perfil" />
-      <ProfileInfo userData={{name:"Oscar Mejia", email:"oj_mejias@unicah.edu"}} uploadCount={tutorialItems.length} />
+      <ProfileInfo userData={{name:"Oscar Mejia", email:"oj_mejias@unicah.edu"}} uploadCount={tutorialItems.length} isLikedMode={currentMode === 'LIKED'} isUserLogged={true} />
       <Container sx={{display:'flex', justifyContent:'center', mt:'1.2rem'}}>
         <ButtonGroup
           disableElevation
           variant="outlined" >
-          <Button  onClick={()=>{setCurrentMode('LIST')}}>Mis Tutoriales</Button>
-          <Button onClick={()=>{setCurrentMode('LIKED')}}>Me Gusta</Button>
+          <Button variant={currentMode === 'LIST' ? 'contained' : 'outlined'}  onClick={()=>{setCurrentMode('LIST')}} startIcon={<DescriptionIcon sx={{mt:-0.2}}/>}>Mis Tutoriales</Button>
+          <Button variant={currentMode === 'LIKED' ? 'contained' : 'outlined'} onClick={()=>{setCurrentMode('LIKED')}} endIcon={<FavoriteIcon sx={{mt:-0.2}}/>}>Me Gusta</Button>
         </ButtonGroup>
       </Container>
       <FeedLoader viewMode="USER"

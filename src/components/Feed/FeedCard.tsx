@@ -49,8 +49,10 @@ const FeedCard = ({itemData, handleReaction, viewMode}:IFeedCardProps)=>{
     <CardMedia
       component="img"
       height="194"
-      image="https://cdn-icons-png.flaticon.com/512/292/292333.png"
-      alt="Paella dish"
+      image="https://cdn.dribbble.com/users/104171/screenshots/1863083/media/1f609237cc4ee69d9072cf360b768a64.jpg"
+      // image="https://www.creativefabrica.com/wp-content/uploads/2020/07/05/School-Stationery-Pattern-Background-Graphics-4546687-1-580x387.jpg"
+      // image="https://cdn.dribbble.com/users/104171/screenshots/1867631/media/16ccf74f6fe7844d5becadac7b20ea95.jpg"
+      alt="tutorial-thumbnail"
     />
     <CardContent>
       <Typography variant="body2" sx={{minWidth:'120vw'}} color="text.secondary">
