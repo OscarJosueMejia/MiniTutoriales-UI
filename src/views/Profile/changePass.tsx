@@ -8,11 +8,8 @@ import { useLazyByUserQuery } from "@store/Services/Feed";
 import Header from "@components/Header";
 import {Button, ButtonGroup, Container} from "@mui/material";
 import { ProfileInfo } from '@components/Profile';
-import { Counter } from '@components/Counter';
-import { Usuario } from '@components/formChangeP';
-import ChangeView from './changePass';
 
-const ProfileView = () => {
+const ChangeView = () => {
     const [ currentPage, setCurrentPage ] = useState(1);
     const [ TriggerFeedByUser, {isLoading, isError, error}] = useLazyByUserQuery()
 
@@ -48,23 +45,19 @@ const ProfileView = () => {
         <ButtonGroup
           disableElevation
           variant="outlined" >
-          <Button>Mis Tutoriales</Button>
-          <Button>Me Gusta</Button>
-          <Button>Cambiar Contraseña</Button>
+          <Button>Regresar</Button>
         </ButtonGroup>
       </Container>
-      <ChangeView/>
-      <FeedLoader viewMode="USER"
-        hideLoaderBtn={feedDetails.page === feedDetails.totalPages }
-        querySelector={selectUserFeedItems}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        isLoading={isLoading}
-        isError={false}
-        error={""}
-      />
+      <Container sx={{display:'flex', justifyContent:'center', mt:'1.2rem'}}>
+        <ButtonGroup
+          disableElevation
+          variant="outlined" >
+          <Button>Actualizar Contraseña</Button>
+        </ButtonGroup>
+      </Container>
     </>
     );
 }
 
-export default ProfileView;
+export default ChangeView;
+

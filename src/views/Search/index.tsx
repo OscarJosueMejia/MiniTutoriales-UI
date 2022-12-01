@@ -20,7 +20,7 @@ const SearchView = () => {
       const { value } = (e as {target:{value:string}}).target;
 
       if (value !== ""){
-        const { data:newData } = await TriggerFeedBySearch({search:value, userId:'6355bf4a972277413bb7ddca'});
+        const { data:newData } = await TriggerFeedBySearch({search:value, userId:'638715a091b5ed67eddd8579'});
         dispatch(setSearchFeedItems({
           items: newData as Array<IFeedItem>,
         }));

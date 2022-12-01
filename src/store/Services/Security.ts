@@ -34,6 +34,26 @@ export const securityApi = createApi({
         },
       })
     }),
+    changePass: builder.mutation({
+      query: (credentials) => ({
+        url: `/changePassword`,
+        method: 'POST',
+        body:credentials,
+        headers: {
+          apikey: process.env.REACT_APP_API_KEY,
+        },
+      })
+    }),
+    getAll: builder.mutation({
+      query: (credentials) => ({
+        url: `/getAll`,
+        method: 'GET',
+        body:credentials,
+        headers: {
+          apikey: process.env.REACT_APP_API_KEY,
+        },
+      })
+    }),
   }),
 });
 

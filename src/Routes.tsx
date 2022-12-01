@@ -55,6 +55,7 @@ const Routes = () => {
           <Switch>
             {/* <Route index element={<PrivateRoute><TutorialManagement/><TabNavigator /></PrivateRoute>}/> */}
             <Route index element={<><ProfileView/><TabNavigator tab="/user/" /></>}/>
+            <Route path="profile" element={<><CommonProfileView mode='COMMON_PROFILE' /><TabNavigator tab="/user/" /></>}/>
             <Route path="/*" element={<PageNotFound/>}/>
           </Switch>
         }/>

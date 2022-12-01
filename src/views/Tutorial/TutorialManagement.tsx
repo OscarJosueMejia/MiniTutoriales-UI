@@ -58,10 +58,10 @@ const TutorialManagement = () => {
           setUploadingImgs(true);
           const dataPreparation = {
             tutorialId: formValues.tutorialId,
-            userId:'6355bf4a972277413bb7ddca', 
+            userId:'638715a091b5ed67eddd8579', 
           title:formValues.title,
           description:formValues.description, 
-          categoryId:'6355bf4a972277423bb7ddca', 
+          categoryId:'638715a091b5ed67eddd8579', 
           requirements:formValues.requirements, 
           steps:await uploadImagesFB(formValues.steps), 
           tags:formValues.tags
