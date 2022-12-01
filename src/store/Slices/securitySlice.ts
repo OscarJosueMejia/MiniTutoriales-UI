@@ -1,40 +1,52 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 
-interface SecState {
-  name: string;
+export interface SecState {
+  username: string;
   email: string;
   avatar: string;
   token: string;
+  rol: string;
   _id: string;
+  _pin?: number;
+  _newPassword?: string;
 }
 
 const initialState: SecState = {
-  name: "",
+  username: "",
   email: "",
   avatar: "",
   token: "",
+  rol: "",
   _id: "",
+  _pin: 0,
+  _newPassword: "",
 };
 
 export const securitySlice = createSlice({
   name: "sec",
   initialState,
   reducers: {
-   setSecData: (state, action: PayloadAction<SecState>) => {
-      state.name = action.payload.name;
+    setSecData: (state, action: PayloadAction<SecState>) => {
+      state.username = action.payload.username;
       state.email = action.payload.email;
       state.avatar = action.payload.avatar;
       state.token = action.payload.token;
+      state.rol = action.payload.rol;
       state._id = action.payload._id;
-   },
-   resetSecData: (state) => {
-      state.name = "";
+      state._pin = action.payload._pin;
+      state._newPassword = action.payload._newPassword;
+    },
+    resetSecData: (state) => {
+      state.username = "";
       state.email = "";
       state.avatar = "";
       state.token = "";
+      state.rol = "";
       state._id = "";
-   }
+      state._pin = 0;
+      state._newPassword = "";
+    },
   },
 });
 

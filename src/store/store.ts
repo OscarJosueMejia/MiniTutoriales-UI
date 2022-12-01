@@ -1,5 +1,3 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { setupListeners } from '@reduxjs/toolkit/dist/query';
 //Slices
 import { appSlice } from './Slices/appSlice';
 import { securitySlice } from './Slices/securitySlice';
@@ -8,9 +6,16 @@ import { searchFeedSlice } from './Slices/searchFeed';
 import { userFeedSlice } from './Slices/userFeedSlice';
 import { commUserSlice } from './Slices/commUserSlice';
 //Services
-import { securityApi } from './Services/Security';
-import { feedApi } from './Services/Feed';
 import { creatorApi } from './Services/Creator';
+import { configureStore } from "@reduxjs/toolkit";
+import { setupListeners } from "@reduxjs/toolkit/dist/query";
+import { securityApi } from "./Services/Security";
+import { feedApi } from "./Services/Feed";
+import CryptoJS from "crypto-js";
+
+const preLoadedState = JSON.parse(
+  CryptoJS.AES.decrypt(localStorage.getItem("reduxState") as string, process.env.REACT_APP_API_KEY as string).toString(CryptoJS.enc.Utf8) || "{}"
+);
 
 export const store = configureStore({
   reducer: {
@@ -24,8 +29,14 @@ export const store = configureStore({
     [feedApi.reducerPath]: feedApi.reducer,
     [creatorApi.reducerPath]: creatorApi.reducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware()
-  .concat([securityApi.middleware, feedApi.middleware, creatorApi.middleware])
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(
+    [securityApi.middleware, feedApi.middleware, creatorApi.middleware]),
+  preloadedState: preLoadedState,
+});
+
+store.subscribe(() => {
+  const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(store.getState()), process.env.REACT_APP_API_KEY as string).toString();
+  localStorage.setItem("reduxState", encryptedData);
 });
 
 setupListeners(store.dispatch);

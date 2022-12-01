@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Routes as Switch, Navigate } from 'reac
 import PrivateRoute from '@components/PrivateRoute';
 import { PageNotFound } from '@components/Misc';
 
+import EjemploAdmin from '@views/EjemploAdmin';
 import Feed from '@views/Feed';
 import { Tutorial, TutorialManagement } from '@views/Tutorial';
 import {ProfileView, CommonProfileView} from '@views/Profile';
@@ -10,6 +11,7 @@ import SignIn from '@views/Auth/SignIn';
 import SignUp from '@views/Auth/SignUp';
 import ValidateAccount from '@views/Auth/ValidateAccount';
 import SearchView from '@views/Search';
+import RecoveryPassword from '@views/Auth/RecoveryPassword';
 
 const Routes = () => {
   return (
@@ -21,6 +23,7 @@ const Routes = () => {
           <Switch>
             <Route index element={<SignIn/>}/>
             <Route path="signup" element={<SignUp/>}/>
+            <Route path='recovery-password' element={<RecoveryPassword />} />
             <Route path="validate" element={<ValidateAccount/>}/>
             <Route path="/*" element={<PageNotFound/>}/>
           </Switch>
@@ -59,7 +62,14 @@ const Routes = () => {
           </Switch>
         }/>
 
+        <Route path="/admin*" element={
+          <Switch>
+            <Route index element={<PrivateRoute allowedRoles={["admin"]} ><EjemploAdmin/></PrivateRoute>}/>
+          </Switch>
+        }/>
+
         <Route path="/*" element={<PageNotFound/>}/>
+        <Route path="*" element={<PageNotFound/>}/>
       </Switch>
       
     </Router>
