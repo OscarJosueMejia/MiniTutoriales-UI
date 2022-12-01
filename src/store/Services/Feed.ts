@@ -1,8 +1,18 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
+import { RootState } from "../store";
+
 
 export const feedApi = createApi({
   reducerPath: 'feedApi',
-  baseQuery: fetchBaseQuery({baseUrl: `${process.env.REACT_APP_API_BASE_URL}/tutorial`}),
+  baseQuery: fetchBaseQuery(
+    {baseUrl: `${process.env.REACT_APP_API_BASE_URL}/tutorial`,
+    prepareHeaders: (headers, {getState}) =>{
+      const token = (getState() as RootState).sec.token;
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+    }
+  }),
 
   endpoints: (builder) => ({
     getAll: builder.query({

@@ -5,8 +5,11 @@ import { securitySlice } from "./Slices/securitySlice";
 import { feedSlice } from "./Slices/feedSlice";
 import { securityApi } from "./Services/Security";
 import { feedApi } from "./Services/Feed";
+import CryptoJS from "crypto-js";
 
-const preLoadedState = JSON.parse(localStorage.getItem("reduxState") || "{}");
+const preLoadedState = JSON.parse(
+  CryptoJS.AES.decrypt(localStorage.getItem("reduxState") as string, process.env.REACT_APP_API_KEY as string).toString(CryptoJS.enc.Utf8) || "{}"
+);
 
 export const store = configureStore({
   reducer: {
@@ -21,7 +24,8 @@ export const store = configureStore({
 });
 
 store.subscribe(() => {
-  localStorage.setItem("reduxState", JSON.stringify(store.getState()));
+  const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(store.getState()), process.env.REACT_APP_API_KEY as string).toString();
+  localStorage.setItem("reduxState", encryptedData);
 });
 
 setupListeners(store.dispatch);

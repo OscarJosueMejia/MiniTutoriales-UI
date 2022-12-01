@@ -2,6 +2,8 @@ import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
 import { selectAuth } from "@store/Slices/securitySlice";
 import { PropsWithChildren } from "react";
+import { PageNotFound } from '@components/Misc';
+
 
 const PrivateRoute = ({ children, allowedRoles = [] }: PropsWithChildren<{ allowedRoles?: Array<string> }>) => {
   const user = useSelector(selectAuth);
@@ -19,12 +21,12 @@ const PrivateRoute = ({ children, allowedRoles = [] }: PropsWithChildren<{ allow
     return <Navigate to="/login" replace />;
   }
 
-  // const { userRol } = user;
-  // if ( allowedRoles.includes(userRol) ) {
-  //   return children ? <>{children}</> : <Outlet />;
-  // }
-  // return children ? <h3>NOT ALLOWED</h3> : <Outlet />;
-  return children ? <>{children}</> : <Outlet />;
+  const { rol } = user;
+  console.log(user);
+  if (allowedRoles.includes(rol)) {
+    return children ? <>{children}</> : <Outlet />;
+  }
+  return children ? <PageNotFound/> : <Outlet />;
 };
 
 export default PrivateRoute;

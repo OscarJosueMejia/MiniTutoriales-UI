@@ -31,7 +31,7 @@ const Routes = () => {
 
         <Route path="/admin*" element={
           <Switch>
-            <Route index element={<PrivateRoute><EjemploAdmin/></PrivateRoute>}/>
+            <Route index element={<PrivateRoute allowedRoles={["admin"]} ><EjemploAdmin/></PrivateRoute>}/>
           </Switch>
         }/>
 

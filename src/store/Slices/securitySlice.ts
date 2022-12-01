@@ -6,6 +6,7 @@ export interface SecState {
   email: string;
   avatar: string;
   token: string;
+  rol: string;
   _id: string;
   _pin?: number;
   _newPassword?: string;
@@ -16,6 +17,7 @@ const initialState: SecState = {
   email: "",
   avatar: "",
   token: "",
+  rol: "",
   _id: "",
   _pin: 0,
   _newPassword: "",
@@ -30,6 +32,7 @@ export const securitySlice = createSlice({
       state.email = action.payload.email;
       state.avatar = action.payload.avatar;
       state.token = action.payload.token;
+      state.rol = action.payload.rol;
       state._id = action.payload._id;
       state._pin = action.payload._pin;
       state._newPassword = action.payload._newPassword;
@@ -39,6 +42,7 @@ export const securitySlice = createSlice({
       state.email = "";
       state.avatar = "";
       state.token = "";
+      state.rol = "";
       state._id = "";
       state._pin = 0;
       state._newPassword = "";

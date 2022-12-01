@@ -16,7 +16,7 @@ import Paper from "@mui/material/Paper";
 import Link from "@mui/material/Link";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import { mainListItems, secondaryListItems } from "./listItems";
+import { MainListItems, SecondaryListItems } from "./listItems";
 
 function Copyright(props: any) {
   return (
@@ -85,7 +85,7 @@ interface IProps {
   children: any;
 }
 
-const DashboardContent = ({ children }:IProps) => {
+const DashboardContent = ({ children }: IProps) => {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -133,9 +133,9 @@ const DashboardContent = ({ children }:IProps) => {
           </Toolbar>
           <Divider />
           <List className="navBar" component="nav">
-            {mainListItems}
+            {MainListItems()}
 
-            {secondaryListItems}
+            {SecondaryListItems()}
           </List>
         </Drawer>
         <Box

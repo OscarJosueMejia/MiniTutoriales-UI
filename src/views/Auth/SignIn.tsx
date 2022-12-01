@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -16,7 +17,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "@store/Services/Security";
 import { setSecData } from "@store/Slices/securitySlice";
-import CryptoJS from "crypto-js";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function Copyright(props: any) {
   return (
@@ -37,21 +38,15 @@ const validationSchema = yup.object().shape({
 });
 
 let initialValues = {
-  email: "",
+  email: localStorage.getItem("emailremember") || "",
   password: "",
+  rememberme: "f",
 };
 
 const theme = createTheme();
 
 const SignIn = () => {
-  // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   const data = new FormData(event.currentTarget);
-  //   console.log({
-  //     email: data.get("email"),
-  //     password: data.get("password"),
-  //   });
-  // };
+  const [loading, setLoading] = useState(false);
 
   const [login, { isLoading, status, error }] = useLoginMutation();
   const dispatch = useDispatch();
@@ -61,10 +56,20 @@ const SignIn = () => {
     initialValues: initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      const data = await login(values).unwrap();
-      const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(data), process.env.REACT_APP_API_KEY as string).toString();
-      localStorage.setItem("sec-info", encryptedData);
+      setLoading(true);
+      let data;
+      try {
+        data = await login(values).unwrap();
+      } catch (error) {
+        setLoading(false);
+      }
       dispatch(setSecData(data));
+      console.log(values);
+      if (values.rememberme[0] === "t") {
+        localStorage.setItem("emailremember", values.email as string);
+      } else {
+        localStorage.removeItem("emailremember");
+      }
       Navigator("/admin");
     },
   });
@@ -114,9 +119,12 @@ const SignIn = () => {
               error={formik.touched.password && Boolean(formik.errors.password)}
               helperText={formik.touched.password && formik.errors.password}
             />
-            <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Recuérdame" />
+            <FormControlLabel
+              control={<Checkbox id="rememberme" name="rememberme" color="primary" value="t" onChange={formik.handleChange} />}
+              label="Recuérdame"
+            />
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-              Iniciar Sesión
+              Iniciar Sesión &nbsp; {loading === true ? <CircularProgress color="inherit" /> : null}
             </Button>
             {error && <p style={{ color: "red" }}>Credenciales Inválidas</p>}
             <Grid container>
