@@ -2,7 +2,6 @@
 import { appSlice } from './Slices/appSlice';
 import { securitySlice } from './Slices/securitySlice';
 import { feedSlice } from './Slices/feedSlice';
-import { searchFeedSlice } from './Slices/searchFeed';
 import { userFeedSlice } from './Slices/userFeedSlice';
 import { commUserSlice } from './Slices/commUserSlice';
 //Services
@@ -26,7 +25,6 @@ export const store = configureStore({
     sec: securitySlice.reducer,
     feed: feedSlice.reducer,
     userFeed: userFeedSlice.reducer,
-    searchFeed: searchFeedSlice.reducer,
     commUser: commUserSlice.reducer,
     [securityApi.reducerPath]: securityApi.reducer,
     [feedApi.reducerPath]: feedApi.reducer,

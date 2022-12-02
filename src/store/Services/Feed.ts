@@ -53,8 +53,8 @@ export const feedApi = createApi({
       })
     }),
     byUser: builder.query({
-      query: (params:{userId:string, page:number, mode:'LIKED'|'LIST'}) => ({
-        url: `list/${params.userId}/${params.mode}`,
+      query: (params:{userId:string, page:number, mode:'LIKED'|'LIST', currentUserLogged?:string}) => ({
+        url: `list/${params.userId}/${params.mode}/${params.currentUserLogged}`,
         method: 'get',
         params:{
           page:params.page,
@@ -75,6 +75,7 @@ export const feedApi = createApi({
         headers: {
           apikey: process.env.REACT_APP_API_KEY,
         },
+        keepUnusedDataFor: 1,
       })
     }),
     reaction: builder.mutation({
@@ -128,6 +129,7 @@ export const {
   useGetOneQuery, 
   useDeleteTutorialMutation,
   useByUserQuery, 
+  useSearchQuery,
   useLazyByUserQuery,
   useLazySearchQuery,
 } = feedApi;

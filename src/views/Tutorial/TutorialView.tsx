@@ -77,7 +77,7 @@ const Tutorial = () => {
               </LoadingButton>
             }
 
-            { showDialog && <AlertDialog isOpen={showDialog} type='DIALOG' title="Eliminar Tutorial" description={`El Tutorial "${data.title}" será eliminado.`} onDialogAccept={()=>{HandleDelete()}} /> }
+            { showDialog && <AlertDialog isOpen={showDialog} type='DIALOG' title="Eliminar Tutorial" description={`El Tutorial "${data.title}" será eliminado.`} onDialogCancel={setShowDialog} onDialogAccept={()=>{HandleDelete()}} /> }
         </Container>
       }
     </>

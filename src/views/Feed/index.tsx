@@ -15,7 +15,7 @@ const Feed = () => {
     const Navigator = useNavigate();
     const userId = (store.getState() as RootState).sec._id;
     const [ currentPage, setCurrentPage ] = useState(1);
-    const [isLastPage, setLastPage] = useState(false);
+    const [ isLastPage, setLastPage ] = useState(false);
     const [ trigger, {isLoading, isFetching, isError, error}] = useLazyFeedForLoggedQuery()
     const [currentData, setCurrentData] = useState<Array<IFeedItem>>([]);
 

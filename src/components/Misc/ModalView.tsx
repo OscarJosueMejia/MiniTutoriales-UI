@@ -6,14 +6,18 @@ interface IAlertDialog {
   type:'ERROR'|'ALERT'|'DIALOG';
   title?:string;
   description:string;
+  onDialogCancel?:(show:boolean) => void;
   onDialogAccept?:VoidFunction;
 }
 
-export default function AlertDialog({isOpen, type, title, description, onDialogAccept}:IAlertDialog) {
+export default function AlertDialog({isOpen, type, title, description, onDialogAccept, onDialogCancel}:IAlertDialog) {
   const [open, setOpen] = React.useState(isOpen);
 
   const handleClose = () => {
     setOpen(false);
+    if(onDialogCancel !== undefined){
+      onDialogCancel(false);
+    }
   };
 
   return (
@@ -33,7 +37,7 @@ export default function AlertDialog({isOpen, type, title, description, onDialogA
         </DialogContent>
         <DialogActions>
           {
-            type === 'DIALOG' && onDialogAccept !== undefined ? <>
+            type === 'DIALOG' && onDialogAccept !== undefined && onDialogCancel !== undefined ? <>
             <Button onClick={handleClose}>Cancelar</Button> 
             <Button onClick={()=>{onDialogAccept(); setOpen(false)}} autoFocus>Aceptar</Button></>
             :<Button onClick={handleClose}>Aceptar</Button>

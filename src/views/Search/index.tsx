@@ -1,10 +1,7 @@
 //Logic
 import {useState} from 'react';
 import { FeedLoader } from '@views/Feed/FeedLoader';
-import { IFeedItem } from "@store/Slices/feedSlice";
-import { useDispatch } from "react-redux";
-import { useLazySearchQuery } from "@store/Services/Feed";
-import { selectSearchFeedItems, setSearchFeedItems } from '@store/Slices/searchFeed';
+import { useSearchQuery } from "@store/Services/Feed";
 import { RootState, store } from '@store/store';
 //Components
 import Header from "@components/Header";
@@ -13,26 +10,17 @@ import SearchIcon from '@mui/icons-material/Search';
 
 const SearchView = () => {
     const userId = (store.getState() as RootState).sec._id;
-  
     const [ currentPage, setCurrentPage ] = useState(1);
-    const [ TriggerFeedBySearch, {isLoading, isError, error}] = useLazySearchQuery()
-    const dispatch = useDispatch();
+    const [searchValue, setSearchValue] = useState("");
+    // const [ TriggerFeedBySearch, {isLoading, isError, error}] = useLazySearchQuery()
+    const {data, isLoading, error, isError, refetch} = useSearchQuery({search:searchValue, userId});
 
     const HandleSearch = async (e:unknown) =>{
       (e as {preventDefault: Function}).preventDefault();
       (e as {stopPropagation: Function}).stopPropagation();
       const { value } = (e as {target:{value:string}}).target;
-
-      if (value !== ""){
-        const { data:newData } = await TriggerFeedBySearch({search:value, userId});
-        dispatch(setSearchFeedItems({
-          items: newData as Array<IFeedItem>,
-        }));
-      }else{
-        dispatch(setSearchFeedItems({
-          items: [],
-        }));
-      }
+      setSearchValue(value);
+      refetch();
     }
 
     return (
@@ -51,8 +39,8 @@ const SearchView = () => {
         </Search>
       </Container>
       <FeedLoader viewMode="MAIN"
+        data={data}
         hideLoaderBtn={ true }
-        querySelector={selectSearchFeedItems}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
         isLoading={isLoading}

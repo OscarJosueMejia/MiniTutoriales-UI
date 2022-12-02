@@ -5,6 +5,7 @@ import { IFeedItem } from "@store/Slices/feedSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { setCommUserItems, selectCommUserData, selectCommUserItems } from '@store/Slices/commUserSlice';
 import { useLazyByUserQuery} from "@store/Services/Feed";
+import { RootState, store } from '@store/store';
 //Components
 import Header from "@components/Header";
 import { ProfileInfo } from '@components/Profile';
@@ -16,11 +17,11 @@ const CommonProfileView = () => {
     const [ currentUser, setCurrentUser ] = useState(Location.state.userId)
     const tutorialItems = useSelector(selectCommUserItems);
     const feedDetails = useSelector(selectCommUserData);
-
+    
     const dispatch = useDispatch();
 
     async function getData(userId:string) {
-        const { data:newData } = await TriggerFeedByUser({page:currentPage, userId, mode:'LIST'});
+        const { data:newData } = await TriggerFeedByUser({page:currentPage, userId, mode:'LIST', currentUserLogged:(store.getState() as RootState).sec._id});
         dispatch(setCommUserItems({
           items: feedDetails.currentUser === currentUser && currentPage > feedDetails.page 
                 ? [...tutorialItems, ...newData.items as Array<IFeedItem> ] 
@@ -32,6 +33,7 @@ const CommonProfileView = () => {
           currentUser
         }));
     }
+
     useEffect(()=>{
       getData(currentUser);
     
@@ -41,7 +43,7 @@ const CommonProfileView = () => {
     <>
       <Header title="Perfil del Usuario" />
       <ProfileInfo userData={{name:"John Doe", email:"oj_mejias@unicah.edu"}} uploadCount={tutorialItems.length} />
-      <FeedLoader viewMode="USER"
+      <FeedLoader viewMode="MAIN"
         hideLoaderBtn={feedDetails.page === feedDetails.totalPages }
         querySelector={selectCommUserItems}
         currentPage={currentPage}
