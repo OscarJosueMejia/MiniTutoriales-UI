@@ -14,31 +14,50 @@ import {
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import CreateIcon from "@mui/icons-material/Create";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import CircularProgress from "@mui/material/CircularProgress";
+
 import { useNavigate } from "react-router-dom";
-
-const validationSchema = yup.object().shape({
-  title: yup.string().required("Titulo es Requerido"),
-  description: yup.string().required("Descripción es Requerido"),
-});
-
-let initialValues = {
-  title: "",
-  description: "",
-};
+import { useLocation } from "react-router-dom";
+import { useUpdateMutation } from "@store/Services/Category";
+import { useDispatch } from "react-redux";
+import { setCategoryData } from "@store/Slices/categorySlice";
 
 export const CategoryUpdate = () => {
   const Navigator = useNavigate();
-  const [age, setAge] = useState("");
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  const [update, { isLoading, status, error }] = useUpdateMutation();
 
-  const handleChangeStatus = (event: SelectChangeEvent) => {
-    setAge(event.target.value as string);
+  const validationSchema = yup.object().shape({
+    title: yup.string().required("Titulo es Requerido"),
+    description: yup.string().required("Descripción es Requerido"),
+    status: yup.string().required("Descripción es Requerido"),
+  });
+
+  let initialValues = {
+    title: location.state.title as string,
+    description: location.state.description as string,
+    status: location.state.status as string,
   };
 
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      console.log(values);
+      setLoading(true);
+      let data;
+      try {
+        data = await update({
+          ...values,
+          categoryId: location.state._id as string,
+        }).unwrap();
+      } catch (error) {
+        setLoading(false);
+        console.log(error);
+      }
+      dispatch(setCategoryData(data));
+      window.location.replace("/admin/categorias/list");
     },
   });
 
@@ -114,9 +133,10 @@ export const CategoryUpdate = () => {
             labelId="status"
             id="status"
             name="status"
-            value={age}
             label="Estado"
-            onChange={handleChangeStatus}
+            value={formik.values.status}
+            onChange={formik.handleChange}
+            error={formik.touched.status && Boolean(formik.errors.status)}
           >
             <MenuItem value="ACT">Activo</MenuItem>
             <MenuItem value="INA">Inactivo</MenuItem>
@@ -141,7 +161,8 @@ export const CategoryUpdate = () => {
             startIcon={<CreateIcon />}
             type="submit"
           >
-            Actualizar
+            Actualizar &nbsp;
+            {loading === true ? <CircularProgress color="inherit" /> : null}
           </Button>
           <Button
             variant="outlined"

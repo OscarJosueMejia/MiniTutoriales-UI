@@ -14,7 +14,7 @@ export const categoryApi = createApi({
         },
       })
     }),
-    getByIndex: builder.mutation({
+    getByIndex: builder.query({
         query: (params) => ({
           url: `byindex/${params.categoryId}`,
           method: 'get',
@@ -23,7 +23,7 @@ export const categoryApi = createApi({
           },
         })
       }),
-    getByStatus: builder.mutation({
+    getByStatus: builder.query({
       query: (params) => ({
         url: `all/${params.status}`,
         method: 'get',
@@ -46,6 +46,7 @@ export const categoryApi = createApi({
       query: (params) => ({
         url: `update/${params.categoryId}`,
         method: 'put',
+        body:params,
         headers: {
           apikey: process.env.REACT_APP_API_KEY,
         },
@@ -63,4 +64,4 @@ export const categoryApi = createApi({
   }),
 });
 
-export const { useGetAllQuery} = categoryApi;
+export const { useGetAllQuery, useAddMutation, useGetByIndexQuery, useDeleteMutation, useGetByStatusQuery, useUpdateMutation} = categoryApi;

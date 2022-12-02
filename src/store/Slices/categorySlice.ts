@@ -23,12 +23,6 @@ export const categorySlice = createSlice({
      setCategoryData: (state, action: PayloadAction<ICategoriesData>) => {
         state.items = action.payload.items;
      },
-    //  resetCategoryData: (state) => {
-    //     state.title = "";
-    //     state.description = "";
-    //     state.status = "ACT";
-    //     state._id = "";
-    //  }
     },
   });
 

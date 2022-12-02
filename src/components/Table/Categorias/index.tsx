@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   TableRow,
   TableCell,
@@ -10,9 +9,16 @@ import {
 } from "@mui/material";
 import { TablePaginationActions } from "@components/Table/index";
 import { ICategoriesData } from "@store/Slices/categorySlice";
-import { useNavigate } from "react-router-dom";
+import { Route, useNavigate } from "react-router-dom";
 import CreateIcon from "@mui/icons-material/Create";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useLocation } from "react-router-dom";
+
+import { useGetAllQuery, useDeleteMutation } from "@store/Services/Category";
+import { setCategoryData } from "@store/Slices/categorySlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { ContentLoadingIndicator } from "@components/Misc/index";
 
 const HeaderTable = () => {
   return (
@@ -27,53 +33,14 @@ const HeaderTable = () => {
 };
 
 const BodyTable = () => {
+  const dispatch = useDispatch();
   const Navigator = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const { isLoading, data, error } = useGetAllQuery({});
+  const [deleteCategory, { status }] = useDeleteMutation();
+
   const rows: ICategoriesData = {
-    items: [
-      {
-        title: "Tarea",
-        description: "Tarea de matema",
-        status: "ACT",
-        _id: "1",
-      },
-      {
-        title: "Tarea",
-        description:
-          " JSIUDUDHYUS VYFYG E YUHGDFUHS USHDFU UH UDFH UHF USDFUF  ",
-        status: "ACT",
-        _id: "2",
-      },
-      {
-        title: "Tarea",
-        description: "Tarea de matema",
-        status: "ACT",
-        _id: "3",
-      },
-      {
-        title: "Tarea",
-        description: "Tarea de matema",
-        status: "ACT",
-        _id: "4",
-      },
-      {
-        title: "Tarea",
-        description: "Tarea de matema",
-        status: "ACT",
-        _id: "5",
-      },
-      {
-        title: "Tarea",
-        description: "Tarea de matema",
-        status: "ACT",
-        _id: "6",
-      },
-      {
-        title: "Tarea",
-        description: "Tarea de matema",
-        status: "ACT",
-        _id: "7",
-      },
-    ],
+    items: isLoading === true ? [] : data,
   };
 
   const [page, setPage] = useState(0);
@@ -99,77 +66,104 @@ const BodyTable = () => {
 
   return (
     <>
-      <TableBody>
-        {(rowsPerPage > 0
-          ? rows.items.slice(
-              page * rowsPerPage,
-              page * rowsPerPage + rowsPerPage
-            )
-          : rows.items
-        ).map((row) => (
-          <TableRow key={row._id as string}>
-            <TableCell
-              component="th"
-              scope="row"
-              style={{ width: 160 }}
-              align="center"
-            >
-              {row._id as string}
-            </TableCell>
-            <TableCell style={{ width: 160 }} align="center">
-              {row.title}
-            </TableCell>
-            <TableCell style={{ width: 160 }} align="center">
-              {row.description}
-            </TableCell>
-            <TableCell style={{ width: 160 }} align="center">
-              {row.status}
-            </TableCell>
-            <TableCell align="center" style={{ width: 160 }}>
-              <IconButton
-                onClick={() => {
-                  Navigator("/admin/categorias/management", {
-                    state: { mode: "UPD" },
-                  });
+      {isLoading === true ? (
+        <>
+          <TableBody>
+            <ContentLoadingIndicator />
+          </TableBody>
+          <TableFooter></TableFooter>
+        </>
+      ) : (
+        <>
+          <TableBody>
+            {(rowsPerPage > 0
+              ? rows.items.slice(
+                  page * rowsPerPage,
+                  page * rowsPerPage + rowsPerPage
+                )
+              : rows.items
+            ).map((row) => (
+              <TableRow key={row._id as string}>
+                <TableCell
+                  component="th"
+                  scope="row"
+                  style={{ width: 160 }}
+                  align="center"
+                >
+                  {row._id as string}
+                </TableCell>
+                <TableCell style={{ width: 160 }} align="center">
+                  {row.title}
+                </TableCell>
+                <TableCell style={{ width: 160 }} align="center">
+                  {row.description}
+                </TableCell>
+                <TableCell style={{ width: 160 }} align="center">
+                  {row.status}
+                </TableCell>
+                <TableCell align="center" style={{ width: 160 }}>
+                  <IconButton
+                    onClick={() => {
+                      Navigator("/admin/categorias/management", {
+                        state: {
+                          mode: "UPD",
+                          _id: row._id as string,
+                          title: row.title,
+                          description: row.description,
+                          status: row.status,
+                        },
+                      });
+                    }}
+                    aria-label="delete"
+                    color="info"
+                    size="large"
+                  >
+                    <CreateIcon fontSize="inherit" />
+                  </IconButton>
+                  <IconButton
+                    aria-label="delete"
+                    color="error"
+                    size="large"
+                    onClick={async () => {
+                      const response = await deleteCategory({
+                        categoryId: row._id as string,
+                      });
+                      Navigator(0);
+                    }}
+                  >
+                    <DeleteIcon fontSize="inherit" />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+            {emptyRows > 0 && (
+              <TableRow style={{ height: 53 * emptyRows }}>
+                <TableCell colSpan={6} />
+              </TableRow>
+            )}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                colSpan={3}
+                count={rows.items.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                SelectProps={{
+                  inputProps: {
+                    "aria-label": "rows per page",
+                  },
+                  native: true,
                 }}
-                aria-label="delete"
-                color="info"
-                size="large"
-              >
-                <CreateIcon fontSize="inherit" />
-              </IconButton>
-              <IconButton aria-label="delete" color="error" size="large">
-                <DeleteIcon fontSize="inherit" />
-              </IconButton>
-            </TableCell>
-          </TableRow>
-        ))}
-        {emptyRows > 0 && (
-          <TableRow style={{ height: 53 * emptyRows }}>
-            <TableCell colSpan={6} />
-          </TableRow>
-        )}
-      </TableBody>
-      <TableFooter>
-        <TableRow>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-            colSpan={3}
-            count={rows.items.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            SelectProps={{
-              inputProps: {
-                "aria-label": "rows per page",
-              },
-              native: true,
-            }}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            ActionsComponent={TablePaginationActions}
-          />
-        </TableRow>
-      </TableFooter>
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                ActionsComponent={TablePaginationActions}
+              />
+            </TableRow>
+          </TableFooter>
+        </>
+      )}
     </>
   );
 };

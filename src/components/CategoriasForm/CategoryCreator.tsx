@@ -1,12 +1,15 @@
 import { useState } from "react";
-import { CategoryUpdate } from "./CategoryUpdate";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
+import { useAddMutation } from "@store/Services/Category";
+import { useDispatch } from "react-redux";
+import { setCategoryData } from "@store/Slices/categorySlice";
 
 import { Box, Button, TextField, FormControl } from "@mui/material";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const validationSchema = yup.object().shape({
   title: yup.string().required("Titulo es Requerido"),
@@ -16,17 +19,31 @@ const validationSchema = yup.object().shape({
 let initialValues = {
   title: "",
   description: "",
+  status: "ACT",
 };
 
 export const CategoryCreator = () => {
+  const Navigator = useNavigate();
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  const [add, { isLoading, status, error }] = useAddMutation();
+
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      console.log(values);
+      setLoading(true);
+      let data;
+      try {
+        data = await add(values).unwrap();
+      } catch (error) {
+        setLoading(false);
+        return error;
+      }
+      dispatch(setCategoryData(data));
+      Navigator("/admin/categorias/list");
     },
   });
-  const Navigator = useNavigate();
 
   return (
     <Box
@@ -122,7 +139,8 @@ export const CategoryCreator = () => {
             startIcon={<ControlPointIcon />}
             type="submit"
           >
-            Agregar
+            Agregar &nbsp;
+            {loading === true ? <CircularProgress color="inherit" /> : null}
           </Button>
           <Button
             variant="outlined"
