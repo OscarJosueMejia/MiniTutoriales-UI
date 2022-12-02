@@ -2,7 +2,7 @@
 import {useState} from 'react';
 import {IFeedItem} from '@store/Slices/feedSlice';
 import { StepContainerLite } from '@components/Steps';
-import { useAddCommentMutation, useDeleteCommentMutation } from '@store/Services/Feed';
+import { colors } from '@components/Feed/FeedCard';
 //Components
 import { Card, CardContent, Container, CardActions, CardMedia, Divider, Typography, CardHeader, FormControl, Avatar, IconButton, TextField, Button } from "@mui/material";
 import { green } from "@mui/material/colors";
@@ -16,7 +16,10 @@ import { useNavigate } from 'react-router-dom';
 interface ITutorialBodyParams {
   itemData:IFeedItem;
   viewMode:TViewMode;
+  currentUserId:string;
+  currentUserName:string;
   handleReaction: (params:IReactionBody) => {};
+  handleComment: (mode:'ADD'|'DEL', newComment:string, commentId?:string) => {}
 }
 
 export interface ITutorialComment{
@@ -26,48 +29,26 @@ export interface ITutorialComment{
   text: string;
 }
 
-const TutorialBody = ({itemData, handleReaction}:ITutorialBodyParams) => {
+const TutorialBody = ({itemData, handleReaction, currentUserId, handleComment}:ITutorialBodyParams) => {
     const Navigator = useNavigate();
-    const [ addComment ] = useAddCommentMutation();
-    const [ deleteComment ] = useDeleteCommentMutation();
     const {_id ,title, authorId, createdAt, description, requirements, comments, reactionsCount, steps, userLiked, author_info} = itemData;
     
-    const currentUserId = '6355bf4a972277413bb7ddca';
-    const currentUserName = 'Oscar Mejia';
-
     const [isUserLiked, setIsUserLiked] = useState(userLiked);
     const [userLikesCount, setUserLikesCount] = useState(reactionsCount.reaction_IsUtil.length);
 
-    const [postComments, setPostComments] = useState<Array<ITutorialComment>>(comments);
     const [newComment, setNewComment] = useState("");
 
     const HandleReactionClick = () => {
-      handleReaction({mode:!isUserLiked ? 'ADD' : 'REMOVE', tutorialId:_id, userId:currentUserId, reactionName:'LIKE'});
+      handleReaction({mode:!isUserLiked ? 'ADD' : 'REMOVE', tutorialId:_id, reactionName:'LIKE'});
       setIsUserLiked(!isUserLiked);
       setUserLikesCount(!isUserLiked ? userLikesCount + 1 : userLikesCount - 1)
     }
-
-    const HandleAddComment = async () => {
-      const commentStructure = {tutorialId:_id as string, userId:currentUserId, authorName:currentUserName, text:newComment}
-      const result = await addComment(commentStructure);
-      let newLocalComments = [...postComments];
-      newLocalComments.push({...commentStructure, ...{_id:(result as {data:{newId:string}}).data.newId}});
-      setPostComments(newLocalComments);
-      setNewComment("");
-    }
-    const HandleDeleteComment = async (commentId:string) => {
-      const commentStructure = {tutorialId:_id as string, commentId}
-
-      await deleteComment(commentStructure);
-      let newLocalComments = postComments.filter(e => e._id !== commentId);
-      setPostComments(newLocalComments);
-    }
-    
+  
     return (
         <Card sx={{width: '100vw', marginBottom:2, backgroundColor:'#f5f5f5', borderRadius:3}}>
         <CardHeader
           avatar={
-            <Avatar sx={{ bgcolor: green[500] }} aria-label="recipe" onClick={()=>{Navigator('/home/profile', {state:{userId:authorId}})}}>
+            <Avatar sx={{ bgcolor: colors[author_info[0].avatar as number] }} aria-label="recipe" onClick={()=>{Navigator('/home/profile', {state:{userId:authorId}})}}>
             {`${(author_info[0].name).split(' ')[0][0]}${(author_info[0].name).split(' ')[1][0]}`}
             </Avatar>
           }
@@ -112,21 +93,21 @@ const TutorialBody = ({itemData, handleReaction}:ITutorialBodyParams) => {
               <TextField id="filled-textarea" multiline
               maxRows={10} label="Escribe un Comentario..." variant='standard' value={newComment} onChange={(e)=>{setNewComment(e.target.value)}} />
           </FormControl>
-          <Button sx={{ml:2}} variant='contained' disabled={newComment == ""} onClick={()=>{HandleAddComment()}}>Agregar</Button>
+          <Button sx={{ml:2}} variant='contained' disabled={newComment == ""} onClick={()=>{handleComment('ADD', newComment)}}>Agregar</Button>
         
         </CardContent>
-          { postComments !== undefined && postComments.length > 0
+          { comments !== undefined && comments.length > 0
             ?<CardContent sx={{display:'flex', alignItems:'center', flexDirection:'column'}}>
               {
-                postComments.map(comment=>{
+                comments.map(comment=>{
                   return(
                     <Container key={comment._id as string} sx={{px:0, my:0.5, py:0.7, bgcolor: 'background.paper', borderRadius:1, display:'flex', justifyContent:'space-between'}}>
                       <div>
-                        <Typography color='#1976d2' sx={{fontSize:15, pl:"0.8rem"}}>{comment.authorName} {currentUserId === author_info[0]._id ? <span style={{marginLeft:2, color:"#787A91"}}>(Autor)</span>  : null } </Typography>
+                        <Typography color='#1976d2' sx={{fontSize:15, pl:"0.8rem"}}>{comment.authorName} {comment.userId === author_info[0]._id ? <span style={{marginLeft:2, color:"#787A91"}}>(Autor)</span>  : null } </Typography>
                         <Typography sx={{pt:0.5, pl:"1rem"}}>{comment.text}</Typography>
                       </div>
                       { comment.userId === currentUserId 
-                        ? <IconButton sx={{mx:2}}  onClick={()=>{HandleDeleteComment(comment._id as string)}}>
+                        ? <IconButton sx={{mx:2}}  onClick={()=>{handleComment('DEL', "", comment._id)}}>
                             <DeleteIcon />
                           </IconButton>
                         : null
@@ -136,12 +117,9 @@ const TutorialBody = ({itemData, handleReaction}:ITutorialBodyParams) => {
                   )
                 })
               }
-              
             </CardContent>
             :<Typography sx={{textAlign:'center', my:2}}>Aún no hay Comentarios.</Typography>
           }
-          
-          
       </Card>
       )
 } 

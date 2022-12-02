@@ -39,7 +39,7 @@ const CommonProfileView = () => {
 
     return (
     <>
-      <Header title="Mi Perfil" />
+      <Header title="Perfil del Usuario" />
       <ProfileInfo userData={{name:"John Doe", email:"oj_mejias@unicah.edu"}} uploadCount={tutorialItems.length} />
       <FeedLoader viewMode="USER"
         hideLoaderBtn={feedDetails.page === feedDetails.totalPages }

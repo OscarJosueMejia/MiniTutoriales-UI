@@ -2,7 +2,7 @@ import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import { RootState } from "../store";
 
 
-const ITEMS_PER_PAGE = 4;
+const ITEMS_PER_PAGE = 10;
 
 export const feedApi = createApi({
   reducerPath: 'feedApi',
@@ -15,7 +15,7 @@ export const feedApi = createApi({
       }
     }
   }),
-
+  refetchOnFocus:true,
   endpoints: (builder) => ({
     getAll: builder.query({
       query: () => ({
@@ -27,11 +27,11 @@ export const feedApi = createApi({
       })
     }),
     feedForLogged: builder.query({
-      query: (page) => ({
-        url: `logged_user/6355bf4a972277413bb7ddca`,
+      query: (params:{page:number, userId:string}) => ({
+        url: `logged_user/${params.userId}`,
         method: 'get',
         params:{
-          page,
+          page:params.page,
           items:ITEMS_PER_PAGE
         },
         headers: {
@@ -40,15 +40,16 @@ export const feedApi = createApi({
       })
     }),
     getOne: builder.query({
-      query: (tutorialId) => ({
-        url: `one/${tutorialId}`,
+      query: (params:{tutorialId:string, userId:string}) => ({
+        url: `one/${params.tutorialId}`,
         method: 'get',
         params:{
-          userId:'6355bf4a972277413bb7ddca'
+          userId:params.userId
         },
         headers: {
           apikey: process.env.REACT_APP_API_KEY,
         },
+        
       })
     }),
     byUser: builder.query({
@@ -105,6 +106,15 @@ export const feedApi = createApi({
         },
       })
     }),
+    deleteTutorial: builder.mutation({
+      query: (tutorialId:string) => ({
+        url: `delete/${tutorialId}`,
+        method: 'delete',
+        headers: {
+          apikey: process.env.REACT_APP_API_KEY,
+        },
+      })
+    })
   }),
 });
 
@@ -116,6 +126,7 @@ export const {
   useFeedForLoggedQuery, 
   useLazyFeedForLoggedQuery,
   useGetOneQuery, 
+  useDeleteTutorialMutation,
   useByUserQuery, 
   useLazyByUserQuery,
   useLazySearchQuery,

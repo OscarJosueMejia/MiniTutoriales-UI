@@ -1,9 +1,10 @@
 //Logic
 import {useState, useEffect} from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { setFeedItems, IFeedItem, selectFeedItems, selectFeedDetails } from "@store/Slices/feedSlice";
-import { useLazyFeedForLoggedQuery } from "@store/Services/Feed";
+import { IFeedItem, selectFeedItems, selectFeedDetails } from "@store/Slices/feedSlice";
+import { useLazyFeedForLoggedQuery, useFeedForLoggedQuery} from "@store/Services/Feed";
 import { useNavigate } from 'react-router-dom';
+import { RootState, store } from '@store/store';
 //Components
 import { FeedLoader } from '@views/Feed/FeedLoader';
 import Header from "@components/Header";
@@ -12,27 +13,18 @@ import { Typography } from '@mui/material';
 
 const Feed = () => {
     const Navigator = useNavigate();
+    const userId = (store.getState() as RootState).sec._id;
     const [ currentPage, setCurrentPage ] = useState(1);
-    const [ trigger, {isLoading, isError, error}] = useLazyFeedForLoggedQuery()
-    
-    const dispatch = useDispatch();
-    const tutorialItems = useSelector(selectFeedItems);
-    const feedDetails = useSelector(selectFeedDetails);
-  
+    const [isLastPage, setLastPage] = useState(false);
+    const [ trigger, {isLoading, isFetching, isError, error}] = useLazyFeedForLoggedQuery()
+    const [currentData, setCurrentData] = useState<Array<IFeedItem>>([]);
+
     useEffect(()=>{
         async function getData() {
-
-          const { data:newData } = await trigger(currentPage);
-          if(currentPage > feedDetails.page){
-            dispatch(setFeedItems({
-              items:[...tutorialItems, ...newData.items as Array<IFeedItem> ],
-              itemsPerPage: newData.itemsPerPage,
-              total: newData.total,
-              totalPages: newData.totalPages,
-              page: newData.page,
-            }));
+          const { data:newData } = await trigger({page:currentPage, userId});
+          setLastPage( newData.page === newData.totalPages );
+          setCurrentData([...currentData, ...newData.items]);
           }
-        }
         getData();
     
       },[currentPage]);
@@ -42,7 +34,8 @@ const Feed = () => {
       <Header title="MiniTutoriales" showActionBtn={true} btnTitle="Crear Tutorial" btnIconType='ADD' btnAction={()=>{Navigator("/creator", {state:{isUpdate:false}})}} />
       <Typography variant="h6" sx={{mt:'8vh', ml:3}}>¿Que aprenderás Hoy?</Typography>
       <FeedLoader viewMode="MAIN"
-        hideLoaderBtn={feedDetails.page === feedDetails.totalPages }
+        data={currentData}
+        hideLoaderBtn={isLastPage}
         querySelector={selectFeedItems}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
@@ -50,7 +43,7 @@ const Feed = () => {
         isError={isError}
         error={error}
       />
-      <AlertDialog isOpen={isError} type='ERROR' title="Ups!" description='Algo no salió como debería...' />
+      <AlertDialog isOpen={isError} type='ERROR' title="Ups!" description='Error al Conectar con el Servidor.' />
     </>
     );
 }

@@ -5,6 +5,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { uploadImage } from '@utils/firebase';
 import { IStep } from '@components/Steps/StepContainer';
 import { IFeedItem } from '@store/Slices/feedSlice';
+import { RootState, store } from '@store/store';
 //Components
 import { Container } from "@mui/material";
 import { AlertDialog, ModalLoadingIndicator } from "@components/Misc";
@@ -16,7 +17,7 @@ import * as Yup from 'yup';
 
 import './tutorial.css';
 
-interface IFormValues {
+export interface IFormValues {
   tutorialId?:string;
   title:string;
   description:string;
@@ -32,7 +33,7 @@ const TutorialManagement = () => {
     const isUpdate = Location.state.isUpdate;
     const itemData = Location.state.itemData as IFeedItem;
 
-    const userId = '6355bf4a972277413bb7ddca';
+    const userId = (store.getState() as RootState).sec._id;
 
     const [uploadingImgs, setUploadingImgs] = useState(false);
 
@@ -85,7 +86,9 @@ const TutorialManagement = () => {
           <Header title={!isUpdate ? "Crear un Tutorial" : "Editar Tutorial"} showActionBtn={true} btnTitle={!isUpdate ? "Publicar" : " Aplicar Cambios"} btnIconType='CHECK' btnAction={()=>{formik.handleSubmit()}} />
           <Container className="tutorialViewContainer"  >
             <TutorialForm  
-              formik={formik}
+              formikValues={formik.values}
+              formikErrors={formik.errors}
+              formikSetValue={formik.setFieldValue}
             />
           </Container>
           <ModalLoadingIndicator show={isLoading || isUpdating || uploadingImgs} />

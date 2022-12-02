@@ -1,18 +1,22 @@
+//Logic
+import {useState} from 'react';
 import { FeedLoader } from '@views/Feed/FeedLoader';
-import {useState, useEffect} from 'react';
 import { IFeedItem } from "@store/Slices/feedSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { selectSearchFeedItems, selectSearchFeedDetails, setSearchFeedItems } from '@store/Slices/searchFeed';
+import { useDispatch } from "react-redux";
 import { useLazySearchQuery } from "@store/Services/Feed";
+import { selectSearchFeedItems, setSearchFeedItems } from '@store/Slices/searchFeed';
+import { RootState, store } from '@store/store';
+//Components
 import Header from "@components/Header";
-import { Container, styled, alpha, InputBase, Button, Typography } from '@mui/material';
+import { Container, styled, InputBase } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
 const SearchView = () => {
+    const userId = (store.getState() as RootState).sec._id;
+  
     const [ currentPage, setCurrentPage ] = useState(1);
     const [ TriggerFeedBySearch, {isLoading, isError, error}] = useLazySearchQuery()
     const dispatch = useDispatch();
-    const tutorialItems = useSelector(selectSearchFeedItems);
 
     const HandleSearch = async (e:unknown) =>{
       (e as {preventDefault: Function}).preventDefault();
@@ -20,7 +24,7 @@ const SearchView = () => {
       const { value } = (e as {target:{value:string}}).target;
 
       if (value !== ""){
-        const { data:newData } = await TriggerFeedBySearch({search:value, userId:'6355bf4a972277413bb7ddca'});
+        const { data:newData } = await TriggerFeedBySearch({search:value, userId});
         dispatch(setSearchFeedItems({
           items: newData as Array<IFeedItem>,
         }));

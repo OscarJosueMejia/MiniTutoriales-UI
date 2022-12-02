@@ -14,8 +14,11 @@ import { feedApi } from "./Services/Feed";
 import CryptoJS from "crypto-js";
 
 const preLoadedState = JSON.parse(
-  CryptoJS.AES.decrypt(localStorage.getItem("reduxState") as string, process.env.REACT_APP_API_KEY as string).toString(CryptoJS.enc.Utf8) || "{}"
+  localStorage.getItem("reduxState") as string  || "{}"
 );
+// const preLoadedState = JSON.parse(
+//   CryptoJS.AES.decrypt(localStorage.getItem("reduxState") as string, process.env.REACT_APP_API_KEY as string).toString(CryptoJS.enc.Utf8) || "{}"
+// );
 
 export const store = configureStore({
   reducer: {
@@ -35,7 +38,7 @@ export const store = configureStore({
 });
 
 store.subscribe(() => {
-  const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(store.getState()), process.env.REACT_APP_API_KEY as string).toString();
+  const encryptedData = JSON.stringify(store.getState())
   localStorage.setItem("reduxState", encryptedData);
 });
 

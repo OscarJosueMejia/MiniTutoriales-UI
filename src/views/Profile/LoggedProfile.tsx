@@ -4,6 +4,8 @@ import { IFeedItem } from "@store/Slices/feedSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUserFeedItems, setUserFeedItems, selectUserFeedDetails} from "@store/Slices/userFeedSlice";
 import { useLazyByUserQuery } from "@store/Services/Feed";
+import { RootState, store } from '@store/store';
+import { feedApi } from '@store/Services/Feed';
 //Components
 import Header from "@components/Header";
 import {Button, ButtonGroup, Container} from "@mui/material";
@@ -14,11 +16,12 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 type mode = 'LIKED'|'LIST';
 
 const ProfileView = () => {
+    const userId=(store.getState() as RootState).sec._id;
+    
     const [ currentPage, setCurrentPage ] = useState(1);
     const [ currentMode, setCurrentMode ] = useState<mode>('LIST');
 
     const [ TriggerFeedByUser, {isLoading, isError, error}] = useLazyByUserQuery()
-    const userId='6355bf4a972277413bb7ddca'
     const tutorialItems = useSelector(selectUserFeedItems);
     const feedDetails = useSelector(selectUserFeedDetails);
 
@@ -26,7 +29,6 @@ const ProfileView = () => {
     
     useEffect(()=>{
       async function getData() {
-
           const { data:newData } = await TriggerFeedByUser({page:currentPage, userId, mode:currentMode});
             if(feedDetails.currentMode !== currentMode){
               setCurrentPage(1);

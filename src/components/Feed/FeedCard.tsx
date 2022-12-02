@@ -9,12 +9,12 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { motion } from 'framer-motion';
 
 interface IFeedCardProps {
-  itemData:IFeedItem
-  viewMode:TViewMode
+  itemData:IFeedItem;
+  viewMode:TViewMode;
   handleReaction: (params:IReactionBody) => {}
 }
 
-const colors = [green[500], lightBlue[500], lightGreen[500], indigo[500], orange[500], teal[500]];
+export const colors = [green[500], lightBlue[500], lightGreen[500], indigo[500], orange[500], teal[500], teal[300], orange[300], lightGreen[400], green[300] ];
 
 const FeedCard = ({itemData, handleReaction, viewMode}:IFeedCardProps)=>{
   const Navigate = useNavigate();
@@ -24,7 +24,7 @@ const FeedCard = ({itemData, handleReaction, viewMode}:IFeedCardProps)=>{
   const [userLikesCount, setUserLikesCount] = useState(reactionsCount.reaction_IsUtil.length);
 
   const HandleReactionClick = () => {
-    handleReaction({mode:!isUserLiked ? 'ADD' : 'REMOVE', tutorialId:_id, userId:'6355bf4a972277413bb7ddca', reactionName:'LIKE'});
+    handleReaction({mode:!isUserLiked ? 'ADD' : 'REMOVE', tutorialId:_id, reactionName:'LIKE'});
     setIsUserLiked(!isUserLiked);
     setUserLikesCount(!isUserLiked ? userLikesCount + 1 : userLikesCount - 1)
   }
@@ -34,7 +34,7 @@ const FeedCard = ({itemData, handleReaction, viewMode}:IFeedCardProps)=>{
     <Card sx={{marginBottom:2, backgroundColor:'#eceff1', borderRadius:2}}>
     <CardHeader
       avatar={
-        <Avatar sx={{ bgcolor: colors[4] }} aria-label="recipe">
+        <Avatar sx={{ bgcolor: colors[author_info[0].avatar as number] }} aria-label="recipe">
         {`${(author_info[0].name).split(' ')[0][0]}${(author_info[0].name).split(' ')[1][0]}`}
         </Avatar>
       }
