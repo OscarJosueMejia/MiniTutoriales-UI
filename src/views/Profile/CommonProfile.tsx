@@ -1,19 +1,15 @@
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { FeedLoader } from '@views/Feed/FeedLoader';
-import {useState, useEffect} from 'react';
 import { IFeedItem } from "@store/Slices/feedSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { setCommUserItems, selectCommUserData, selectCommUserItems } from '@store/Slices/commUserSlice';
 import { useLazyByUserQuery} from "@store/Services/Feed";
+//Components
 import Header from "@components/Header";
-import { useLocation } from 'react-router-dom';
+import { ProfileInfo } from '@components/Profile';
 
-interface IProfileViewParams{
-  mode:'LOGGED_USER'|'COMMON_PROFILE'
-}
-
-
-const CommonProfileView = ({mode}:IProfileViewParams) => {
-    // window.location.reload();
+const CommonProfileView = () => {
     const Location = useLocation();
     const [ currentPage, setCurrentPage ] = useState(1);
     const [ TriggerFeedByUser, {isLoading, isError, error}] = useLazyByUserQuery()
@@ -24,7 +20,7 @@ const CommonProfileView = ({mode}:IProfileViewParams) => {
     const dispatch = useDispatch();
 
     async function getData(userId:string) {
-        const { data:newData } = await TriggerFeedByUser({page:currentPage, userId});
+        const { data:newData } = await TriggerFeedByUser({page:currentPage, userId, mode:'LIST'});
         dispatch(setCommUserItems({
           items: feedDetails.currentUser === currentUser && currentPage > feedDetails.page 
                 ? [...tutorialItems, ...newData.items as Array<IFeedItem> ] 
@@ -43,7 +39,8 @@ const CommonProfileView = ({mode}:IProfileViewParams) => {
 
     return (
     <>
-      <Header title="Mi Perfil" />
+      <Header />
+      <ProfileInfo userData={{name:"John Doe", email:"oj_mejias@unicah.edu"}} uploadCount={tutorialItems.length} />
       <FeedLoader viewMode="USER"
         hideLoaderBtn={feedDetails.page === feedDetails.totalPages }
         querySelector={selectCommUserItems}
