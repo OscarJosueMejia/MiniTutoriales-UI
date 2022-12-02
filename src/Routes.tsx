@@ -3,6 +3,7 @@ import PrivateRoute from '@components/PrivateRoute';
 import { PageNotFound } from '@components/Misc';
 
 import EjemploAdmin from '@views/EjemploAdmin';
+import Admin from '@layouts/Admin/index';
 import Feed from '@views/Feed';
 import { Tutorial, TutorialManagement } from '@views/Tutorial';
 import {ProfileView, CommonProfileView} from '@views/Profile';
@@ -12,6 +13,7 @@ import SignUp from '@views/Auth/SignUp';
 import ValidateAccount from '@views/Auth/ValidateAccount';
 import SearchView from '@views/Search';
 import RecoveryPassword from '@views/Auth/RecoveryPassword';
+import {CategoryList, CategoryManagement} from '@views/Categorias/index';
 
 const Routes = () => {
   return (
@@ -70,6 +72,16 @@ const Routes = () => {
 
         <Route path="/*" element={<PageNotFound/>}/>
         <Route path="*" element={<PageNotFound/>}/>
+        <Route path="/admin/*" element={
+          <Switch>
+            <Route path='categorias/*' element={
+              <Switch>
+                <Route path='list' element={<Admin><CategoryList/></Admin>}/>
+                <Route path='management' element={<Admin><CategoryManagement/></Admin>}/>
+              </Switch>
+            }/>
+          </Switch>
+        }/>
       </Switch>
       
     </Router>
