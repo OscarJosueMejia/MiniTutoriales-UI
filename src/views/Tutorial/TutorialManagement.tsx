@@ -32,8 +32,6 @@ const TutorialManagement = () => {
     const isUpdate = Location.state.isUpdate;
     const itemData = Location.state.itemData as IFeedItem;
 
-    const userId = '6355bf4a972277413bb7ddca';
-
     const [uploadingImgs, setUploadingImgs] = useState(false);
 
     const [uploadContent, { isLoading, status, error }] = useUploadContentMutation();
@@ -60,7 +58,7 @@ const TutorialManagement = () => {
           setUploadingImgs(true);
           const dataPreparation = {
             tutorialId: formValues.tutorialId,
-            userId, 
+            userId:'638715a091b5ed67eddd8579', 
           title:formValues.title,
           description:formValues.description, 
           categoryId:'638715a091b5ed67eddd8579', 

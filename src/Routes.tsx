@@ -30,7 +30,7 @@ const Routes = () => {
           <Switch>
             <Route index element={<><Feed/><TabNavigator tab="/home/" /></>}/>
             <Route path="tutorial" element={<><Tutorial/><TabNavigator tab="/home/"/></>}/>
-            <Route path="profile" element={<><CommonProfileView /><TabNavigator tab="/home/" /></>}/>
+            <Route path="profile" element={<><CommonProfileView mode='COMMON_PROFILE' /><TabNavigator tab="/home/" /></>}/>
             <Route path="/*" element={<PageNotFound/>}/>
           </Switch>
         }/>

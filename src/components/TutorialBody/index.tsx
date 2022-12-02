@@ -120,7 +120,7 @@ const TutorialBody = ({itemData, handleReaction}:ITutorialBodyParams) => {
               {
                 postComments.map(comment=>{
                   return(
-                    <Container key={comment._id as string} sx={{px:0, my:0.5, py:0.7, bgcolor: 'background.paper', borderRadius:1, display:'flex', justifyContent:'space-between'}}>
+                    <Container sx={{px:0, my:0.5, py:0.7, bgcolor: 'background.paper', borderRadius:1, display:'flex', justifyContent:'space-between'}}>
                       <div>
                         <Typography color='#1976d2' sx={{fontSize:15, pl:"0.8rem"}}>{comment.authorName} {currentUserId === author_info[0]._id ? <span style={{marginLeft:2, color:"#787A91"}}>(Autor)</span>  : null } </Typography>
                         <Typography sx={{pt:0.5, pl:"1rem"}}>{comment.text}</Typography>

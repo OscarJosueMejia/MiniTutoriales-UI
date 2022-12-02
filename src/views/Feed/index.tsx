@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 import { FeedLoader } from '@views/Feed/FeedLoader';
 import Header from "@components/Header";
 import { AlertDialog } from '@components/Misc';
-import { Typography } from '@mui/material';
 
 const Feed = () => {
     const Navigator = useNavigate();
@@ -19,6 +18,7 @@ const Feed = () => {
     const tutorialItems = useSelector(selectFeedItems);
     const feedDetails = useSelector(selectFeedDetails);
   
+
     useEffect(()=>{
         async function getData() {
 
@@ -40,7 +40,6 @@ const Feed = () => {
     return (
     <>
       <Header title="MiniTutoriales" showActionBtn={true} btnTitle="Crear Tutorial" btnIconType='ADD' btnAction={()=>{Navigator("/creator", {state:{isUpdate:false}})}} />
-      <Typography variant="h6" sx={{mt:'8vh', ml:3}}>¿Que aprenderás Hoy?</Typography>
       <FeedLoader viewMode="MAIN"
         hideLoaderBtn={feedDetails.page === feedDetails.totalPages }
         querySelector={selectFeedItems}
