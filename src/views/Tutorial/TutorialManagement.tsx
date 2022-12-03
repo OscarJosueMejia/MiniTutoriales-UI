@@ -1,6 +1,6 @@
 //Logic
 import {useState} from 'react';
-import { useUploadContentMutation, useUpdateContentMutation} from '@store/Services/Creator';
+import { useUploadContentMutation, useUpdateContentMutation} from '@store/Services/Feed';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { uploadImage } from '@utils/firebase';
 import { IStep } from '@components/Steps/StepContainer';

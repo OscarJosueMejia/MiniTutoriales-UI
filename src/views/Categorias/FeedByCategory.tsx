@@ -22,13 +22,13 @@ const FeedByCategory = () => {
 
     const {data:dataForCategories, isLoading:loadingCategories, refetch} = useGetByStatusQuery({status:'ACT'});
     const {data:dataForFeed, isLoading:loadingFeed, isError, error, refetch:refetchFeed} = useByCategoryQuery({categoryId:categorySelected as string, page:currentPage, currentUserLogged:userId});
-    console.log(dataForFeed);
+    
     const handleCategoryChange = (id:string|number, description:string) => {
         setCategorySelected(id);
         setCategoryDescription(description);
         refetchFeed();
     }
-
+    
     return(
         <>
             <Header title="Categorías"  />
@@ -53,7 +53,6 @@ const FeedByCategory = () => {
                     {dataForFeed !== undefined &&
                         <FeedLoader viewMode="MAIN"
                             data={(dataForFeed as FeedData).items}
-                            hideLoaderBtn={false}
                             currentPage={currentPage}
                             setCurrentPage={setCurrentPage}
                             isLoading={loadingFeed}

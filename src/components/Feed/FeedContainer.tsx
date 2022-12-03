@@ -1,28 +1,17 @@
 //Logic
-import { useSelector } from "react-redux";
 import { IFeedItem } from "@store/Slices/feedSlice";
 import { TViewMode, IReactionBody } from '@views/Feed/FeedLoader';
-import { selectFeedItems } from "@store/Slices/feedSlice";
 //Components
-import { Container, Button, Typography} from "@mui/material";
+import { Container, Typography} from "@mui/material";
 import FeedCard from "./FeedCard";
 
 interface IFeedContainerProps {
-    data?:Array<IFeedItem>
+    data:Array<IFeedItem>
     handleReaction: (params:IReactionBody) => {};
     viewMode:TViewMode;
-    querySelector?: any | undefined;
-    handleLoader: () => void;
-    hideLoaderBtn?:boolean;
 }
 
-const FeedContainer = ({data, handleReaction, handleLoader, querySelector=selectFeedItems, viewMode, hideLoaderBtn}:IFeedContainerProps) => {
-    const altData =  useSelector(querySelector)
-
-    if (!data){
-        data = altData as Array<IFeedItem>
-    }
-
+const FeedContainer = ({data, handleReaction, viewMode}:IFeedContainerProps) => {
     return(
         <Container sx={{display:'flex', paddingLeft:0, paddingRight:0, justifyContent:'center', alignItems:'center', flexDirection:'column'}}>
             <Container  className="feedContainer" sx={{mt:3}} >
@@ -33,7 +22,6 @@ const FeedContainer = ({data, handleReaction, handleLoader, querySelector=select
                 :<Typography variant="h6">No se encontraron Tutoriales</Typography>
                 }
             </Container>
-            { !hideLoaderBtn ? <Button onClick={handleLoader} sx={{mt:'-2vh', mb:'10vh', alignSelf:'center'}} >Mostrar Más</Button> : null}
         </Container>
     )
 } 

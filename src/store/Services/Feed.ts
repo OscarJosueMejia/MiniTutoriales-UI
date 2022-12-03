@@ -1,7 +1,6 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import { RootState } from "../store";
 
-
 const ITEMS_PER_PAGE = 10;
 
 export const feedApi = createApi({
@@ -15,7 +14,7 @@ export const feedApi = createApi({
       }
     }
   }),
-  refetchOnFocus:true,
+  tagTypes: ["Feed"],
   endpoints: (builder) => ({
     getAll: builder.query({
       query: () => ({
@@ -37,7 +36,8 @@ export const feedApi = createApi({
         headers: {
           apikey: process.env.REACT_APP_API_KEY,
         },
-      })
+      }),
+      providesTags: ["Feed"]
     }),
     getOne: builder.query({
       query: (params:{tutorialId:string, userId:string}) => ({
@@ -49,8 +49,8 @@ export const feedApi = createApi({
         headers: {
           apikey: process.env.REACT_APP_API_KEY,
         },
-        
-      })
+      }),
+      providesTags: ["Feed"]
     }),
     byUser: builder.query({
       query: (params:{userId:string, page:number, mode:'LIKED'|'LIST', currentUserLogged?:string}) => ({
@@ -63,7 +63,8 @@ export const feedApi = createApi({
         headers: {
           apikey: process.env.REACT_APP_API_KEY,
         },
-      })
+      }),
+      providesTags: ["Feed"]
     }),
     byCategory: builder.query({
       query: (params:{categoryId:string, currentUserLogged?:string, page:number}) => ({
@@ -76,7 +77,8 @@ export const feedApi = createApi({
         headers: {
           apikey: process.env.REACT_APP_API_KEY,
         },
-      })
+      }),
+      providesTags: ["Feed"]
     }),
     search: builder.query({
       query: (params:{search:string, userId:string}) => ({
@@ -89,7 +91,8 @@ export const feedApi = createApi({
           apikey: process.env.REACT_APP_API_KEY,
         },
         keepUnusedDataFor: 1,
-      })
+      }),
+      providesTags: ["Feed"]
     }),
     reaction: builder.mutation({
       query: (params) => ({
@@ -99,7 +102,8 @@ export const feedApi = createApi({
         headers: {
           apikey: process.env.REACT_APP_API_KEY,
         },
-      })
+      }),
+      invalidatesTags: ["Feed"]
     }),
     AddComment: builder.mutation({
       query: (params:{userId:string, text:string, authorName:string, tutorialId:string}) => ({
@@ -109,7 +113,8 @@ export const feedApi = createApi({
         headers: {
           apikey: process.env.REACT_APP_API_KEY,
         },
-      })
+      }),
+      invalidatesTags: ["Feed"]
     }),
     DeleteComment: builder.mutation({
       query: (params:{commentId:string, tutorialId:string}) => ({
@@ -118,7 +123,8 @@ export const feedApi = createApi({
         headers: {
           apikey: process.env.REACT_APP_API_KEY,
         },
-      })
+      }),
+      invalidatesTags: ["Feed"]
     }),
     deleteTutorial: builder.mutation({
       query: (tutorialId:string) => ({
@@ -127,8 +133,32 @@ export const feedApi = createApi({
         headers: {
           apikey: process.env.REACT_APP_API_KEY,
         },
-      })
-    })
+      }),
+      invalidatesTags: ["Feed"]
+    }),
+
+    uploadContent: builder.mutation({
+      query: (body) => ({
+        url: `add/${body.userId}`,
+        method: 'post',
+        body,
+        headers: {
+          apikey: process.env.REACT_APP_API_KEY,
+        },
+      }),
+      invalidatesTags: ["Feed"]
+    }),
+    updateContent: builder.mutation({
+      query: (body) => ({
+        url: `update/${body.tutorialId}`,
+        method: 'put',
+        body,
+        headers: {
+          apikey: process.env.REACT_APP_API_KEY,
+        },
+      }),
+      invalidatesTags: ["Feed"]
+    }),
   }),
 });
 
@@ -146,4 +176,6 @@ export const {
   useSearchQuery,
   useLazyByUserQuery,
   useLazySearchQuery,
+
+  useUploadContentMutation, useUpdateContentMutation
 } = feedApi;
