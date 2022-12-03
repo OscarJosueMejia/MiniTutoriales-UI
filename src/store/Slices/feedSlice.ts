@@ -22,18 +22,18 @@ export interface IFeedItem2 {
     name:string,
     email: string,
     status: string, //'ACT' | 'INA' | 'BLQ';
-    password?: string,
-    preferences?: string[],
-    oldPasswords?: string[],
-    passwordChangeToken?: String,
-    verificationPin?:string;
+    password: string,
+    preferences: string[],
+    oldPasswords: string,
+    passwordChangeToken: String,
+    verificationPin:string;
     created: Date,
     updated: Date,
-    avatar?: string,
-    failedAttempts?: number,
-    lastLogin?: Date,
+    avatar: string,
+    failedAttempts: number,
+    lastLogin: Date,
     roles:string[],
-    _id?: unknown
+    _id: unknown
 }
 
 export interface FeedData {

@@ -44,11 +44,22 @@ export const securityApi = createApi({
         },
       })
     }),
-    getAll: builder.mutation({
-      query: (credentials) => ({
-        url: `getAll`,
-        method: 'GET',
-        body:credentials,
+    getAll: builder.query({
+      query: () => ({
+        url: 'all',
+        method: 'getALL',
+        headers: {
+          apikey: process.env.REACT_APP_API_KEY,
+        },
+      })
+    }),
+    getById: builder.query({
+      query: (id) => ({
+        url: `profile/${id}`,
+        method: 'get',
+        params:{
+          id:'638715a091b5ed67eddd8579'
+        },
         headers: {
           apikey: process.env.REACT_APP_API_KEY,
         },
@@ -57,4 +68,4 @@ export const securityApi = createApi({
   }),
 });
 
-export const {useLoginMutation, useSigninMutation, useVerifyAccountMutation} = securityApi;
+export const {useLoginMutation, useSigninMutation, useVerifyAccountMutation, useChangePassMutation, useGetAllQuery, useGetByIdQuery} = securityApi;

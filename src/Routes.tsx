@@ -57,6 +57,8 @@ const Routes = () => {
             <Route index element={<><ProfileView/><TabNavigator tab="/user/" /></>}/>
             <Route path="profile" element={<><CommonProfileView mode='COMMON_PROFILE' /><TabNavigator tab="/user/" /></>}/>
             <Route path="changePassword" element={<><ChangeView/><TabNavigator tab="/user/changePassword" /></>}/>
+            <Route path="getALL" element={<><ChangeView/><TabNavigator tab="/user/getALL" /></>}/>
+            <Route path="profile/:id" element={<><ChangeView/><TabNavigator tab="/user/profile/:id" /></>}/>
             <Route path="/*" element={<PageNotFound/>}/>
           </Switch>
         }/>

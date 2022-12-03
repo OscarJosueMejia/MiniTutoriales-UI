@@ -4,16 +4,27 @@ import EmailIcon from '@mui/icons-material/Email';
 import DescriptionIcon from '@mui/icons-material/Description';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Copyright } from '@mui/icons-material';
+import { IStep } from '@components/Steps/StepContainer';
+import { useState } from 'react';
 
+const inputVariant = 'filled';
 const theme = createTheme();
 
-interface IProfileInfoProps {
-    userData:{
-        email:string
-    };
+interface IProfileFormProps {
+  formik:any;
 }
 
-export default function FormChangePass({userData}:IProfileInfoProps) {
+export default function FormChangePass({formik}:IProfileFormProps) {
+  const oldPasswords:Array<string> = formik.values['oldPasswords'] as Array<string>
+  const [ stepCreatorOpen, setStepCreatorOpen ] = useState(false);
+  const [ reqCreatorOpen, setReqCreatorOpen ] = useState(false);
+
+  const [ stepUpd, setStepUpd ] = useState<IStep>();
+    const [ stepUpdOpen, setStepUpdOpen ] = useState(false);
+
+    
+
+
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
@@ -36,6 +47,10 @@ export default function FormChangePass({userData}:IProfileInfoProps) {
         >
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
+              value={formik.values['email']}
+              error={formik.errors['email'] !== undefined}
+              helperText={formik.errors['email']}
+              onChange={(e)=>{formik.setFieldValue('email',e.target.value)}} 
               margin="normal"
               required
               fullWidth
@@ -46,23 +61,31 @@ export default function FormChangePass({userData}:IProfileInfoProps) {
               autoFocus
             />
             <TextField
+              value={formik.values['password']}
+              onChange={(e)=>{formik.setFieldValue('password',e.target.value)}}
+              error={formik.errors['password'] !== undefined}
+              helperText={formik.errors['password']}
               margin="normal"
               required
               fullWidth
-              name="oldPassword"
+              name="password"
               label="Contraseña Actual"
               type="password"
               id="password"
               autoComplete="current-password"
             />
             <TextField
+              value={formik.values['oldPasswords']}
+              onChange={(e)=>{formik.setFieldValue('oldPasswords',e.target.value)}}
+              error={formik.errors['oldPasswords'] !== undefined}
+              helperText={formik.errors['oldPasswords']}
               margin="normal"
               required
               fullWidth
-              name="password"
+              name="oldPasswords"
               label="Contraseña Nueva"
               type="password"
-              id="password"
+              id="oldPasswords"
               autoComplete="current-password"
             />
             <Button

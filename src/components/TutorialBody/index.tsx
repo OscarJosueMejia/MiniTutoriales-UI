@@ -33,7 +33,7 @@ const TutorialBody = ({itemData, handleReaction}:ITutorialBodyParams) => {
     const {_id ,title, authorId, createdAt, description, requirements, comments, reactionsCount, steps, userLiked, author_info} = itemData;
     
     const currentUserId = '638715a091b5ed67eddd8579';
-    const currentUserName = 'Oscar Mejia';
+    const currentUserName = 'AngelLagos01';
 
     const [isUserLiked, setIsUserLiked] = useState(userLiked);
     const [userLikesCount, setUserLikesCount] = useState(reactionsCount.reaction_IsUtil.length);
