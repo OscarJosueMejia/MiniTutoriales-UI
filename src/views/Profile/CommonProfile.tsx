@@ -23,7 +23,7 @@ const CommonProfileView = () => {
       {isLoading && data === undefined ? <ContentLoadingIndicator /> 
       :
       <>
-        <ProfileInfo userData={{name:"John Doe", email:data.userData.email, avatar:data.userData.avatar}} uploadCount={ (data as FeedData).items.length}  />
+        <ProfileInfo userData={{name:data.userData.name, email:data.userData.email, avatar:data.userData.avatar}} uploadCount={ (data as FeedData).items.length}  />
         <FeedLoader viewMode="MAIN"
             data={(data as FeedData).items}
             currentPage={currentPage}
