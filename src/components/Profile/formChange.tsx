@@ -1,40 +1,65 @@
-import {Container, Avatar, Typography, Button, Box, Checkbox, CssBaseline, FormControlLabel, Grid, Link, TextField, ButtonGroup} from '@mui/material';
-import { green } from "@mui/material/colors";
-import EmailIcon from '@mui/icons-material/Email';
-import DescriptionIcon from '@mui/icons-material/Description';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Copyright } from '@mui/icons-material';
-import { IStep } from '@components/Steps/StepContainer';
+import { FeedLoader } from '@views/Feed/FeedLoader';
+import { IFeedItem2 } from "@store/Slices/feedSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUserFeedItems, setUserFeedItems, selectUserFeedDetails} from "@store/Slices/userFeedSlice";
+import { useLazyByUserQuery } from "@store/Services/Feed";
+//Components
+import Header from "@components/Header";
+import {Box, Button, ButtonGroup, CircularProgress, Container, CssBaseline, TextField} from "@mui/material";
+import { ProfileInfo } from '@components/Profile';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { selectCommUserData, selectCommUserItems, setCommUserItems } from '@store/Slices/commUserSlice';
+//import FormChangePass from '@components/Profile/formChange';
+import { useChangePassMutation } from '@store/Services/Security';
+import { useFormik } from 'formik';
+import * as yup from "yup";
+import { setSecData } from '@store/Slices/securitySlice';
 import { useState } from 'react';
 
-const inputVariant = 'filled';
-const theme = createTheme();
+export const FormChangePass = () => {
+  const Navigator = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  const [update, { isLoading, status, error }] = useChangePassMutation();
 
-interface IProfileFormProps {
-  formik:any;
-}
+  const validationSchema = yup.object().shape({
+        email: yup.string().required("Campo Requerido"),
+        password: yup.string().required("Campo requerido"),
+        oldPasswords: yup.array().min(1, 'Campo requerido'),
+  });
 
-export default function FormChangePass({formik}:IProfileFormProps) {
-  const oldPasswords:Array<string> = formik.values['oldPasswords'] as Array<string>
-  const [ stepCreatorOpen, setStepCreatorOpen ] = useState(false);
-  const [ reqCreatorOpen, setReqCreatorOpen ] = useState(false);
+  //let initialValues:IFormValues = {email:"", oldPasswords:[], password:""}
 
-  const [ stepUpd, setStepUpd ] = useState<IStep>();
-    const [ stepUpdOpen, setStepUpdOpen ] = useState(false);
+  let initialValues = {
+    email: location.state.email as string,
+    oldPasswords: location.state.oldPasswords as string,
+    password: location.state.password as string,
+  };
 
-    
+  const formik = useFormik({
+    initialValues: initialValues,
+    validationSchema: validationSchema,
+    onSubmit: async (values) => {
+      setLoading(true);
+      let data;
+      try {
+        data = await update({
+          ...values,
+          email: location.state.email as string,
+        }).unwrap();
+      } catch (error) {
+        setLoading(false);
+        console.log(error);
+      }
+      dispatch(setSecData(data));
+      window.location.replace("/user/");
+    },
+  });
 
-
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      const data = new FormData(event.currentTarget);
-      console.log({
-        email: data.get('email'),
-        password: data.get('password'),
-      });
-    };
     return (
-        <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -45,48 +70,40 @@ export default function FormChangePass({formik}:IProfileFormProps) {
             alignItems: 'center',
           }}
         >
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box component="form" onSubmit={formik.handleSubmit} noValidate sx={{ mt: 1 }} autoComplete="off">
             <TextField
-              value={formik.values['email']}
-              error={formik.errors['email'] !== undefined}
-              helperText={formik.errors['email']}
-              onChange={(e)=>{formik.setFieldValue('email',e.target.value)}} 
-              margin="normal"
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              error={formik.touched.email && Boolean(formik.errors.email)}
+              helperText={formik.touched.email && formik.errors.email}
               required
-              fullWidth
               id="email"
               label="Correo Electronico"
               name="email"
-              autoComplete="email"
-              autoFocus
             />
             <TextField
-              value={formik.values['password']}
-              onChange={(e)=>{formik.setFieldValue('password',e.target.value)}}
-              error={formik.errors['password'] !== undefined}
-              helperText={formik.errors['password']}
-              margin="normal"
-              required
-              fullWidth
-              name="password"
+              id="oldPassword"
+              name="oldPassword"
               label="Contraseña Actual"
-              type="password"
-              id="password"
-              autoComplete="current-password"
+              value={formik.values.oldPasswords}
+              required
+              onChange={formik.handleChange}
+              error={
+                formik.touched.oldPasswords && Boolean(formik.errors.oldPasswords)
+              }
+              helperText={formik.touched.oldPasswords && formik.errors.oldPasswords}
             />
             <TextField
-              value={formik.values['oldPasswords']}
-              onChange={(e)=>{formik.setFieldValue('oldPasswords',e.target.value)}}
-              error={formik.errors['oldPasswords'] !== undefined}
-              helperText={formik.errors['oldPasswords']}
-              margin="normal"
-              required
-              fullWidth
-              name="oldPasswords"
+              id="newPassword"
+              name="newPassword"
               label="Contraseña Nueva"
-              type="password"
-              id="oldPasswords"
-              autoComplete="current-password"
+              value={formik.values.password}
+              required
+              onChange={formik.handleChange}
+              error={
+                formik.touched.password && Boolean(formik.errors.password)
+              }
+              helperText={formik.touched.password && formik.errors.password}
             />
             <Button
               type="submit"
@@ -94,12 +111,13 @@ export default function FormChangePass({formik}:IProfileFormProps) {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Actualizar Contraseña
+              Actualizar Contraseña &nbsp;
+              {loading === true ? <CircularProgress color="inherit" /> : null}
             </Button>
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
-    </ThemeProvider>
-    )
-} 
+    );
+};
+
