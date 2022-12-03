@@ -15,6 +15,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import CreateIcon from "@mui/icons-material/Create";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import CircularProgress from "@mui/material/CircularProgress";
+import { AlertDialog } from "@components/Misc";
 
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -27,7 +28,7 @@ export const CategoryUpdate = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-  const [update, { isLoading, status, error }] = useUpdateMutation();
+  const [update, { status, isError, error }] = useUpdateMutation();
 
   const validationSchema = yup.object().shape({
     title: yup.string().required("Titulo es Requerido"),
@@ -57,7 +58,7 @@ export const CategoryUpdate = () => {
         console.log(error);
       }
       dispatch(setCategoryData(data));
-      window.location.replace("/admin/categorias/list");
+      Navigator("/admin/categorias/list");
     },
   });
 
@@ -178,6 +179,14 @@ export const CategoryUpdate = () => {
           </Button>
         </div>
       </Box>
+      {isError ? (
+        <AlertDialog
+          isOpen={isError}
+          type="ERROR"
+          title="Ups!"
+          description={(error as { data: { error: string } }).data.error}
+        />
+      ) : null}
     </Box>
   );
 };
