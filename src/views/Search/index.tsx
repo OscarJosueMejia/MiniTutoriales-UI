@@ -7,20 +7,20 @@ import { RootState, store } from '@store/store';
 import Header from "@components/Header";
 import { Container, styled, InputBase } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import { IFeedItem } from '@store/Slices/feedSlice';
+import { ContentLoadingIndicator } from "@components/Misc";
 
 const SearchView = () => {
     const userId = (store.getState() as RootState).sec._id;
     const [ currentPage, setCurrentPage ] = useState(1);
     const [searchValue, setSearchValue] = useState("");
-    // const [ TriggerFeedBySearch, {isLoading, isError, error}] = useLazySearchQuery()
-    const {data, isLoading, error, isError, refetch} = useSearchQuery({search:searchValue, userId});
+    const {data, isLoading, error, isError} = useSearchQuery({search:searchValue, userId}, {refetchOnFocus:false});
 
     const HandleSearch = async (e:unknown) =>{
       (e as {preventDefault: Function}).preventDefault();
       (e as {stopPropagation: Function}).stopPropagation();
       const { value } = (e as {target:{value:string}}).target;
       setSearchValue(value);
-      refetch();
     }
 
     return (
@@ -38,15 +38,18 @@ const SearchView = () => {
           />
         </Search>
       </Container>
-      <FeedLoader viewMode="MAIN"
-        data={data}
-        hideLoaderBtn={ true }
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        isLoading={isLoading}
-        isError={isError}
-        error={error}
-      />
+
+      {isLoading?<ContentLoadingIndicator/>
+      :<FeedLoader viewMode="MAIN"
+          data={(searchValue.length > 0) ? (data as Array<IFeedItem>) : []}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          isError={isError}
+          error={error}
+          hidePagination={true}
+          disableErrors={true}
+        />
+      }
     </>
     );
 }

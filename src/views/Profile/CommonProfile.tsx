@@ -8,6 +8,7 @@ import { RootState, store } from '@store/store';
 //Components
 import Header from "@components/Header";
 import { ProfileInfo } from '@components/Profile';
+import { ContentLoadingIndicator } from "@components/Misc";
 
 const CommonProfileView = () => {
     const Location = useLocation();
@@ -15,20 +16,24 @@ const CommonProfileView = () => {
     const [ currentUser, setCurrentUser ] = useState(Location.state.userId)
 
     const { data, isLoading, isError, error } = useByUserQuery({page:currentPage, userId:currentUser, mode:'LIST', currentUserLogged:(store.getState() as RootState).sec._id});
-
+    
     return (
     <>
       <Header title="Perfil del Usuario" />
-      <ProfileInfo userData={{name:"John Doe", email:"oj_mejias@unicah.edu"}} uploadCount={ data !== undefined ? (data as FeedData).items.length : 0}  />
-      <FeedLoader viewMode="MAIN"
-          data={(data as FeedData).items}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-          totalPages={(data as FeedData).totalPages}
-          isLoading={isLoading}
-          isError={isError}
-          error={error}
-      />
+      {isLoading && data === undefined ? <ContentLoadingIndicator /> 
+      :
+      <>
+        <ProfileInfo userData={{name:"John Doe", email:data.userData.email, avatar:data.userData.avatar}} uploadCount={ (data as FeedData).items.length}  />
+        <FeedLoader viewMode="MAIN"
+            data={(data as FeedData).items}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            totalPages={(data as FeedData).totalPages}
+            isError={isError}
+            error={error}
+          />
+      </>
+      }
     </>
     );
 }

@@ -4,15 +4,16 @@ import { green } from "@mui/material/colors";
 import EmailIcon from '@mui/icons-material/Email';
 import DescriptionIcon from '@mui/icons-material/Description';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
+import { colors } from '@components/Feed/FeedCard';
 import { useNavigate } from 'react-router-dom';
 
 interface IProfileInfoProps {
     userData:{
         name:string,
         email:string
+        avatar?:number;
     };
     uploadCount:number;
     isUserLogged?:boolean;
@@ -37,7 +38,7 @@ const ProfileInfo = ({userData, uploadCount, isLikedMode, isUserLogged}:IProfile
       <>
         <Container sx={{mt:10}}>
         <div style={{backgroundColor:'#eceff1', display:'flex',textAlign:'center',  justifyContent:'center', flexDirection:'column', borderRadius:5, paddingTop:'2vh', paddingBottom:'1vh'}}> 
-          <Avatar sx={{ bgcolor: green[500], alignSelf:'center', width:'60px', height:'60px'}} aria-label="recipe"
+          <Avatar sx={{ bgcolor: colors[userData.avatar as number], alignSelf:'center', width:'60px', height:'60px'}} aria-label="recipe"
                   onClick={handleClick}
                   aria-controls={open ? 'account-menu' : undefined}
                   aria-haspopup="true"

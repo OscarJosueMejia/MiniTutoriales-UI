@@ -8,10 +8,13 @@ import { Card, CardContent, Container, CardActions, CardMedia, Divider, Typograp
 import { green } from "@mui/material/colors";
 import { TViewMode, IReactionBody } from '@views/Feed/FeedLoader';
 import { RequirementsLiteList } from '@components/Requirements';
+import { Comments } from './Comments';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
+import { RootState, store } from '@store/store';
+
 
 interface ITutorialBodyParams {
   itemData:IFeedItem;
@@ -36,8 +39,6 @@ const TutorialBody = ({itemData, handleReaction, currentUserId, handleComment}:I
     const [isUserLiked, setIsUserLiked] = useState(userLiked);
     const [userLikesCount, setUserLikesCount] = useState(reactionsCount.reaction_IsUtil.length);
 
-    const [newComment, setNewComment] = useState("");
-
     const HandleReactionClick = () => {
       handleReaction({mode:!isUserLiked ? 'ADD' : 'REMOVE', tutorialId:_id, reactionName:'LIKE'});
       setIsUserLiked(!isUserLiked);
@@ -48,7 +49,14 @@ const TutorialBody = ({itemData, handleReaction, currentUserId, handleComment}:I
         <Card sx={{width: '100vw', marginBottom:2, backgroundColor:'#f5f5f5', borderRadius:3}}>
         <CardHeader
           avatar={
-            <Avatar sx={{ bgcolor: colors[author_info[0].avatar as number] }} aria-label="recipe" onClick={()=>{Navigator('/home/profile', {state:{userId:authorId}})}}>
+            <Avatar sx={{ bgcolor: colors[author_info[0].avatar as number] }} aria-label="recipe" 
+            onClick={()=>{
+              if(authorId === (store.getState() as RootState).sec._id){
+                Navigator('/user/')
+              }else{
+                Navigator('/home/profile', {state:{userId:authorId}})
+              }}}>
+
             {`${(author_info[0].name).split(' ')[0][0]}${(author_info[0].name).split(' ')[1][0]}`}
             </Avatar>
           }
@@ -60,7 +68,7 @@ const TutorialBody = ({itemData, handleReaction, currentUserId, handleComment}:I
           component="img"
           height="194"
           image="https://cdn-icons-png.flaticon.com/512/292/292333.png"
-          alt="Paella dish"
+          alt="tutorialdefault"
         />
         <CardContent>
           <Typography variant="body1" sx={{minWidth:'150vw'}} color="text.secondary">
@@ -87,39 +95,7 @@ const TutorialBody = ({itemData, handleReaction, currentUserId, handleComment}:I
         </CardActions>
         
         <Divider />
-        <Typography sx={{mt:2, ml:'0.8rem'}}>Comentarios</Typography>
-        <CardContent sx={{display:'flex', alignItems:'center'}}>
-        <FormControl fullWidth sx={{ m: 0 , bgcolor:'#f0f0f0'}}>
-              <TextField id="filled-textarea" multiline
-              maxRows={10} label="Escribe un Comentario..." variant='standard' value={newComment} onChange={(e)=>{setNewComment(e.target.value)}} />
-          </FormControl>
-          <Button sx={{ml:2}} variant='contained' disabled={newComment == ""} onClick={()=>{handleComment('ADD', newComment)}}>Agregar</Button>
-        
-        </CardContent>
-          { comments !== undefined && comments.length > 0
-            ?<CardContent sx={{display:'flex', alignItems:'center', flexDirection:'column'}}>
-              {
-                comments.map(comment=>{
-                  return(
-                    <Container key={comment._id as string} sx={{px:0, my:0.5, py:0.7, bgcolor: 'background.paper', borderRadius:1, display:'flex', justifyContent:'space-between'}}>
-                      <div>
-                        <Typography color='#1976d2' sx={{fontSize:15, pl:"0.8rem"}}>{comment.authorName} {comment.userId === author_info[0]._id ? <span style={{marginLeft:2, color:"#787A91"}}>(Autor)</span>  : null } </Typography>
-                        <Typography sx={{pt:0.5, pl:"1rem"}}>{comment.text}</Typography>
-                      </div>
-                      { comment.userId === currentUserId 
-                        ? <IconButton sx={{mx:2}}  onClick={()=>{handleComment('DEL', "", comment._id)}}>
-                            <DeleteIcon />
-                          </IconButton>
-                        : null
-                      }
-                      
-                    </Container>
-                  )
-                })
-              }
-            </CardContent>
-            :<Typography sx={{textAlign:'center', my:2}}>Aún no hay Comentarios.</Typography>
-          }
+        <Comments authorId={author_info[0]._id as string} currentUserId={currentUserId} handleComment={handleComment} comments={comments} />
       </Card>
       )
 } 

@@ -10,6 +10,7 @@ import {Button, ButtonGroup, Container} from "@mui/material";
 import { ProfileInfo } from '@components/Profile';
 import DescriptionIcon from '@mui/icons-material/Description';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { ContentLoadingIndicator } from "@components/Misc";
 
 type mode = 'LIKED'|'LIST';
 
@@ -24,7 +25,7 @@ const ProfileView = () => {
     return (
     <>
       <Header title="Mi Perfil" />
-      <ProfileInfo userData={{name:"Oscar Mejia", email:(store.getState() as RootState).sec.email }} uploadCount={data !== undefined ? (data as FeedData).items.length : 0} isLikedMode={currentMode === 'LIKED'} isUserLogged={true} />
+      <ProfileInfo userData={{name:"Oscar Mejia", email:(store.getState() as RootState).sec.email, avatar:Number((store.getState() as RootState).sec.avatar)}} uploadCount={data !== undefined ? (data as FeedData).items.length : 0} isLikedMode={currentMode === 'LIKED'} isUserLogged={true} />
       <Container sx={{display:'flex', justifyContent:'center', mt:'1.2rem'}}>
         <ButtonGroup
           disableElevation
@@ -33,14 +34,12 @@ const ProfileView = () => {
           <Button variant={currentMode === 'LIKED' ? 'contained' : 'outlined'} onClick={()=>{setCurrentMode('LIKED')}} endIcon={<FavoriteIcon sx={{mt:-0.2}}/>}>Me Gusta</Button>
         </ButtonGroup>
       </Container>
-
-      {data &&
-        <FeedLoader viewMode="USER"
+      {isLoading && data === undefined ? <ContentLoadingIndicator />
+      :<FeedLoader viewMode={currentMode === 'LIKED' ? 'MAIN' : 'USER'}
           data={(data as FeedData).items}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           totalPages={(data as FeedData).totalPages}
-          isLoading={isLoading}
           isError={isError}
           error={error}
         />

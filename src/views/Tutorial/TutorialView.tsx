@@ -29,13 +29,12 @@ const Tutorial = () => {
   const currentUserName = 'Oscar Mejia';
   
   const { _id, viewMode } = Location.state as Partial<IFeedItem> & {viewMode:TViewMode};
-  const {data, isLoading, isError, error, refetch} = useGetOneQuery({tutorialId:_id as string, userId:currentUserId});
+  const {data, isLoading, isError, error} = useGetOneQuery({tutorialId:_id as string, userId:currentUserId});
 
 
   const handleReaction = async ({tutorialId, reactionName, mode}:IReactionBody) => {
     try {
       await reaction({tutorialId, reactionName, userId:currentUserId, mode}).unwrap();
-      refetch();
     } catch (error) {
       console.log(error);
     }
@@ -50,7 +49,6 @@ const Tutorial = () => {
         await deleteComment({tutorialId:_id as string, commentId:commentId as string});
       break;
     }
-    refetch();
   }
 
   const HandleDelete = async () => {
