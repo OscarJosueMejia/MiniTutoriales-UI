@@ -4,7 +4,7 @@ import { PageNotFound } from '@components/Misc';
 
 import Feed from '@views/Feed';
 import { Tutorial, TutorialManagement } from '@views/Tutorial';
-import {ProfileView, CommonProfileView} from '@views/Profile';
+import {ProfileView, CommonProfileView, ChangeView} from '@views/Profile';
 import TabNavigator from '@components/TabNavigator';
 import SignIn from '@views/Auth/SignIn';
 import SignUp from '@views/Auth/SignUp';
@@ -56,6 +56,7 @@ const Routes = () => {
             {/* <Route index element={<PrivateRoute><TutorialManagement/><TabNavigator /></PrivateRoute>}/> */}
             <Route index element={<><ProfileView/><TabNavigator tab="/user/" /></>}/>
             <Route path="profile" element={<><CommonProfileView mode='COMMON_PROFILE' /><TabNavigator tab="/user/" /></>}/>
+            <Route path="changePassword" element={<><ChangeView/><TabNavigator tab="/user/changePassword" /></>}/>
             <Route path="/*" element={<PageNotFound/>}/>
           </Switch>
         }/>

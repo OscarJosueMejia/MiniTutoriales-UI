@@ -8,7 +8,7 @@ import Header from "@components/Header";
 import { useLocation } from 'react-router-dom';
 
 interface IProfileViewParams{
-  mode:'LOGGED_USER'|'COMMON_PROFILE'
+  mode:'LOGGED_USER'|'COMMON_PROFILE'|'CHANGE_PASSWORD'
 }
 
 

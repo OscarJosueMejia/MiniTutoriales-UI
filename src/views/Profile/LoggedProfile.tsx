@@ -12,11 +12,15 @@ import { Counter } from '@components/Counter';
 import { Usuario } from '@components/formChangeP';
 import ChangeView from './changePass';
 
+type mode = 'LIKED'|'LIST'|'CHANGE_PASSWORD';
+
 const ProfileView = () => {
     const [ currentPage, setCurrentPage ] = useState(1);
     const [ TriggerFeedByUser, {isLoading, isError, error}] = useLazyByUserQuery()
+    const [ currentMode, setCurrentMode ] = useState<mode>('LIST');
 
     const userId='638715a091b5ed67eddd8579';//'6355bf4a972277413bb7ddca'
+    const email='alagosjacome99@gmail.com';
     const tutorialItems = useSelector(selectUserFeedItems);
     const feedDetails = useSelector(selectUserFeedDetails);
 
@@ -50,10 +54,9 @@ const ProfileView = () => {
           variant="outlined" >
           <Button>Mis Tutoriales</Button>
           <Button>Me Gusta</Button>
-          <Button>Cambiar Contraseña</Button>
+          <Button href="http://localhost:3000/user/changePassword" variant={currentMode === 'CHANGE_PASSWORD' ? 'contained' : 'outlined'}  onClick={()=>{setCurrentMode('CHANGE_PASSWORD')}}>Cambiar Contraseña</Button>
         </ButtonGroup>
       </Container>
-      <ChangeView/>
       <FeedLoader viewMode="USER"
         hideLoaderBtn={feedDetails.page === feedDetails.totalPages }
         querySelector={selectUserFeedItems}

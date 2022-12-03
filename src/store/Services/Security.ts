@@ -36,7 +36,7 @@ export const securityApi = createApi({
     }),
     changePass: builder.mutation({
       query: (credentials) => ({
-        url: `/changePassword`,
+        url: `changePassword`,
         method: 'POST',
         body:credentials,
         headers: {
@@ -46,7 +46,7 @@ export const securityApi = createApi({
     }),
     getAll: builder.mutation({
       query: (credentials) => ({
-        url: `/getAll`,
+        url: `getAll`,
         method: 'GET',
         body:credentials,
         headers: {
