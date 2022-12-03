@@ -21,6 +21,7 @@ export const appSlice = createSlice({
     setShowMenu: (state, action: PayloadAction<boolean>) => {
       state.showMenu = action.payload;
     }
+
   }
 });
 

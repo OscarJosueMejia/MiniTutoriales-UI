@@ -1,8 +1,9 @@
-import { Box, AppBar, Toolbar, IconButton, Typography, InputBase} from "@mui/material";
-import MenuIcon from '@mui/icons-material/Menu';
+import { Box, AppBar, Container, Toolbar, Typography, InputBase, Button} from "@mui/material";
 import { styled, alpha } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
-
+import CheckIcon from '@mui/icons-material/Check';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -46,31 +47,68 @@ const Search = styled('div')(({ theme }) => ({
     },
   }));
 
+interface IHeaderOptions {
+  title?:string;
+  showActionBtn?:boolean;
+  btnTitle?:string;
+  btnLoading?:boolean;
+  btnAction?:()=>void;
+  btnIconType?:'CHECK'|'ADD'|'UPD';
+  showSearchBar?:boolean;
+  searchBarOnChange?:(e:unknown)=>void;
+}
 
-const Header = () => {
+
+const Header = (props:IHeaderOptions) => {
+    const {showActionBtn, showSearchBar, title, btnAction, btnTitle, btnIconType, searchBarOnChange} = props;
+    let iconForButton;
+    switch (btnIconType){
+      case 'CHECK':
+        iconForButton=<CheckIcon sx={{mt:-0.4}}/>
+      break;
+      case 'ADD':
+        iconForButton=<AddIcon sx={{mt:-0.4}}/>
+      break;
+      case 'UPD':
+        iconForButton=<EditIcon sx={{mt:-0.4}}/>
+      break;
+      default:
+        iconForButton=<></>
+      ;
+    }
 
     return(
         <Box sx={{ flexGrow: 1, marginBottom:4 }}>
         <AppBar position="fixed">
           <Toolbar>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
-            >
-              MiniTutoriales
-            </Typography>
+              <Typography
+                variant="h6"
+                noWrap
+                component="div"
+                sx={{ flexGrow: 1, display: {display:'flex', alignItems:'center' } }}
+              >
+                <img src="https://cdn-icons-png.flaticon.com/512/3176/3176369.png" alt="mini.png" width='30px' style={{marginRight:'0.5rem'}} />
+                {title}
+              </Typography>
             
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Search…"
-                inputProps={{ 'aria-label': 'search' }}
-              />
-            </Search>
+            {showSearchBar ?
+              <Search>
+                <SearchIconWrapper>
+                  <SearchIcon />
+                </SearchIconWrapper>
+                <StyledInputBase
+                  placeholder="Search…"
+                  inputProps={{ 'aria-label': 'search' }}
+                  onChange={searchBarOnChange}
+                />
+              </Search>
+              :null
+            }
+            {
+              showActionBtn ?  <Button color="inherit" onClick={btnAction} endIcon={iconForButton}>{btnTitle}</Button>
+              :null
+            }
+           
           </Toolbar>
         </AppBar>
       </Box>

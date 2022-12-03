@@ -9,6 +9,7 @@ export interface IFeedItem {
   reactionsCount:{reaction_IsUtil:Array<string>,reaction_Dislike:Array<string>};
   requirements:string;
   steps:Array<IStep>;
+  comments:Array<{_id:string, userId:string, tutorialId:string, authorName:string, text:string}>
   tags:unknown;
   title:string;
   userLiked?:boolean;
@@ -17,7 +18,7 @@ export interface IFeedItem {
   _id:unknown;
 }
 
-interface FeedData {
+export interface FeedData {
     items:Array<IFeedItem>;
     itemsPerPage:number;
     page:number;
@@ -49,4 +50,5 @@ export const feedSlice = createSlice({
 
 export const { setFeedItems } = feedSlice.actions;
 export const selectFeedItems = (state: RootState) => state.feed.items;
+export const selectFeedDetails = (state: RootState) => state.feed;
 export default feedSlice.reducer;

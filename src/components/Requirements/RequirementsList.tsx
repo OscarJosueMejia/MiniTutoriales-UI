@@ -3,7 +3,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import HandymanIcon from '@mui/icons-material/Handyman';
 
 interface IRequirementsHandlerProps {
-    requirementsList: Array<string>;
+    requirementsList: unknown;
     handleRequirements: (mode:'ADD'|'DEL'|'CANCEL', description:string) => void;
 }
 
@@ -18,19 +18,19 @@ export const RequirementsList = ({requirementsList, handleRequirements}:IRequire
         
             <List sx={{minWidth:'50%', maxWidth:'100%', bgcolor: 'background.paper', pl:2 }}>
                 {
-                requirementsList.length > 0 ?
-                    requirementsList.map((value) => (
+                (requirementsList as Array<unknown>).length > 0 ?
+                    (requirementsList as Array<unknown>).map((value) => (
                     <ListItem
-                        key={value}
+                        key={value as string}
                         disableGutters
                         secondaryAction={
                         <IconButton aria-label="comment"
-                        onClick={()=>{handleRequirements('DEL', value)}}
+                        onClick={()=>{handleRequirements('DEL', value as string)}}
                         >
                             <ClearIcon />
                         </IconButton>
                         }>
-                        <ListItemText primary={value} />
+                        <ListItemText primary={`- ${value as string}`} />
                     </ListItem>
                 )) : null }
             </List>

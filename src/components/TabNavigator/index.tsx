@@ -11,10 +11,15 @@ import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
 import AddIcon from '@mui/icons-material/Add';
 
-const TabNavigator = () => {
+interface ITabNavProps {
+  tab:string;
+}
+
+
+const TabNavigator = ({tab}:ITabNavProps) => {
     const Navigator = useNavigate();
 
-    const [value, setValue] = useState('Principal');
+    const [value, setValue] = useState(tab);
   
     const handleChange = (event:any, newValue:any) => {
       setValue(newValue);
@@ -26,32 +31,25 @@ const TabNavigator = () => {
         <BottomNavigation   sx={{width: 500}} value={value} onChange={handleChange}>
             <BottomNavigationAction
             label="Principal"
-            value="/home"
+            value="/home/"
             icon={<HomeOutlinedIcon />}
             />
             <BottomNavigationAction
             label="Buscar"
-            value="/find"
+            value="/find/"
             icon={<SearchSharpIcon />}
             />
             <BottomNavigationAction
             label="Categorías"
-            value="/categories"
+            value="/categories/"
             icon={<FormatListBulletedOutlinedIcon />}
             />
             <BottomNavigationAction 
             label="Mi Perfil" 
-            value="/profile" 
+            value="/user/" 
             icon={<PersonOutlineOutlinedIcon />} 
             />
         </BottomNavigation>
-        <SpeedDial
-          ariaLabel="SpeedDial basic example"
-          sx={{ position: 'absolute', bottom: '8vh', right: '2vh'}}
-          icon={<AddIcon />}
-          onClick={()=>{Navigator("/creator")}}
-        >
-        </SpeedDial>
       </Paper>
 
     );

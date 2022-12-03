@@ -24,9 +24,10 @@ export const StepContainer = ({steps, handleUpdate}:IStepContainer) => {
                 steps.map(step=>{
                     return(< StepItem key={step.stepNumber} step={step} updateStep={handleUpdate} />)
                 })
-                :<Container sx={{mt:2, bgcolor:'#f0f0f0', py:1,borderRadius:3, textAlign:'center'}} >
-                    <Typography  style={{color:'gray'}}> Agrega al menos 1 Paso </Typography>
-                </Container>
+                // :<Container sx={{mt:2, bgcolor:'#f0f0f0', py:1,borderRadius:3, textAlign:'center'}} >
+                //     <Typography  style={{color:'gray'}}> Agrega al menos 1 Paso </Typography>
+                // </Container>
+                :null
             }
         </Container>
     )

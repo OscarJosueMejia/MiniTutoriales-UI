@@ -34,7 +34,12 @@ export const StepUpdater = (props:IStepUpdaterProps) => {
                 {!newImg ? null
                     :<div style={{marginTop:'3vh', marginBottom:'2vh',textAlign:'center' }}>
                         <CircularProgress style={(!isLoading ? {display:'none'} : {})}/>
-                       <img style={(!isLoading ? {maxWidth:'40%', borderRadius:10} : {display:'none'})} src={URL.createObjectURL(newImg as FileWithPath)}  onLoad={()=>{setIsLoading(false);}} alt="" />
+                        {
+                            (typeof newImg === 'string') 
+                            ?<img style={(!isLoading ? {maxWidth:'40%', borderRadius:10} : {display:'none'})} src={newImg as string}  onLoad={()=>{setIsLoading(false);}} alt="" />
+                            :<img style={(!isLoading ? {maxWidth:'40%', borderRadius:10} : {display:'none'})} src={URL.createObjectURL(newImg as FileWithPath)}  onLoad={()=>{setIsLoading(false);}} alt="" />
+                        }
+                            
                     </div>
                 }
                 <Container sx={{textAlign:'center'}} >

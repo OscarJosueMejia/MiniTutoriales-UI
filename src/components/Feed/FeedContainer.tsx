@@ -1,9 +1,9 @@
-import {  MutableRefObject } from 'react';
-
-import { Container, Button } from "@mui/material";
+import { TViewMode } from '@views/Feed/FeedLoader';
+import { Container, Button, Chip, Typography} from "@mui/material";
 import FeedCard from "./FeedCard";
 import { useSelector } from "react-redux";
-import { selectFeedItems } from "@store/Slices/feedSlice";
+import { IFeedItem, selectFeedItems } from "@store/Slices/feedSlice";
+
 
 interface IReactionBody {
     mode:'ADD'|'REMOVE';
@@ -14,23 +14,28 @@ interface IReactionBody {
 
 interface IFeedContainerProps {
     handleReaction: (params:IReactionBody) => {};
-    handleScroll: () => void;
-    scrollRef: MutableRefObject<HTMLInputElement>
+    viewMode:TViewMode;
+    querySelector: any;
+    handleLoader: () => void;
+    hideLoaderBtn?:boolean;
 }
 
-const FeedContainer = ({handleReaction, handleScroll, scrollRef}:IFeedContainerProps) => {
-    const tutorialItems = useSelector(selectFeedItems);
+const FeedContainer = ({handleReaction, handleLoader, querySelector, viewMode, hideLoaderBtn}:IFeedContainerProps) => {
+    const tutorialItems = useSelector(querySelector) as Array<IFeedItem>;
 
     return(
-        <Container sx={{display:'flex', justifyContent:'center', alignItems:'center', flexDirection:'column'}}>
-            <Container  className="feedContainer" >
-                {
+        <Container sx={{display:'flex', paddingLeft:0, paddingRight:0, justifyContent:'center', alignItems:'center', flexDirection:'column'}}>
+            
+            <Container  className="feedContainer" sx={{mt:3}} >
+                {tutorialItems.length > 0 ?
+
                     tutorialItems.map(item=>{
-                        return(<FeedCard itemData={item} handleReaction={handleReaction} />)
+                        return(<FeedCard key={item._id as string } itemData={item} handleReaction={handleReaction} viewMode={viewMode} />)
                     })
+                :<Typography variant="h6">No se encontraron Tutoriales</Typography>
                 }
             </Container>
-            <Button onClick={handleScroll} sx={{mt:'-2vh', mb:'10vh', alignSelf:'center'}} >Mostrar Más</Button>
+            { !hideLoaderBtn ? <Button onClick={handleLoader} sx={{mt:'-2vh', mb:'10vh', alignSelf:'center'}} >Mostrar Más</Button> : null}
         </Container>
     )
 } 
