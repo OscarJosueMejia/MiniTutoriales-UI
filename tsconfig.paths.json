@@ -17,8 +17,14 @@
       "@views/*": [
         "./src/views/*"
       ],
+      "@layouts/*": [
+        "./src/layouts/*"
+      ],
       "@store/*": [
         "./src/store/*"
+      ],
+      "@assets/*": [
+        "./src/assets/*"
       ],
     },
   }

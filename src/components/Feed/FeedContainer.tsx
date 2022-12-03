@@ -1,41 +1,27 @@
-import { TViewMode } from '@views/Feed/FeedLoader';
-import { Container, Button, Chip, Typography} from "@mui/material";
+//Logic
+import { IFeedItem } from "@store/Slices/feedSlice";
+import { TViewMode, IReactionBody } from '@views/Feed/FeedLoader';
+//Components
+import { Container, Typography} from "@mui/material";
 import FeedCard from "./FeedCard";
-import { useSelector } from "react-redux";
-import { IFeedItem, selectFeedItems } from "@store/Slices/feedSlice";
-
-
-interface IReactionBody {
-    mode:'ADD'|'REMOVE';
-    userId:unknown;
-    tutorialId:unknown;
-    reactionName:'LIKE'|'DISLIKE';
-  }
 
 interface IFeedContainerProps {
+    data:Array<IFeedItem>
     handleReaction: (params:IReactionBody) => {};
     viewMode:TViewMode;
-    querySelector: any;
-    handleLoader: () => void;
-    hideLoaderBtn?:boolean;
 }
 
-const FeedContainer = ({handleReaction, handleLoader, querySelector, viewMode, hideLoaderBtn}:IFeedContainerProps) => {
-    const tutorialItems = useSelector(querySelector) as Array<IFeedItem>;
-
+const FeedContainer = ({data, handleReaction, viewMode}:IFeedContainerProps) => {
     return(
         <Container sx={{display:'flex', paddingLeft:0, paddingRight:0, justifyContent:'center', alignItems:'center', flexDirection:'column'}}>
-            
-            <Container  className="feedContainer" >
-                {tutorialItems.length > 0 ?
-
-                    tutorialItems.map(item=>{
+            <Container  className="feedContainer" sx={{mt:3}} >
+                {data !== undefined && data.length > 0 ?
+                    data.map(item=>{
                         return(<FeedCard key={item._id as string } itemData={item} handleReaction={handleReaction} viewMode={viewMode} />)
                     })
                 :<Typography variant="h6">No se encontraron Tutoriales</Typography>
                 }
             </Container>
-            { !hideLoaderBtn ? <Button onClick={handleLoader} sx={{mt:'-2vh', mb:'10vh', alignSelf:'center'}} >Mostrar Más</Button> : null}
         </Container>
     )
 } 

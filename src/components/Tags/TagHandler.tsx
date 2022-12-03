@@ -1,56 +1,71 @@
 import { useState } from "react";
-import { Container, Typography, FormControl, TextField, IconButton, Chip} from "@mui/material"
-import AddIcon from '@mui/icons-material/Add';
+import { Theme, useTheme } from '@mui/material/styles';
+import { Container, Typography, FormControl, InputLabel, MenuItem, Box, OutlinedInput, TextField, IconButton, Chip} from "@mui/material"
+import { ICategories } from '@store/Slices/categorySlice';
 import TagIcon from '@mui/icons-material/Tag';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
-interface ITag {
-    tagDescription: string;
-}
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 
 interface ITagHandlerProps {
-    tags:Array<ITag>;
-    handleTag: (mode:'ADD'|'DEL', tagDescription:string) => void;
+    tags:Array<string>;
+    handleTag: Function;
+    availableTags:Array<ICategories>
 }
 
-export const TagHandler = ({tags, handleTag}:ITagHandlerProps) => {
-    const [ tagDescTmp, setTagDescTmp ] = useState("");
-    const [ tagError, setTagError ] = useState("");
-
-    const handleTextChange = (e:any) => {
-        if (tags.some(tag => ((tag.tagDescription).toLowerCase() === (e.target.value).toLowerCase()))) {
-            setTagError(`Ya existe una etiqueta llamada "${e.target.value}"`);
-        }else{
-            setTagError("");
+export const TagHandler = ({tags, handleTag, availableTags}:ITagHandlerProps) => {
+    const handleChange = (event: SelectChangeEvent<typeof tags>) => {
+        const { target: { value }} = event;
+        if(tags.length < 3){
+            handleTag('tags', value as Array<string>);
         }
-        setTagDescTmp(e.target.value);
-    }
+    };
 
     return(
         <Container sx={{pb:'4vh'}} style={{paddingLeft:0, paddingRight:0}}>
                 <Typography variant='h6' component='h6' sx={{mt:'2vh', display:'flex', alignItems:'center'}} >
                     <TagIcon sx={{ color: 'action.active', my: 0.5, mr:1}} />
-                    Etiquetas
+                    Categorías
                 </Typography>
-                
-                <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}>
-                    <FormControl fullWidth sx={{ m: 1, width:'60vw' }}>
-                            <TextField error={tagError !== ""} helperText={tagError} id="filled-basic" label="Escribe una etiqueta" variant='filled' value={tagDescTmp} onChange={handleTextChange} />
-                    </FormControl>
-                    <IconButton disabled={tagDescTmp === "" || tagError !== ""} aria-label="delete" size="large" 
-                    onClick={()=>{handleTag('ADD', tagDescTmp); setTagDescTmp('')}}>
-                        <AddIcon fontSize="inherit" />
-                    </IconButton>
-                </div>
 
-                <Container sx={{mt:1}} >
-                        {tags.length > 0 
-                            ? tags.map(tag => {
-                                return(<Chip sx={{mx:1}} label={tag.tagDescription} 
-                                    onDelete={()=>{handleTag('DEL', tag.tagDescription);}} />)
-                            })
-                            :null
-                        }
-                </Container>
+                <FormControl sx={{ mt:1.5, ml:1, width: 300 }}>
+                <InputLabel id="demo-multiple-name-label">Seleccionar</InputLabel>
+                    <Select
+                    labelId="demo-multiple-name-label"
+                    id="demo-multiple-name"
+                    multiple
+                    value={tags}
+                    onChange={handleChange}
+                    input={<OutlinedInput id="select-multiple-chip" label="Seleccionar" />}
+                    renderValue={(selected) => (
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                        {selected.map((value) => (
+                            <Chip key={value} label={ availableTags.filter(e => e._id === value)[0].title } />
+                        ))}
+                        </Box>
+                    )}
+                    MenuProps={MenuProps}
+                    >
+                    {availableTags.map((tag) => (
+                        <MenuItem
+                        key={tag._id as string}
+                        value={tag._id as string}
+                        >
+                        {tag.title}
+                        </MenuItem>
+                    ))}
+                    </Select>
+                </FormControl>
             </Container>
     )
 }
+

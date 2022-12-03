@@ -1,55 +1,35 @@
 //Logic
-import {useState, useEffect} from 'react';
-import { useDispatch, useSelector } from "react-redux";
-import { setFeedItems, IFeedItem, selectFeedItems, selectFeedDetails } from "@store/Slices/feedSlice";
-import { useLazyFeedForLoggedQuery } from "@store/Services/Feed";
+import {useState} from 'react';
+import { FeedData } from "@store/Slices/feedSlice";
+import { useFeedForLoggedQuery} from "@store/Services/Feed";
 import { useNavigate } from 'react-router-dom';
+import { RootState, store } from '@store/store';
+
 //Components
 import { FeedLoader } from '@views/Feed/FeedLoader';
 import Header from "@components/Header";
-import { AlertDialog } from '@components/Misc';
+import { Typography } from '@mui/material';
+import { ContentLoadingIndicator } from "@components/Misc";
 
 const Feed = () => {
     const Navigator = useNavigate();
+    const userId = (store.getState() as RootState).sec._id;
     const [ currentPage, setCurrentPage ] = useState(1);
-    const [ trigger, {isLoading, isError, error}] = useLazyFeedForLoggedQuery()
-    
-    const dispatch = useDispatch();
-    const tutorialItems = useSelector(selectFeedItems);
-    const feedDetails = useSelector(selectFeedDetails);
-  
-
-    useEffect(()=>{
-        async function getData() {
-
-          const { data:newData } = await trigger(currentPage);
-          if(currentPage > feedDetails.page){
-            dispatch(setFeedItems({
-              items:[...tutorialItems, ...newData.items as Array<IFeedItem> ],
-              itemsPerPage: newData.itemsPerPage,
-              total: newData.total,
-              totalPages: newData.totalPages,
-              page: newData.page,
-            }));
-          }
-        }
-        getData();
-    
-      },[currentPage]);
-
+    const { data, error, isError, isLoading } = useFeedForLoggedQuery({page:currentPage, userId}, {refetchOnFocus:true})
     return (
     <>
       <Header title="MiniTutoriales" showActionBtn={true} btnTitle="Crear Tutorial" btnIconType='ADD' btnAction={()=>{Navigator("/creator", {state:{isUpdate:false}})}} />
-      <FeedLoader viewMode="MAIN"
-        hideLoaderBtn={feedDetails.page === feedDetails.totalPages }
-        querySelector={selectFeedItems}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        isLoading={isLoading}
-        isError={isError}
-        error={error}
-      />
-      <AlertDialog isOpen={isError} type='ERROR' title="Ups!" description='Algo no salió como debería...' />
+      <Typography variant="h6" sx={{mt:'8vh', ml:3}}>¿Que aprenderás Hoy?</Typography>
+      {isLoading && data === undefined ? <ContentLoadingIndicator />
+          : <FeedLoader viewMode="MAIN"
+          data={(data as FeedData).items}
+          totalPages={(data as FeedData).totalPages}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          isError={isError}
+          error={error}
+        />
+      }
     </>
     );
 }

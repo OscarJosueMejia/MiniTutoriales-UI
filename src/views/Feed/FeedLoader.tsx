@@ -1,56 +1,63 @@
 import { FeedContainer } from "@components/Feed";
 import { useReactionMutation } from "@store/Services/Feed";
-import { ContentLoadingIndicator } from "@components/Misc";
+import { RootState, store } from '@store/store';
+import { IFeedItem } from "@store/Slices/feedSlice";
+import { Pagination, Stack, Container } from '@mui/material';
+import { AlertDialog } from '@components/Misc';
 
 import './feed.css';
 
 export type TViewMode = "USER" | "MAIN";
-
 export interface IReactionBody {
   mode:'ADD'|'REMOVE';
-  userId:unknown;
   tutorialId:unknown;
   reactionName:'LIKE'|'DISLIKE';
 }
 
 interface IFeedProps{
+  data?:Array<IFeedItem>;
   viewMode?:TViewMode;
-  querySelector:any;
   currentPage:number;
+  totalPages?:number;
   setCurrentPage:(page:number)=>void;
-  isLoading:boolean;
-  isError:boolean;
-  error:any;
-  hideLoaderBtn?:boolean;
+  isError?:boolean;
+  error?:any;
+  hidePagination?:boolean;
+  disableErrors?:boolean;
 }
 
-export const FeedLoader = ({viewMode='MAIN', querySelector, currentPage, setCurrentPage, isLoading, isError, error, hideLoaderBtn}:IFeedProps) => {
+export const FeedLoader = ({ viewMode='MAIN', data, currentPage, setCurrentPage, totalPages, isError, error, hidePagination, disableErrors}:IFeedProps) => {
   const [ reaction ] = useReactionMutation();
+  const currentUserId = (store.getState() as RootState).sec._id;
   
-  const handleLoader = () => {
-      setCurrentPage(currentPage+1);
-  } 
+  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    setCurrentPage(value);
+  };
 
-  const handleReaction = async ({tutorialId, reactionName, userId, mode}:IReactionBody) => {
+  const handleReaction = async ({tutorialId, reactionName, mode}:IReactionBody) => {
     try {
-      await reaction({tutorialId, reactionName, userId, mode}).unwrap();
+      await reaction({tutorialId, reactionName, userId:currentUserId, mode}).unwrap();
     } catch (error) {
       console.log(error);
     }
   }
-
+  
   return (
     <>
-      {(isLoading) ?
-        <ContentLoadingIndicator />
-        :<FeedContainer 
-        hideLoaderBtn={ hideLoaderBtn }
+      <FeedContainer 
+        data={(data as Array<IFeedItem>)}
         viewMode={viewMode} 
-        handleReaction={handleReaction} 
-        querySelector={querySelector} 
-        handleLoader={handleLoader} />
-      }
-    </>
+        handleReaction={handleReaction} />
+        {!hidePagination && (data as Array<IFeedItem>).length > 0 ?
+          <Container sx={{mb:'8vh', display:'flex', justifyContent:'center'}}>
+            <Stack spacing={2}>
+              <Pagination count={totalPages} page={currentPage} shape="rounded" onChange={handleChange} />
+            </Stack>
+          </Container>
+          :null
+        }
+        {(isError && !disableErrors) && <AlertDialog isOpen={isError} type='ERROR' title="Ups!" description={JSON.stringify(error)} />}
+      </>
   );
 }
 

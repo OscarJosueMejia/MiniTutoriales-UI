@@ -9,12 +9,12 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { motion } from 'framer-motion';
 
 interface IFeedCardProps {
-  itemData:IFeedItem
-  viewMode:TViewMode
+  itemData:IFeedItem;
+  viewMode:TViewMode;
   handleReaction: (params:IReactionBody) => {}
 }
 
-const colors = [green[500], lightBlue[500], lightGreen[500], indigo[500], orange[500], teal[500]];
+export const colors = [green[500], lightBlue[500], lightGreen[500], indigo[500], orange[500], teal[500], teal[300], orange[300], lightGreen[400], green[300] ];
 
 const FeedCard = ({itemData, handleReaction, viewMode}:IFeedCardProps)=>{
   const Navigate = useNavigate();
@@ -24,7 +24,7 @@ const FeedCard = ({itemData, handleReaction, viewMode}:IFeedCardProps)=>{
   const [userLikesCount, setUserLikesCount] = useState(reactionsCount.reaction_IsUtil.length);
 
   const HandleReactionClick = () => {
-    handleReaction({mode:!isUserLiked ? 'ADD' : 'REMOVE', tutorialId:_id, userId:'6355bf4a972277413bb7ddca', reactionName:'LIKE'});
+    handleReaction({mode:!isUserLiked ? 'ADD' : 'REMOVE', tutorialId:_id, reactionName:'LIKE'});
     setIsUserLiked(!isUserLiked);
     setUserLikesCount(!isUserLiked ? userLikesCount + 1 : userLikesCount - 1)
   }
@@ -34,7 +34,7 @@ const FeedCard = ({itemData, handleReaction, viewMode}:IFeedCardProps)=>{
     <Card sx={{marginBottom:2, backgroundColor:'#eceff1', borderRadius:2}}>
     <CardHeader
       avatar={
-        <Avatar sx={{ bgcolor: colors[4] }} aria-label="recipe">
+        <Avatar sx={{ bgcolor: colors[author_info[0].avatar as number] }} aria-label="recipe">
         {`${(author_info[0].name).split(' ')[0][0]}${(author_info[0].name).split(' ')[1][0]}`}
         </Avatar>
       }
@@ -49,8 +49,10 @@ const FeedCard = ({itemData, handleReaction, viewMode}:IFeedCardProps)=>{
     <CardMedia
       component="img"
       height="194"
-      image="https://cdn-icons-png.flaticon.com/512/292/292333.png"
-      alt="Paella dish"
+      image="https://cdn.dribbble.com/users/104171/screenshots/1863083/media/1f609237cc4ee69d9072cf360b768a64.jpg"
+      // image="https://www.creativefabrica.com/wp-content/uploads/2020/07/05/School-Stationery-Pattern-Background-Graphics-4546687-1-580x387.jpg"
+      // image="https://cdn.dribbble.com/users/104171/screenshots/1867631/media/16ccf74f6fe7844d5becadac7b20ea95.jpg"
+      alt="tutorial-thumbnail"
     />
     <CardContent>
       <Typography variant="body2" sx={{minWidth:'120vw'}} color="text.secondary">

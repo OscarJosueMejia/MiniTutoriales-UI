@@ -1,10 +1,12 @@
 //Logic
 import {useState} from 'react';
-import { useUploadContentMutation, useUpdateContentMutation} from '@store/Services/Creator';
+import { useUploadContentMutation, useUpdateContentMutation} from '@store/Services/Feed';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { uploadImage } from '@utils/firebase';
 import { IStep } from '@components/Steps/StepContainer';
 import { IFeedItem } from '@store/Slices/feedSlice';
+import { useGetByStatusQuery } from '@store/Services/Category';
+import { RootState, store } from '@store/store';
 //Components
 import { Container } from "@mui/material";
 import { AlertDialog, ModalLoadingIndicator } from "@components/Misc";
@@ -16,13 +18,13 @@ import * as Yup from 'yup';
 
 import './tutorial.css';
 
-interface IFormValues {
+export interface IFormValues {
   tutorialId?:string;
   title:string;
   description:string;
   steps:Array<IStep>;
   requirements:unknown;
-  tags:Array<{tagDescription: string}>;
+  tags:Array<string>;
 }
 
 const TutorialManagement = () => {
@@ -32,7 +34,11 @@ const TutorialManagement = () => {
     const isUpdate = Location.state.isUpdate;
     const itemData = Location.state.itemData as IFeedItem;
 
+    const userId = (store.getState() as RootState).sec._id;
+
     const [uploadingImgs, setUploadingImgs] = useState(false);
+
+    const {data:dataForCategories, isLoading:loadingCategories, refetch} = useGetByStatusQuery({status:'ACT'}, {refetchOnMountOrArgChange:true});
 
     const [uploadContent, { isLoading, status, error }] = useUploadContentMutation();
     const [updateContent, { isLoading:isUpdating}] = useUpdateContentMutation();
@@ -46,7 +52,7 @@ const TutorialManagement = () => {
         description:itemData.description,
         steps:itemData.steps,
         requirements:itemData.requirements as unknown,
-        tags:itemData.tags as Array<{tagDescription: string}>
+        tags:itemData.tags as Array<string>
       }
     }
 
@@ -58,7 +64,7 @@ const TutorialManagement = () => {
           setUploadingImgs(true);
           const dataPreparation = {
             tutorialId: formValues.tutorialId,
-            userId:'638715a091b5ed67eddd8579', 
+            userId, 
           title:formValues.title,
           description:formValues.description, 
           categoryId:'638715a091b5ed67eddd8579', 
@@ -82,9 +88,14 @@ const TutorialManagement = () => {
         <>
           <Header title={!isUpdate ? "Crear un Tutorial" : "Editar Tutorial"} showActionBtn={true} btnTitle={!isUpdate ? "Publicar" : " Aplicar Cambios"} btnIconType='CHECK' btnAction={()=>{formik.handleSubmit()}} />
           <Container className="tutorialViewContainer"  >
-            <TutorialForm  
-              formik={formik}
-            />
+            {dataForCategories &&
+              <TutorialForm  
+                formikValues={formik.values}
+                formikErrors={formik.errors}
+                formikSetValue={formik.setFieldValue}
+                categoriesList={dataForCategories}
+              />
+            }
           </Container>
           <ModalLoadingIndicator show={isLoading || isUpdating || uploadingImgs} />
         </>
@@ -99,7 +110,7 @@ function validationSchema(){
       description: Yup.string().required("Campo requerido"),
       steps: Yup.array().min(1, 'Agregue al menos 1 paso.'),
       requirements: Yup.array().min(1, 'Agregue al menos 1 requerimiento.'),
-      tags: Yup.array().min(1, 'Agregue al menos una etiqueta.'),
+      tags: Yup.array().min(1, 'Seleccione al menos una categoría.'),
   }
 }
 

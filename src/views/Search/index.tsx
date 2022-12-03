@@ -1,34 +1,26 @@
+//Logic
+import {useState} from 'react';
 import { FeedLoader } from '@views/Feed/FeedLoader';
-import {useState, useEffect} from 'react';
-import { IFeedItem } from "@store/Slices/feedSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { selectSearchFeedItems, selectSearchFeedDetails, setSearchFeedItems } from '@store/Slices/searchFeed';
-import { useLazySearchQuery } from "@store/Services/Feed";
+import { useSearchQuery } from "@store/Services/Feed";
+import { RootState, store } from '@store/store';
+//Components
 import Header from "@components/Header";
-import { Container, styled, alpha, InputBase, Button, Typography } from '@mui/material';
+import { Container, styled, InputBase } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import { IFeedItem } from '@store/Slices/feedSlice';
+import { ContentLoadingIndicator } from "@components/Misc";
 
 const SearchView = () => {
+    const userId = (store.getState() as RootState).sec._id;
     const [ currentPage, setCurrentPage ] = useState(1);
-    const [ TriggerFeedBySearch, {isLoading, isError, error}] = useLazySearchQuery()
-    const dispatch = useDispatch();
-    const tutorialItems = useSelector(selectSearchFeedItems);
+    const [searchValue, setSearchValue] = useState("");
+    const {data, isLoading, error, isError} = useSearchQuery({search:searchValue, userId}, {refetchOnFocus:false});
 
     const HandleSearch = async (e:unknown) =>{
       (e as {preventDefault: Function}).preventDefault();
       (e as {stopPropagation: Function}).stopPropagation();
       const { value } = (e as {target:{value:string}}).target;
-
-      if (value !== ""){
-        const { data:newData } = await TriggerFeedBySearch({search:value, userId:'638715a091b5ed67eddd8579'});
-        dispatch(setSearchFeedItems({
-          items: newData as Array<IFeedItem>,
-        }));
-      }else{
-        dispatch(setSearchFeedItems({
-          items: [],
-        }));
-      }
+      setSearchValue(value);
     }
 
     return (
@@ -46,15 +38,18 @@ const SearchView = () => {
           />
         </Search>
       </Container>
-      <FeedLoader viewMode="MAIN"
-        hideLoaderBtn={ true }
-        querySelector={selectSearchFeedItems}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        isLoading={isLoading}
-        isError={isError}
-        error={error}
-      />
+
+      {isLoading?<ContentLoadingIndicator/>
+      :<FeedLoader viewMode="MAIN"
+          data={(searchValue.length > 0) ? (data as Array<IFeedItem>) : []}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          isError={isError}
+          error={error}
+          hidePagination={true}
+          disableErrors={true}
+        />
+      }
     </>
     );
 }
