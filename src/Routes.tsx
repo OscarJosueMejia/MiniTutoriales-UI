@@ -13,7 +13,7 @@ import SignUp from '@views/Auth/SignUp';
 import ValidateAccount from '@views/Auth/ValidateAccount';
 import SearchView from '@views/Search';
 import RecoveryPassword from '@views/Auth/RecoveryPassword';
-import {CategoryList, CategoryManagement} from '@views/Categorias/index';
+import {CategoryList, CategoryManagement, FeedByCategory} from '@views/Categorias/index';
 
 const Routes = () => {
   return (
@@ -36,6 +36,13 @@ const Routes = () => {
             <Route index element={<><Feed/><TabNavigator tab="/home/" /></>}/>
             <Route path="tutorial" element={<><Tutorial/><TabNavigator tab="/home/"/></>}/>
             <Route path="profile" element={<><CommonProfileView /><TabNavigator tab="/home/" /></>}/>
+            <Route path="/*" element={<PageNotFound/>}/>
+          </Switch>
+        }/>
+
+        <Route path="/categories/*" element={
+          <Switch>
+            <Route index element={<><FeedByCategory/><TabNavigator tab="/categories/" /></>}/>
             <Route path="/*" element={<PageNotFound/>}/>
           </Switch>
         }/>

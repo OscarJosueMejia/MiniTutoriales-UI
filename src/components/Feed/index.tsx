@@ -1,3 +1,4 @@
 import FeedContainer from "./FeedContainer";
+import CategoryCard from "./CategoryCard";
 
-export {FeedContainer};
+export {FeedContainer, CategoryCard};

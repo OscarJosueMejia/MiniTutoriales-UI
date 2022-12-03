@@ -1,8 +1,8 @@
 //Logic
 import {useState, useEffect} from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { IFeedItem, selectFeedItems, selectFeedDetails } from "@store/Slices/feedSlice";
-import { useLazyFeedForLoggedQuery, useFeedForLoggedQuery} from "@store/Services/Feed";
+import { IFeedItem, selectFeedItems } from "@store/Slices/feedSlice";
+import { useLazyFeedForLoggedQuery} from "@store/Services/Feed";
 import { useNavigate } from 'react-router-dom';
 import { RootState, store } from '@store/store';
 //Components

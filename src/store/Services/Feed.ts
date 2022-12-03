@@ -65,6 +65,19 @@ export const feedApi = createApi({
         },
       })
     }),
+    byCategory: builder.query({
+      query: (params:{categoryId:string, currentUserLogged?:string, page:number}) => ({
+        url: `byCategory/${params.categoryId}/${params.currentUserLogged}`,
+        method: 'get',
+        params:{
+          page:params.page,
+          items:ITEMS_PER_PAGE
+        },
+        headers: {
+          apikey: process.env.REACT_APP_API_KEY,
+        },
+      })
+    }),
     search: builder.query({
       query: (params:{search:string, userId:string}) => ({
         url: `custom/${params.search}`,
@@ -129,6 +142,7 @@ export const {
   useGetOneQuery, 
   useDeleteTutorialMutation,
   useByUserQuery, 
+  useByCategoryQuery,
   useSearchQuery,
   useLazyByUserQuery,
   useLazySearchQuery,

@@ -3,8 +3,9 @@ import { useState } from 'react';
 import { IStep } from '@components/Steps/StepContainer';
 import { IFormValues } from '@views/Tutorial/TutorialManagement';
 import { FormikErrors } from 'formik';
+import { ICategories } from '@store/Slices/categorySlice';
 //UI Components
-import {Box, TextField, FormControl, Typography, Button, Container, Dialog, Chip, IconButton, DialogTitle, DialogContent, DialogContentText, DialogActions} from '@mui/material';
+import {Box, TextField, FormControl, Typography, Button, Container} from '@mui/material';
 import { StepContainer, StepCreator, StepUpdater } from '@components/Steps';
 import { TagHandler } from '@components/Tags';
 import { RequirementsList, RequirementCreator } from '@components/Requirements';
@@ -17,12 +18,13 @@ interface ITutorialFormProps {
     formikValues:IFormValues;
     formikErrors:FormikErrors<IFormValues>;
     formikSetValue:Function;
+    categoriesList:Array<ICategories>
 }
 
-const TutorialForm = ({formikValues, formikErrors, formikSetValue}:ITutorialFormProps) => {
+const TutorialForm = ({formikValues, formikErrors, formikSetValue, categoriesList}:ITutorialFormProps) => {
     const steps:Array<IStep> = formikValues.steps as Array<IStep>
     const requirements:Array<string> = formikValues.requirements as Array<string>
-    const tags:Array<{tagDescription: string}> = formikValues.tags as Array<{tagDescription: string}>
+    const tags:Array<string> = formikValues.tags as Array<string>
     //Add
     const [ stepCreatorOpen, setStepCreatorOpen ] = useState(false);
     const [ reqCreatorOpen, setReqCreatorOpen ] = useState(false);
@@ -68,18 +70,6 @@ const TutorialForm = ({formikValues, formikErrors, formikSetValue}:ITutorialForm
             // formik.setFieldValue('steps',tmpSteps);
         }
         setStepCreatorOpen(false);
-    }
-
-    const handleTags = ( mode:'ADD'|'DEL', tagDescription:string) => {
-        let tmpTags = [...tags];
-
-        if ( mode === 'ADD' && !(tmpTags.some(e => (e.tagDescription === tagDescription)))) {
-            tmpTags.push({tagDescription});
-        } else {
-            tmpTags = tmpTags.filter(tag => tag.tagDescription !== tagDescription);
-        }
-        formikSetValue('tags', tmpTags);
-        // formik.setFieldValue('tags',tmpTags);
     }
 
     const handleRequirements = (mode:'ADD'|'DEL'|'CANCEL', description:string) =>{
@@ -143,7 +133,7 @@ const TutorialForm = ({formikValues, formikErrors, formikSetValue}:ITutorialForm
                 <Button onClick={()=>{setStepCreatorOpen(true)}}>Agregar Paso</Button>
             </Container>
 
-            <TagHandler tags={tags} handleTag={handleTags}/>
+            <TagHandler tags={tags} handleTag={formikSetValue} availableTags={categoriesList}/>
             {formikErrors.tags ? <Typography sx={{textAlign:'center', color:'red'}}>{formikErrors.tags as string}</Typography> : null}
 
         </Box>    

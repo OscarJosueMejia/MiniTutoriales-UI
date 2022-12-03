@@ -5,6 +5,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { uploadImage } from '@utils/firebase';
 import { IStep } from '@components/Steps/StepContainer';
 import { IFeedItem } from '@store/Slices/feedSlice';
+import { useGetByStatusQuery } from '@store/Services/Category';
 import { RootState, store } from '@store/store';
 //Components
 import { Container } from "@mui/material";
@@ -23,7 +24,7 @@ export interface IFormValues {
   description:string;
   steps:Array<IStep>;
   requirements:unknown;
-  tags:Array<{tagDescription: string}>;
+  tags:Array<string>;
 }
 
 const TutorialManagement = () => {
@@ -37,6 +38,8 @@ const TutorialManagement = () => {
 
     const [uploadingImgs, setUploadingImgs] = useState(false);
 
+    const {data:dataForCategories, isLoading:loadingCategories, refetch} = useGetByStatusQuery({status:'ACT'}, {refetchOnMountOrArgChange:true});
+
     const [uploadContent, { isLoading, status, error }] = useUploadContentMutation();
     const [updateContent, { isLoading:isUpdating}] = useUpdateContentMutation();
 
@@ -49,7 +52,7 @@ const TutorialManagement = () => {
         description:itemData.description,
         steps:itemData.steps,
         requirements:itemData.requirements as unknown,
-        tags:itemData.tags as Array<{tagDescription: string}>
+        tags:itemData.tags as Array<string>
       }
     }
 
@@ -85,11 +88,14 @@ const TutorialManagement = () => {
         <>
           <Header title={!isUpdate ? "Crear un Tutorial" : "Editar Tutorial"} showActionBtn={true} btnTitle={!isUpdate ? "Publicar" : " Aplicar Cambios"} btnIconType='CHECK' btnAction={()=>{formik.handleSubmit()}} />
           <Container className="tutorialViewContainer"  >
-            <TutorialForm  
-              formikValues={formik.values}
-              formikErrors={formik.errors}
-              formikSetValue={formik.setFieldValue}
-            />
+            {dataForCategories &&
+              <TutorialForm  
+                formikValues={formik.values}
+                formikErrors={formik.errors}
+                formikSetValue={formik.setFieldValue}
+                categoriesList={dataForCategories}
+              />
+            }
           </Container>
           <ModalLoadingIndicator show={isLoading || isUpdating || uploadingImgs} />
         </>
@@ -104,7 +110,7 @@ function validationSchema(){
       description: Yup.string().required("Campo requerido"),
       steps: Yup.array().min(1, 'Agregue al menos 1 paso.'),
       requirements: Yup.array().min(1, 'Agregue al menos 1 requerimiento.'),
-      tags: Yup.array().min(1, 'Agregue al menos una etiqueta.'),
+      tags: Yup.array().min(1, 'Seleccione al menos una categoría.'),
   }
 }
 
