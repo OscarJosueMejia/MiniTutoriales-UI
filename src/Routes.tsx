@@ -67,7 +67,7 @@ const Routes = () => {
           <Switch>
             {/* <Route index element={<PrivateRoute><TutorialManagement/><TabNavigator /></PrivateRoute>}/> */}
             <Route index element={<><ProfileView/><TabNavigator tab="/user/" /></>}/>
-            <Route path="profile" element={<><CommonProfileView mode='COMMON_PROFILE' /><TabNavigator tab="/user/" /></>}/>
+            <Route path="profile" element={<><CommonProfileView/><TabNavigator tab="/user/" /></>}/>
             <Route path="changePassword" element={<><ChangeView/><TabNavigator tab="/user/changePassword" /></>}/>
             <Route path="getALL" element={<><TabNavigator tab="/user/getALL" /></>}/>
             <Route path="profile/:id" element={<><TabNavigator tab="/user/profile/:id" /></>}/>

@@ -3,14 +3,12 @@ import { Copyright } from '@mui/icons-material';
 import { FeedLoader } from '@views/Feed/FeedLoader';
 import { IFeedItem2 } from "@store/Slices/feedSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUserFeedItems, setUserFeedItems, selectUserFeedDetails} from "@store/Slices/userFeedSlice";
 import { useLazyByUserQuery } from "@store/Services/Feed";
 //Components
 import Header from "@components/Header";
 import {Box, Button, ButtonGroup, CircularProgress, Container, CssBaseline, TextField} from "@mui/material";
 import { ProfileInfo } from '@components/Profile';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { selectCommUserData, selectCommUserItems, setCommUserItems } from '@store/Slices/commUserSlice';
 //import FormChangePass from '@components/Profile/formChange';
 import { useChangePassMutation } from '@store/Services/Security';
 import { useFormik } from 'formik';

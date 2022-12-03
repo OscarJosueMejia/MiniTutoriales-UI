@@ -90,7 +90,7 @@ const ProfileInfo = ({userData, uploadCount, isLikedMode, isUserLogged}:IProfile
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem onClick={()=>{Navigator('/auth/')}}>
+        <MenuItem onClick={()=>{Navigator('/user/changePassword')}}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
