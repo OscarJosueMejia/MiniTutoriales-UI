@@ -11,13 +11,13 @@ const PrivateRoute = ({ children, allowedRoles = [] }: PropsWithChildren<{ allow
     try {
       const { token } = user;
       if (!token) {
-        return <Navigate to="/auth" replace />;
+        return <Navigate to="/auth/" replace />;
       }
     } catch (ex) {
-      return <Navigate to="/auth" replace />;
+      return <Navigate to="/auth/" replace />;
     }
   } else {
-    return <Navigate to="/auth" replace />;
+    return <Navigate to="/auth/" replace />;
   }
 
   const { rol } = user;

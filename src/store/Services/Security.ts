@@ -1,9 +1,18 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { RootState } from "../store";
 import { ITEMS_PER_PAGE } from "./Feed";
 
 export const securityApi = createApi({
   reducerPath: "securityApi",
-  baseQuery: fetchBaseQuery({ baseUrl: `${process.env.REACT_APP_API_BASE_URL}/user` }),
+  baseQuery: fetchBaseQuery(
+    { baseUrl: `${process.env.REACT_APP_API_BASE_URL}/user`,
+    prepareHeaders: (headers, {getState}) =>{
+      const token = (getState() as RootState).sec.token;
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+    }
+  }),
   endpoints: (builder) => ({
     getAllUsers: builder.query({
       query: (params:{page:number, search:string}) => ({

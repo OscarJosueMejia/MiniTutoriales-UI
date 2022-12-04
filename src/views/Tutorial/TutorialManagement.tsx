@@ -40,7 +40,7 @@ const TutorialManagement = () => {
 
     const {data:dataForCategories, isLoading:loadingCategories, refetch} = useGetByStatusQuery({status:'ACT'}, {refetchOnMountOrArgChange:true});
 
-    const [uploadContent, { isLoading, status, error }] = useUploadContentMutation();
+    const [uploadContent, { isLoading, status, error  }] = useUploadContentMutation();
     const [updateContent, { isLoading:isUpdating}] = useUpdateContentMutation();
 
     let initialValues:IFormValues = {title:"", description:"", steps:[], requirements:[], tags:[]}

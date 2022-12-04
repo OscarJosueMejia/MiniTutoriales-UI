@@ -45,7 +45,7 @@ export const StepCreator = (props:IStepCreatorProps) => {
                 </DialogContent>
             <DialogActions>
                 <Button onClick={()=>{handleClose('CANCEL')}}>Cancelar</Button>
-                <Button onClick={()=>{handleClose('ADD', {stepNumber:newStepNumber, description:newDescription, imgURL:newImg}); setNewDescription(""); setNewImg(undefined)}}>Aceptar</Button>
+                <Button disabled={newDescription === ""} onClick={()=>{handleClose('ADD', {stepNumber:newStepNumber, description:newDescription, imgURL:newImg}); setNewDescription(""); setNewImg(undefined)}}>Aceptar</Button>
             </DialogActions>
         </Dialog>
     )   

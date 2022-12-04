@@ -1,8 +1,18 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
+import { RootState } from "../store";
 
 export const categoryApi = createApi({
   reducerPath: 'categoryApi',
-  baseQuery: fetchBaseQuery({baseUrl: `${process.env.REACT_APP_API_BASE_URL}/category`}),
+  baseQuery: fetchBaseQuery(
+    {baseUrl: `${process.env.REACT_APP_API_BASE_URL}/category`,
+      prepareHeaders: (headers, {getState}) =>{
+        const token = (getState() as RootState).sec.token;
+        if (token) {
+          headers.set("Authorization", `Bearer ${token}`);
+        }
+      }
+    }),
+
   tagTypes: ["Category"],
   endpoints: (builder) => ({
     getAll: builder.query({
