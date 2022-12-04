@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLazyByUserQuery } from "@store/Services/Feed";
 //Components
 import Header from "@components/Header";
-import {Box, Button, ButtonGroup, CircularProgress, Container, CssBaseline, TextField} from "@mui/material";
+import {Avatar, Box, Button, ButtonGroup, CircularProgress, Container, CssBaseline, TextField, Typography} from "@mui/material";
 import { ProfileInfo } from '@components/Profile';
 import { useLocation, useNavigate } from 'react-router-dom';
 //import FormChangePass from '@components/Profile/formChange';
@@ -32,8 +32,8 @@ export const FormChangePass = ({ email, odlPassword }: IProp) => {
 
   const validationSchema = yup.object().shape({
         email: yup.string().required("Campo Requerido"),
-        password: yup.string().required("Campo requerido"),
-        oldPassword: yup.string().required('Campo requerido'),
+        newPassword: yup.string().required("Campo requerido"),
+        oldPassword: yup.string().required("Campo requerido"),
   });
 
   //let initialValues:IFormValues = {email:"", oldPasswords:[], password:""}
@@ -53,8 +53,8 @@ export const FormChangePass = ({ email, odlPassword }: IProp) => {
       try {
         data = await update({
           ...values,
-          email: email,
-          odlPassword: odlPassword,
+          email: values.email,
+          odlPassword: values.oldPassword,
           newPassword: values.newPassword
         }).unwrap();
       } catch (error) {
@@ -72,13 +72,17 @@ export const FormChangePass = ({ email, odlPassword }: IProp) => {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 5,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
           }}
         >
-          <Box component="form" onSubmit={formik.handleSubmit} noValidate sx={{ mt: 1 }} autoComplete="off">
+          <Typography component="h1" variant="h5">
+            Cambiar Contraseña
+          </Typography>
+          <Typography>La contraseña debe tener al menos ocho caracteres e incluir una combinación de números, letras y caracteres especiales (!@%).</Typography>
+          <Box component="form" onSubmit={formik.handleSubmit} noValidate sx={{ mt: 2 }} autoComplete="off">
             <TextField
               value={formik.values.email}
               onChange={formik.handleChange}
@@ -91,6 +95,7 @@ export const FormChangePass = ({ email, odlPassword }: IProp) => {
               name="email"
             />
             <TextField
+              sx={{ mt: 2, mb: 2 }}
               id="oldPassword"
               name="oldPassword"
               label="Contraseña Actual"
@@ -122,11 +127,21 @@ export const FormChangePass = ({ email, odlPassword }: IProp) => {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 2, mb: 2 }}
             >
-              Actualizar Contraseña &nbsp;
+              Guardar &nbsp;
               {loading === true ? <CircularProgress color="inherit" /> : null}
             </Button>
+            <Button
+              type="button"
+              fullWidth
+              variant="outlined"
+              sx={{ mt: 0, mb: 2 }}
+              onClick={()=>{Navigator('/user/')}}
+            >
+              Cancelar &nbsp;
+            </Button>
+            {error && <p style={{ color: "red" }}>No cumple los requisitos</p>}
           </Box>
         </Box>
       </Container>

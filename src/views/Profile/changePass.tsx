@@ -9,9 +9,8 @@ const ChangeView = () => {
   
     return (
     <>
-      <Header title="Actualizar Contraseña" />
+      <Header title="Configuración" />
       <Container sx={{display:'flex', justifyContent:'center', mt:'4rem'}}>
-      <h2>La contraseña debe tener al menos seis caracteres e incluir una combinación de números, letras y caracteres especiales (!@%).</h2> 
       </Container>    
       <FormChangePass email={""} odlPassword={""}/> 
     </>
