@@ -20,7 +20,7 @@ const ProfileView = () => {
     const [ currentPage, setCurrentPage ] = useState(1);
     const [ currentMode, setCurrentMode ] = useState<mode>('LIST');
 
-    const { data, isLoading, isError, error } = useByUserQuery({page:currentPage, userId, mode:currentMode, currentUserLogged:userId});
+    const { data, isLoading, isError, error } = useByUserQuery({page:currentPage, userId, mode:currentMode, currentUserLogged:userId}, {refetchOnFocus:true});
 
     return (
     <>
