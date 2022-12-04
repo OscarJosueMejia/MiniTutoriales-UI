@@ -2,17 +2,13 @@ import * as React from "react";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import ListSubheader from "@mui/material/ListSubheader";
 import CategoryIcon from "@mui/icons-material/Category";
-import DynamicFeedIcon from "@mui/icons-material/DynamicFeed";
 import GroupIcon from "@mui/icons-material/Group";
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import "./admin.css";
 import { resetSecData } from "@store/Slices/securitySlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { selectAuth } from "@store/Slices/securitySlice";
 
 export const MainListItems = () => {
   const Navigator = useNavigate();
@@ -25,7 +21,7 @@ export const MainListItems = () => {
           </ListItemIcon>
           <ListItemText
             onClick={() => {
-              window.location.assign("hola");
+              Navigator("/admin/categorias/list");
             }}
             primary="Categorías"
           />
@@ -38,7 +34,7 @@ export const MainListItems = () => {
           </ListItemIcon>
           <ListItemText
             onClick={() => {
-              window.location.assign("hola");
+              Navigator("/admin/accesslist");
             }}
             primary="Usuarios"
           />
