@@ -29,13 +29,16 @@ export default function SignUp() {
     validationSchema:Yup.object(validationSchema()),
     
     onSubmit: async (formValues) => {
-      await signUp(
-        {name:`${formValues.firstName} ${formValues.lastName}`,
-          email:formValues.email,
-          password:formValues.password
-      }).unwrap();
-      if(!isError){
-        Navigator('/auth/validate', {replace:true, state:{emailToVerify:formValues.email}});
+      try {
+        await signUp(
+          {name:`${formValues.firstName} ${formValues.lastName}`,
+            email:formValues.email,
+            password:formValues.password
+          }).unwrap();
+  
+          Navigator('/auth/validate', {replace:true, state:{emailToVerify:formValues.email}});
+      } catch (error) {
+        console.log(error);
       }
     } 
   })
@@ -140,8 +143,7 @@ export default function SignUp() {
         ?<AlertDialog isOpen={isError} type='ERROR' title="Ups!" description={(error as {data:{error:string}}).data.error} /> 
         : null
       }
-      
-
+    
     </ThemeProvider>
   );
 }
@@ -151,6 +153,6 @@ function validationSchema(){
       firstName: Yup.string().required("Campo Requerido"),
       lastName: Yup.string().required("Campo Requerido"),
       email: Yup.string().email('Correo No Válido').required("Campo requerido"),
-      password: Yup.string().matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, 'Contraseña Débil').required("Campo requerido"),
+      password: Yup.string().matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, 'La contraseña es débil.').required("Campo requerido"),
   }
 }

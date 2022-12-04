@@ -1,7 +1,9 @@
-import {Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Link, Grid, Box, Typography, Container} from '@mui/material';
+import {Avatar, CssBaseline, TextField, FormControlLabel, Checkbox, Link, Grid, Box, Typography, Container} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useVerifyAccountMutation } from '@store/Services/Security';
 import { LoadingButton } from '@mui/lab';
+import { useDispatch } from "react-redux";
+import { setSecData } from "@store/Slices/securitySlice";
 
 import { useFormik } from "formik";
 import * as Yup from 'yup';
@@ -19,6 +21,7 @@ const PIN_TTL=15;
 export default function ValidateAccount() {
   const Location = useLocation();
   const Navigator = useNavigate();
+  const dispatch = useDispatch();
   const [verifyAccount, { isLoading, status, error, isError}] = useVerifyAccountMutation();
   let initialValues:IFormValues = { email:"", pin:"" }
 
@@ -33,11 +36,14 @@ export default function ValidateAccount() {
     validationSchema:Yup.object(validationSchema()),
     
     onSubmit: async (formValues) => {
-      const data = await verifyAccount(
-        {email:formValues.email, pin:formValues.pin});
-      if(!isError){
-        //
+      try {
+        const data = await verifyAccount(
+        {email:formValues.email, pin:formValues.pin}).unwrap();
+
+        dispatch(setSecData(data));
         Navigator('/home/');
+      } catch (error) {
+        console.log(error);
       }
     } 
   });
@@ -116,6 +122,6 @@ export default function ValidateAccount() {
 function validationSchema(){
   return {
       email: Yup.string().email('Correo No Válido').required("Campo requerido"),
-      pin: Yup.string().min(6).required("Campo Requerido"),
+      pin: Yup.string().min(6, 'El Pin debe tener 6 dígitos.').required("Campo Requerido"),
   }
 }
