@@ -91,6 +91,7 @@ const TutorialManagement = () => {
               <TutorialForm  
                 formikValues={formik.values}
                 formikErrors={formik.errors}
+                formikTouched={formik.touched}
                 formikSetValue={formik.setFieldValue}
                 categoriesList={dataForCategories}
               />
@@ -123,5 +124,3 @@ async function uploadImagesFB(steps:Array<IStep>){
 
   return Promise.all(stepsWithURL);
 }
-
-//{{HOST}}/tutorial/update/:id

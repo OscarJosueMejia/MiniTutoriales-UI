@@ -70,8 +70,8 @@ export default function SignUp() {
                   fullWidth
                   value={formik.values.firstName}
                   onChange={(e)=>{formik.setFieldValue('firstName', e.target.value)}}
-                  error={formik.errors.firstName !== undefined}
-                  helperText={formik.errors.firstName}
+                  error={formik.touched.firstName && formik.errors.firstName !== undefined}
+                  helperText={formik.touched.firstName && formik.errors.firstName}
                   id="firstName"
                   label="Nombre"
                   autoFocus
@@ -84,8 +84,8 @@ export default function SignUp() {
                   label="Apellido"
                   value={formik.values.lastName}
                   onChange={(e)=>{formik.setFieldValue('lastName', e.target.value)}}
-                  error={formik.errors.lastName !== undefined}
-                  helperText={formik.errors.lastName}
+                  error={formik.touched.lastName && formik.errors.lastName !== undefined}
+                  helperText={formik.touched.lastName && formik.errors.lastName}
                   required
                   fullWidth
                 />
@@ -97,8 +97,8 @@ export default function SignUp() {
                   label="Email"
                   value={formik.values.email}
                   onChange={(e)=>{formik.setFieldValue('email', e.target.value)}}
-                  error={formik.errors.email !== undefined}
-                  helperText={formik.errors.email}
+                  error={ formik.touched.email && formik.errors.email !== undefined}
+                  helperText={formik.touched.email && formik.errors.email}
                   required
                   fullWidth
                 />
@@ -111,8 +111,8 @@ export default function SignUp() {
                   type="password"
                   value={formik.values.password}
                   onChange={(e)=>{formik.setFieldValue('password', e.target.value)}}
-                  error={formik.errors.password !== undefined}
-                  helperText={formik.errors.password}
+                  error={formik.touched.password && formik.errors.password !== undefined}
+                  helperText={formik.touched.password && formik.errors.password}
                   required
                   fullWidth
                 />

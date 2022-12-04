@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { IStep } from '@components/Steps/StepContainer';
 import { IFormValues } from '@views/Tutorial/TutorialManagement';
-import { FormikErrors } from 'formik';
+import { FormikErrors, FormikTouched } from 'formik';
 import { ICategories } from '@store/Slices/categorySlice';
 //UI Components
 import {Box, TextField, FormControl, Typography, Button, Container} from '@mui/material';
@@ -17,11 +17,12 @@ const inputVariant = 'filled';
 interface ITutorialFormProps {
     formikValues:IFormValues;
     formikErrors:FormikErrors<IFormValues>;
+    formikTouched:FormikTouched<IFormValues>;
     formikSetValue:Function;
     categoriesList:Array<ICategories>
 }
 
-const TutorialForm = ({formikValues, formikErrors, formikSetValue, categoriesList}:ITutorialFormProps) => {
+const TutorialForm = ({formikValues, formikErrors, formikTouched, formikSetValue, categoriesList}:ITutorialFormProps) => {
     const steps:Array<IStep> = formikValues.steps as Array<IStep>
     const requirements:Array<string> = formikValues.requirements as Array<string>
     const tags:Array<string> = formikValues.tags as Array<string>
@@ -99,8 +100,8 @@ const TutorialForm = ({formikValues, formikErrors, formikSetValue, categoriesLis
                     <TextField id="filled-basic" label="Título" variant={inputVariant} required
                     value={formikValues.title} 
                     onChange={(e)=>{formikSetValue('title',e.target.value)}} 
-                    error={formikErrors.title !== undefined}
-                    helperText={formikErrors.title as string}/>
+                    error={formikTouched.title && formikErrors.title !== undefined}
+                    helperText={formikTouched.title && formikErrors.title as string}/>
                     
                 </FormControl>
             </div>
@@ -110,8 +111,8 @@ const TutorialForm = ({formikValues, formikErrors, formikSetValue, categoriesLis
                     <TextField id="filled-textarea" multiline
                     value={formikValues.description} 
                     onChange={(e)=>{formikSetValue('description',e.target.value)}}
-                    error={formikErrors.description !== undefined}
-                    helperText={formikErrors.description as string}
+                    error={formikTouched.description && formikErrors.description !== undefined}
+                    helperText={ formikTouched.description && formikErrors.description as string}
                     maxRows={10} label="Descripción" variant={inputVariant} required/>
                 </FormControl>
             </div>
@@ -123,7 +124,6 @@ const TutorialForm = ({formikValues, formikErrors, formikSetValue, categoriesLis
                 <Button onClick={()=>{setReqCreatorOpen(true)}}>Agregar Requisito o Material Necesario</Button>
             </Container>
 
-            
             <StepContainer steps={steps} handleUpdate={openStepUpdate} />
             <StepCreator open={stepCreatorOpen} newStepNumber={steps.length + 1} handleClose={closeStepCreator} />
             {stepUpdOpen ? <StepUpdater open={stepUpdOpen} stepUpd={stepUpd as IStep} handleClose={closeStepUpdate}/> : null}
@@ -134,7 +134,7 @@ const TutorialForm = ({formikValues, formikErrors, formikSetValue, categoriesLis
             </Container>
 
             <TagHandler tags={tags} handleTag={formikSetValue} availableTags={categoriesList}/>
-            {formikErrors.tags ? <Typography sx={{textAlign:'center', color:'red'}}>{formikErrors.tags as string}</Typography> : null}
+            {formikErrors.tags ? <Typography sx={{textAlign:'center', color:'red', ml:1.2, mt:-3}}>{formikErrors.tags as string}</Typography> : null}
 
         </Box>    
     )
