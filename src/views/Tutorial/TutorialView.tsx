@@ -29,7 +29,7 @@ const Tutorial = () => {
   const currentUserName = (store.getState() as RootState).sec.name;
   
   const { _id, viewMode } = Location.state as Partial<IFeedItem> & {viewMode:TViewMode};
-  const {data, isLoading, isError, error} = useGetOneQuery({tutorialId:_id as string, userId:currentUserId});
+  const {data, isLoading, isError, error} = useGetOneQuery({tutorialId:_id as string, userId:currentUserId}, {refetchOnFocus:true, refetchOnMountOrArgChange:true});
 
 
   const handleReaction = async ({tutorialId, reactionName, mode}:IReactionBody) => {

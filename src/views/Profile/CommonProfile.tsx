@@ -15,7 +15,7 @@ const CommonProfileView = () => {
     const [ currentPage, setCurrentPage ] = useState(1);
     const [ currentUser, setCurrentUser ] = useState(Location.state.userId)
 
-    const { data, isLoading, isError, error } = useByUserQuery({page:currentPage, userId:currentUser, mode:'LIST', currentUserLogged:(store.getState() as RootState).sec._id});
+    const { data, isLoading, isError, error } = useByUserQuery({page:currentPage, userId:currentUser, mode:'LIST', currentUserLogged:(store.getState() as RootState).sec._id}, {refetchOnFocus:true, refetchOnMountOrArgChange:true});
     
     return (
     <>

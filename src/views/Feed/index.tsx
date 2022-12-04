@@ -15,7 +15,7 @@ const Feed = () => {
     const Navigator = useNavigate();
     const userId = (store.getState() as RootState).sec._id;
     const [ currentPage, setCurrentPage ] = useState(1);
-    const { data, error, isError, isLoading } = useFeedForLoggedQuery({page:currentPage, userId}, {refetchOnMountOrArgChange:true})
+    const { data, error, isError, isLoading } = useFeedForLoggedQuery({page:currentPage, userId}, {refetchOnFocus:true, refetchOnMountOrArgChange:true})
     return (
     <>
       <Header title="MiniTutoriales" showActionBtn={true} btnTitle="Crear Tutorial" btnIconType='ADD' btnAction={()=>{Navigator("/creator", {state:{isUpdate:false}})}} />

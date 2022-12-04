@@ -46,7 +46,7 @@ const TutorialBody = ({itemData, handleReaction, currentUserId, handleComment}:I
     }
   
     return (
-        <Card sx={{width: '100vw', marginBottom:2, backgroundColor:'#f5f5f5', borderRadius:3}}>
+        <Card sx={{width: '98vw', marginBottom:2, backgroundColor:'#f5f5f5', borderRadius:3}}>
         <CardHeader
           avatar={
             <Avatar sx={{ bgcolor: colors[author_info[0].avatar as number] }} aria-label="recipe" 
@@ -60,7 +60,9 @@ const TutorialBody = ({itemData, handleReaction, currentUserId, handleComment}:I
             {`${(author_info[0].name).split(' ')[0][0]}${(author_info[0].name).split(' ')[1][0]}`}
             </Avatar>
           }
-          title={title}
+          title={<Typography variant="body1"  color="text.primary">
+          {title}
+        </Typography>}
           
           subheader={new Date(createdAt).toLocaleString('es-ES', {day:'2-digit',month:'long', year:'numeric', hour:'numeric', hour12:true, minute:'2-digit'})} 
           />
@@ -71,10 +73,10 @@ const TutorialBody = ({itemData, handleReaction, currentUserId, handleComment}:I
           alt="tutorialdefault"
         />
         <CardContent>
-          <Typography variant="body1" sx={{minWidth:'150vw'}} color="text.secondary">
+          <Typography variant="body1" sx={{minWidth:'92vw'}} color="text.secondary">
             Autor: {author_info[0].name}
           </Typography>
-          <Typography variant="body1" sx={{minWidth:'150vw', mt:2, mb:2}} color="text.primary">
+          <Typography variant="body1" sx={{minWidth:'92vw', mt:2, mb:2}} color="text.primary">
             {description}
           </Typography>
           <RequirementsLiteList requirementsList={requirements as unknown} />

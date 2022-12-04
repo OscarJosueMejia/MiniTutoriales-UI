@@ -70,11 +70,11 @@ const Routes = () => {
           </Switch>
         }/>
 
-        <Route path="/admin/*" element={
+        {/* <Route path="/admin/*" element={
           <Switch>
             <Route index element={<PrivateRoute allowedRoles={["admin"]} ><EjemploAdmin/></PrivateRoute>}/>
           </Switch>
-        }/>
+        }/> */}
 
         <Route path="/*" element={<PageNotFound/>}/>
         <Route path="*" element={<PageNotFound/>}/>

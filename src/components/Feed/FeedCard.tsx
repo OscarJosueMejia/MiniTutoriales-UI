@@ -43,7 +43,9 @@ const FeedCard = ({itemData, handleReaction, viewMode}:IFeedCardProps)=>{
         </IconButton>
       }
       onClick={()=>{Navigate('/home/tutorial',{state:{_id, viewMode}})}}
-      title={title}
+      title={<Typography variant="body1"  color="text.primary">
+      {`${title}`}
+    </Typography>}
       subheader={new Date(createdAt).toLocaleString('es-ES', {day:'2-digit',month:'long', year:'numeric', hour:'numeric', hour12:true, minute:'2-digit'})}
     />
     <CardMedia
@@ -55,7 +57,7 @@ const FeedCard = ({itemData, handleReaction, viewMode}:IFeedCardProps)=>{
       alt="tutorial-thumbnail"
     />
     <CardContent>
-      <Typography variant="body2" sx={{minWidth:'120vw'}} color="text.secondary">
+      <Typography variant="body2" sx={{minWidth:'90vw'}} color="text.secondary">
         {description} 
       </Typography>
     </CardContent>

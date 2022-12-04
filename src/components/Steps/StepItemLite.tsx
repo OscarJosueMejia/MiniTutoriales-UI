@@ -24,7 +24,7 @@ export const StepItemLite = ({ step } : IStepProps) => {
         {!step.imgURL ? null
             :<div style={{marginTop:'3vh', marginBottom:'2vh',textAlign:'center' }}>
                 <CircularProgress style={(!isLoading ? {display:'none'} : {})}/>
-                <img style={(!isLoading ? {maxWidth:'40%', borderRadius:10} : {display:'none'})} src={step.imgURL as string}  onLoad={()=>{setIsLoading(false);}} alt="" />
+                <img style={(!isLoading ? {maxWidth:'60vw', borderRadius:10} : {display:'none'})} src={step.imgURL as string}  onLoad={()=>{setIsLoading(false);}} alt="" />
             </div>
             
             
