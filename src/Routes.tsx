@@ -5,7 +5,6 @@ import { PageNotFound } from '@components/Misc';
 import { useSelector } from 'react-redux';
 import { selectAuth } from '@store/Slices/securitySlice';
 
-import EjemploAdmin from '@views/EjemploAdmin';
 import Admin from '@layouts/Admin/index';
 import Feed from '@views/Feed';
 import { Tutorial, TutorialManagement } from '@views/Tutorial';
@@ -66,11 +65,14 @@ const Routes = () => {
           <Switch>
             <Route path='categorias/*' element={
               <Switch>
-                <Route path='list' element={<Admin><CategoryList/></Admin>}/>
-                <Route path='management' element={<Admin><CategoryManagement/></Admin>}/>
+                <Route index path='list' element={<PrivateRoute allowedRoles={["admin"]}><Admin><CategoryList/></Admin></PrivateRoute>}/>
+                <Route path='management' element={<PrivateRoute allowedRoles={["admin"]}><Admin><CategoryManagement/></Admin></PrivateRoute>}/>
+                <Route path="*" element={<PageNotFound/>}/>
               </Switch>
               }/>
-            <Route path="accesslist" element={<PrivateRoute allowedRoles={["admin"]}><AccessManager/></PrivateRoute>}/>
+            <Route index path="accesslist" element={<PrivateRoute allowedRoles={["admin"]}><AccessManager/></PrivateRoute>}/>
+            <Route path="*" element={<PageNotFound/>}/>
+
           </Switch>
         }/>
 
@@ -95,13 +97,6 @@ const Routes = () => {
             {/* <Route index element={<PrivateRoute><TutorialManagement/><TabNavigator /></PrivateRoute>}/> */}
             <Route index element={<UserLayout><ProfileView/></UserLayout>}/>
             <Route path="/*" element={<PageNotFound/>}/>
-          </Switch>
-        }/>
-
-        <Route path="/admin/*" element={
-          <Switch>
-            <Route index element={<PrivateRoute allowedRoles={["admin"]} ><CategoryList/></PrivateRoute>}/>
-            <Route path="*" element={<PageNotFound/>}/>
           </Switch>
         }/>
 
