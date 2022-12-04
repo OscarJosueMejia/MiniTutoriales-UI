@@ -67,7 +67,7 @@ const TutorialBody = ({itemData, handleReaction, currentUserId, handleComment}:I
         <CardMedia
           component="img"
           height="194"
-          image="https://cdn-icons-png.flaticon.com/512/292/292333.png"
+          image="https://cdn.dribbble.com/users/104171/screenshots/1863083/media/1f609237cc4ee69d9072cf360b768a64.jpg"
           alt="tutorialdefault"
         />
         <CardContent>

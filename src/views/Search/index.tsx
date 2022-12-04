@@ -13,7 +13,7 @@ const SearchView = () => {
     const userId = (store.getState() as RootState).sec._id;
     const [ currentPage, setCurrentPage ] = useState(1);
     const [searchValue, setSearchValue] = useState("");
-    const {data, isLoading, error, isError} = useSearchQuery({search:searchValue, userId}, {refetchOnFocus:false});
+    const {data, isLoading, isFetching, error, isError} = useSearchQuery({search:searchValue, userId}, {refetchOnFocus:false});
 
     const HandleSearch = async (e:ChangeEvent<HTMLInputElement>) =>{
       setSearchValue(e.target.value);
@@ -26,7 +26,7 @@ const SearchView = () => {
           <SearchInput handleSearchChange={HandleSearch} />
       </Container>
 
-      {isLoading?<ContentLoadingIndicator/>
+      {isLoading || isFetching ?<ContentLoadingIndicator mt={6}/>
       :<FeedLoader viewMode="MAIN"
           data={(searchValue.length > 0) ? (data as Array<IFeedItem>) : []}
           currentPage={currentPage}

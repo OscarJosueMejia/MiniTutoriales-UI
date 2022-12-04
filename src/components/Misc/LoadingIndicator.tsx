@@ -25,7 +25,7 @@ export const ModalLoadingIndicator = ({show}:{show:boolean}) => {
 
 export const CardSkeleton = () => {
   return(
-    <Container sx={{display:'flex', mt:'3vh', justifyContent:'space-around', flexDirection:'column'}}>
+    <Container sx={{display:'flex', mt:'3vh', justifyContent:'space-around', flexDirection:'row', flexWrap:'wrap', alignItems:'center' }}>
       <CardSkeletonItem />
       <CardSkeletonItem />
       <CardSkeletonItem />
