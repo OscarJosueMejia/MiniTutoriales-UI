@@ -82,10 +82,11 @@ export const feedApi = createApi({
     }),
     search: builder.query({
       query: (params:{search:string, userId:string}) => ({
-        url: `custom/${params.search}`,
+        url: `custom`,
         method: 'get',
         params:{
-          userId:params.userId
+          userId:params.userId,
+          search:params.search
         },
         headers: {
           apikey: process.env.REACT_APP_API_KEY,

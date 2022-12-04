@@ -56,7 +56,7 @@ export const FeedLoader = ({ viewMode='MAIN', data, currentPage, setCurrentPage,
           </Container>
           :null
         }
-        {(isError && !disableErrors) && <AlertDialog isOpen={isError} type='ERROR' title="Ups!" description={JSON.stringify(error)} />}
+        {(isError && !disableErrors) && <AlertDialog isOpen={isError} type='ERROR' title="Ups!" description="Error al Conectar con el Servidor." />}
       </>
   );
 }

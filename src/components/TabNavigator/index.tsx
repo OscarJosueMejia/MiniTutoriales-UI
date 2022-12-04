@@ -14,8 +14,6 @@ import AddIcon from '@mui/icons-material/Add';
 interface ITabNavProps {
   tab:string;
 }
-
-
 const TabNavigator = ({tab}:ITabNavProps) => {
     const Navigator = useNavigate();
     const [value, setValue] = useState(tab);
@@ -28,10 +26,7 @@ const TabNavigator = ({tab}:ITabNavProps) => {
     return (
     <Paper sx={{display:'flex', justifyContent:'center', position: 'fixed', bottom: 0, left: 0, right: 0, zIndex:10}} elevation={5}>
         <BottomNavigation   sx={{width: 500}} 
-        value={window.location.pathname.substring(
-            window.location.pathname.indexOf("/") , 
-            window.location.pathname.lastIndexOf("/")+1)
-          } onChange={handleChange}>
+        value={value} onChange={handleChange}>
             <BottomNavigationAction
             label="Principal"
             value="/home/"

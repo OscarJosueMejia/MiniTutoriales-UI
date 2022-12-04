@@ -5,7 +5,7 @@ import { useGetByStatusQuery } from '@store/Services/Category';
 import { useByCategoryQuery } from '@store/Services/Feed';
 import { RootState, store } from '@store/store';
 //Components
-import { Typography, Container, IconButton } from "@mui/material";
+import { Typography, Container, IconButton, Divider } from "@mui/material";
 import Header from "@components/Header";
 import { FeedLoader } from '@views/Feed/FeedLoader';
 import { CategoryCard } from "@components/Feed";
@@ -49,9 +49,10 @@ const FeedByCategory = () => {
               })
             }
               
-            <IconButton sx={{position:'relative', alignSelf:'center'}} onClick={()=>{refetch();}} ><ReplayIcon/></IconButton>
+              <IconButton sx={{position:'relative', alignSelf:'center'}} onClick={()=>{refetch();}} ><ReplayIcon/></IconButton>
             </Container>
             <Container><Typography sx={{textAlign:'center', mt:2}}>{categoryDescription}</Typography></Container>
+            <Divider sx={{mt:'3vh'}}/>
             {loadingFeed && dataForFeed === undefined ? <CardSkeleton />
                 : <FeedLoader viewMode="MAIN"
                     data={(dataForFeed as FeedData).items}
