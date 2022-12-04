@@ -10,6 +10,7 @@ export interface SecState {
   _id: string;
   _pin?: number;
   _newPassword?: string;
+  oldPasswords?: string;
 }
 
 const initialState: SecState = {
@@ -21,6 +22,7 @@ const initialState: SecState = {
   _id: "",
   _pin: 0,
   _newPassword: "",
+  oldPasswords: "",
 };
 
 export const securitySlice = createSlice({
@@ -36,6 +38,7 @@ export const securitySlice = createSlice({
       state._id = action.payload._id;
       state._pin = action.payload._pin;
       state._newPassword = action.payload._newPassword;
+      state.oldPasswords = action.payload.oldPasswords;
     },
     resetSecData: (state) => {
       state.name = "";
@@ -46,6 +49,7 @@ export const securitySlice = createSlice({
       state._id = "";
       state._pin = 0;
       state._newPassword = "";
+      state.oldPasswords = "";
     },
   },
 });

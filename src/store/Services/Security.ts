@@ -131,5 +131,6 @@ export const {
   useRecoveryChangePasswordMutation, 
   useVerifyAccountMutation,
   useUpdateUserStatusMutation,
-  useGetAllUsersQuery
+  useGetAllUsersQuery,
+  useChangePassMutation
 } = securityApi;

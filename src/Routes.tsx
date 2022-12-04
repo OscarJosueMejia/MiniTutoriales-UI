@@ -9,7 +9,7 @@ import EjemploAdmin from '@views/EjemploAdmin';
 import Admin from '@layouts/Admin/index';
 import Feed from '@views/Feed';
 import { Tutorial, TutorialManagement } from '@views/Tutorial';
-import {ProfileView, CommonProfileView} from '@views/Profile';
+import {ProfileView, CommonProfileView, ChangeView} from '@views/Profile';
 import AccessManager from '@views/UserAdmin/AccessManager';
 import UserLayout from '@layouts/User';
 import SignIn from '@views/Auth/SignIn';
@@ -111,6 +111,7 @@ const Routes = () => {
           <Switch>
             {/* <Route index element={<PrivateRoute><TutorialManagement/><TabNavigator /></PrivateRoute>}/> */}
             <Route index element={<UserLayout><ProfileView/></UserLayout>}/>
+            <Route path="changePassword" element={<><ChangeView/><TabNavigator tab="/user/changePassword" /></>}/>
             <Route path="/*" element={<PageNotFound/>}/>
           </Switch>
         }/>

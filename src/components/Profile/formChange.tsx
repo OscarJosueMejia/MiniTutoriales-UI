@@ -16,7 +16,14 @@ import * as yup from "yup";
 import { setSecData } from '@store/Slices/securitySlice';
 import { useState } from 'react';
 
-export const FormChangePass = () => {
+const theme = createTheme();
+
+interface IProp {
+  email: string;
+  odlPassword: string;
+}
+
+export const FormChangePass = ({ email, odlPassword }: IProp) => {
   const Navigator = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -26,15 +33,15 @@ export const FormChangePass = () => {
   const validationSchema = yup.object().shape({
         email: yup.string().required("Campo Requerido"),
         password: yup.string().required("Campo requerido"),
-        oldPasswords: yup.array().min(1, 'Campo requerido'),
+        oldPassword: yup.string().required('Campo requerido'),
   });
 
   //let initialValues:IFormValues = {email:"", oldPasswords:[], password:""}
 
   let initialValues = {
-    email: location.state.email as string,
-    oldPasswords: location.state.oldPasswords as string,
-    password: location.state.password as string,
+    email:"",
+    oldPassword:"",
+    newPassword:"",
   };
 
   const formik = useFormik({
@@ -46,7 +53,9 @@ export const FormChangePass = () => {
       try {
         data = await update({
           ...values,
-          email: location.state.email as string,
+          email: email,
+          odlPassword: odlPassword,
+          newPassword: values.newPassword
         }).unwrap();
       } catch (error) {
         setLoading(false);
@@ -58,6 +67,7 @@ export const FormChangePass = () => {
   });
 
     return (
+      <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -75,6 +85,7 @@ export const FormChangePass = () => {
               error={formik.touched.email && Boolean(formik.errors.email)}
               helperText={formik.touched.email && formik.errors.email}
               required
+              fullWidth
               id="email"
               label="Correo Electronico"
               name="email"
@@ -83,25 +94,29 @@ export const FormChangePass = () => {
               id="oldPassword"
               name="oldPassword"
               label="Contraseña Actual"
-              value={formik.values.oldPasswords}
+              type="password"
+              value={formik.values.oldPassword}
               required
+              fullWidth
               onChange={formik.handleChange}
               error={
-                formik.touched.oldPasswords && Boolean(formik.errors.oldPasswords)
+                formik.touched.oldPassword && Boolean(formik.errors.oldPassword)
               }
-              helperText={formik.touched.oldPasswords && formik.errors.oldPasswords}
+              helperText={formik.touched.oldPassword && formik.errors.oldPassword}
             />
             <TextField
               id="newPassword"
               name="newPassword"
               label="Contraseña Nueva"
-              value={formik.values.password}
+              type="password"
+              value={formik.values.newPassword}
               required
+              fullWidth
               onChange={formik.handleChange}
               error={
-                formik.touched.password && Boolean(formik.errors.password)
+                formik.touched.newPassword && Boolean(formik.errors.newPassword)
               }
-              helperText={formik.touched.password && formik.errors.password}
+              helperText={formik.touched.newPassword && formik.errors.newPassword}
             />
             <Button
               type="submit"
@@ -114,8 +129,8 @@ export const FormChangePass = () => {
             </Button>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
+      </ThemeProvider>
     );
 };
 
