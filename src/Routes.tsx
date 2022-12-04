@@ -2,6 +2,9 @@ import { BrowserRouter as Router, Route, Routes as Switch, Navigate } from 'reac
 import PrivateRoute from '@components/PrivateRoute';
 import { PageNotFound } from '@components/Misc';
 
+import { useSelector } from 'react-redux';
+import { selectAuth } from '@store/Slices/securitySlice';
+
 import EjemploAdmin from '@views/EjemploAdmin';
 import Admin from '@layouts/Admin/index';
 import Feed from '@views/Feed';
@@ -18,6 +21,16 @@ import {CategoryList, CategoryManagement, FeedByCategory} from '@views/Categoria
 
 
 const Routes = () => {
+
+  const user = useSelector(selectAuth);
+  if (user) {
+    const { token } = user;
+    if (token && window.location.pathname === "/auth") {
+      window.location.replace("/home");
+    }
+  }
+
+
   return (
     <Router >
       <Switch>
@@ -49,9 +62,9 @@ const Routes = () => {
           </Switch>
         }/>
         
-        <Route path="/admin*" element={
+        <Route path="/admin/*" element={
           <Switch>
-            <Route path='categorias*' element={
+            <Route path='categorias/*' element={
               <Switch>
                 <Route path='list' element={<Admin><CategoryList/></Admin>}/>
                 <Route path='management' element={<Admin><CategoryManagement/></Admin>}/>
@@ -88,6 +101,7 @@ const Routes = () => {
         <Route path="/admin/*" element={
           <Switch>
             <Route index element={<PrivateRoute allowedRoles={["admin"]} ><CategoryList/></PrivateRoute>}/>
+            <Route path="*" element={<PageNotFound/>}/>
           </Switch>
         }/>
 

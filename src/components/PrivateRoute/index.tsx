@@ -7,22 +7,21 @@ import { PageNotFound } from '@components/Misc';
 
 const PrivateRoute = ({ children, allowedRoles = [] }: PropsWithChildren<{ allowedRoles?: Array<string> }>) => {
   const user = useSelector(selectAuth);
-  console.log(selectAuth);
   if (user) {
     try {
       const { token } = user;
       if (!token) {
-        return <Navigate to="/login" replace />;
+        return <Navigate to="/auth" replace />;
       }
     } catch (ex) {
-      return <Navigate to="/login" replace />;
+      return <Navigate to="/auth" replace />;
     }
   } else {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/auth" replace />;
   }
 
   const { rol } = user;
-  console.log(user);
+
   if (allowedRoles.includes(rol)) {
     return children ? <>{children}</> : <Outlet />;
   }

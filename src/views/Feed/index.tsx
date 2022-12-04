@@ -20,6 +20,7 @@ const Feed = () => {
     <>
       <Header title="MiniTutoriales" showActionBtn={true} btnTitle="Crear Tutorial" btnIconType='ADD' btnAction={()=>{Navigator("/creator", {state:{isUpdate:false}})}} />
       <Typography variant="h6" sx={{mt:'8vh', ml:3}}>¿Que aprenderás Hoy?</Typography>
+      
       {(isLoading && data === undefined) ? <CardSkeleton />
           : <FeedLoader viewMode="MAIN"
           data={(data as FeedData).items}

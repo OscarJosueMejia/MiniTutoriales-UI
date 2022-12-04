@@ -24,7 +24,7 @@ const ProfileView = () => {
 
     return (
     <>
-      <Header title="Mi Perfil" showActionBtn={true} btnTitle="Crear Tutorial" btnIconType='ADD' btnAction={()=>{Navigator("/creator", {state:{isUpdate:false}})}} />
+      <Header title="Mi Perfil" />
       <ProfileInfo userData={{name:(store.getState() as RootState).sec.name, email:(store.getState() as RootState).sec.email, avatar:Number((store.getState() as RootState).sec.avatar)}} uploadCount={data !== undefined ? (data as FeedData).items.length : 0} isLikedMode={currentMode === 'LIKED'} isUserLogged={true} />
       <Container sx={{display:'flex', justifyContent:'center', mt:'1.2rem'}}>
         <ButtonGroup

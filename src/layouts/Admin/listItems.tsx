@@ -10,8 +10,8 @@ import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import "./admin.css";
 import { resetSecData } from "@store/Slices/securitySlice";
-import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { selectAuth } from "@store/Slices/securitySlice";
 
 export const MainListItems = () => {
@@ -63,7 +63,7 @@ export const SecondaryListItems = () => {
             onClick={() => {
               dispatch(resetSecData());
               localStorage.removeItem("reduxState");
-              Navigator("/login");
+              Navigator("/auth");
             }}
             primary="Cerrar Sesión"
           />

@@ -9,6 +9,9 @@ import Logout from '@mui/icons-material/Logout';
 import { colors } from '@components/Feed/FeedCard';
 import { useNavigate } from 'react-router-dom';
 
+import { resetSecData } from "@store/Slices/securitySlice";
+import { useDispatch } from "react-redux";
+
 interface IProfileInfoProps {
     userData:{
         name:string,
@@ -22,6 +25,8 @@ interface IProfileInfoProps {
 
 const ProfileInfo = ({userData, uploadCount, isLikedMode, isUserLogged}:IProfileInfoProps) => {
     const Navigator = useNavigate();
+    const dispatch = useDispatch();
+
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
@@ -33,6 +38,12 @@ const ProfileInfo = ({userData, uploadCount, isLikedMode, isUserLogged}:IProfile
     const handleClose = () => {
       setAnchorEl(null);
     };
+
+    const closeSession = () => {
+      dispatch(resetSecData());
+      localStorage.removeItem("reduxState");
+      Navigator("/auth");
+    }
 
     return(
       <>
@@ -96,7 +107,7 @@ const ProfileInfo = ({userData, uploadCount, isLikedMode, isUserLogged}:IProfile
           </ListItemIcon>
           Cambiar Contraseña
         </MenuItem>
-        <MenuItem onClick={()=>{Navigator('/auth/')}}>
+        <MenuItem onClick={()=>{closeSession()}}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>

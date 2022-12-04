@@ -127,7 +127,7 @@ export default function SignUp() {
             
             <Grid container justifyContent="flex-end" sx={{mt:2}}>
               <Grid item >
-                <Link href="#" variant="body2" onClick={()=>{Navigator('/login/');}}>
+                <Link variant="body2" onClick={()=>{Navigator('/auth/');}}>
                   Ya tienes una cuenta? Inicia Sesión
                 </Link>
               </Grid>
@@ -135,6 +135,7 @@ export default function SignUp() {
           </Box>
         </Box>
       </Container>
+
       {isError
         ?<AlertDialog isOpen={isError} type='ERROR' title="Ups!" description={(error as {data:{error:string}}).data.error} /> 
         : null
