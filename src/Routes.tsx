@@ -16,6 +16,7 @@ import SearchView from '@views/Search';
 import RecoveryPassword from '@views/Auth/RecoveryPassword';
 import {CategoryList, CategoryManagement, FeedByCategory} from '@views/Categorias/index';
 
+
 const Routes = () => {
   return (
     <Router >
@@ -47,6 +48,18 @@ const Routes = () => {
             <Route path="/*" element={<PageNotFound/>}/>
           </Switch>
         }/>
+        
+        <Route path="/admin*" element={
+          <Switch>
+            <Route path='categorias*' element={
+              <Switch>
+                <Route path='list' element={<Admin><CategoryList/></Admin>}/>
+                <Route path='management' element={<Admin><CategoryManagement/></Admin>}/>
+              </Switch>
+              }/>
+            <Route path="accesslist" element={<PrivateRoute allowedRoles={["admin"]}><AccessManager/></PrivateRoute>}/>
+          </Switch>
+        }/>
 
         <Route path="/creator/*" element={
           <Switch>
@@ -75,22 +88,11 @@ const Routes = () => {
         <Route path="/admin/*" element={
           <Switch>
             <Route index element={<PrivateRoute allowedRoles={["admin"]} ><CategoryList/></PrivateRoute>}/>
-            <Route path="accesslist" element={<PrivateRoute allowedRoles={["admin"]}><AccessManager/></PrivateRoute>}/>
           </Switch>
         }/>
 
-        <Route path="/*" element={<PageNotFound/>}/>
         <Route path="*" element={<PageNotFound/>}/>
-        <Route path="/admin/*" element={
-          <Switch>
-            <Route path='categorias/*' element={
-              <Switch>
-                <Route path='list' element={<Admin><CategoryList/></Admin>}/>
-                <Route path='management' element={<Admin><CategoryManagement/></Admin>}/>
-              </Switch>
-            }/>
-          </Switch>
-        }/>
+
       </Switch>
       
     </Router>

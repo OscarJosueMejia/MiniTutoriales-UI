@@ -13,6 +13,7 @@ import { Route, useNavigate } from "react-router-dom";
 import CreateIcon from "@mui/icons-material/Create";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useLocation } from "react-router-dom";
+import { AlertDialog } from "@components/Misc";
 
 import { useGetAllQuery, useDeleteMutation } from "@store/Services/Category";
 import { setCategoryData } from "@store/Slices/categorySlice";
@@ -36,7 +37,7 @@ const BodyTable = () => {
   const dispatch = useDispatch();
   const Navigator = useNavigate();
   const [loading, setLoading] = useState(false);
-  const { isLoading, data, error } = useGetAllQuery({});
+  const { isLoading, data, error, isError } = useGetAllQuery({});
   const [deleteCategory, { status }] = useDeleteMutation();
 
   const rows: ICategoriesData = {
@@ -99,7 +100,7 @@ const BodyTable = () => {
                   {row.description}
                 </TableCell>
                 <TableCell style={{ width: 160 }} align="center">
-                  {row.status}
+                  {row.status === "ACT" ? "ACTIVO" : "INACTIVO"}
                 </TableCell>
                 <TableCell align="center" style={{ width: 160 }}>
                   <IconButton
@@ -128,7 +129,6 @@ const BodyTable = () => {
                       const response = await deleteCategory({
                         categoryId: row._id as string,
                       });
-                      Navigator(0);
                     }}
                   >
                     <DeleteIcon fontSize="inherit" />
@@ -164,6 +164,14 @@ const BodyTable = () => {
           </TableFooter>
         </>
       )}
+      {isError ? (
+        <AlertDialog
+          isOpen={isError}
+          type="ERROR"
+          title="Ups!"
+          description={(error as { data: { error: string } }).data.error}
+        />
+      ) : null}
     </>
   );
 };

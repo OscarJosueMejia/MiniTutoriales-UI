@@ -3,7 +3,7 @@ import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 export const categoryApi = createApi({
   reducerPath: 'categoryApi',
   baseQuery: fetchBaseQuery({baseUrl: `${process.env.REACT_APP_API_BASE_URL}/category`}),
-
+  tagTypes: ["Category"],
   endpoints: (builder) => ({
     getAll: builder.query({
       query: () => ({
@@ -12,7 +12,8 @@ export const categoryApi = createApi({
         headers: {
           apikey: process.env.REACT_APP_API_KEY,
         },
-      })
+      }),
+      providesTags: ["Category"]
     }),
     getByIndex: builder.query({
         query: (params) => ({
@@ -21,7 +22,8 @@ export const categoryApi = createApi({
           headers: {
             apikey: process.env.REACT_APP_API_KEY,
           },
-        })
+        }),
+        providesTags: ["Category"]
       }),
     getByStatus: builder.query({
       query: (params) => ({
@@ -30,7 +32,8 @@ export const categoryApi = createApi({
         headers: {
           apikey: process.env.REACT_APP_API_KEY,
         },
-      })
+      }),
+      providesTags: ["Category"]
     }),
     add: builder.mutation({
       query: (params) => ({
@@ -40,7 +43,8 @@ export const categoryApi = createApi({
         headers: {
           apikey: process.env.REACT_APP_API_KEY,
         },
-      })
+      }),
+      invalidatesTags: ["Category"]
     }),
     update: builder.mutation({
       query: (params) => ({
@@ -50,7 +54,8 @@ export const categoryApi = createApi({
         headers: {
           apikey: process.env.REACT_APP_API_KEY,
         },
-      })
+      }),
+      invalidatesTags: ["Category"]
     }),
     delete: builder.mutation({
       query: (params) => ({
@@ -59,7 +64,8 @@ export const categoryApi = createApi({
         headers: {
           apikey: process.env.REACT_APP_API_KEY,
         },
-      })
+      }),
+      invalidatesTags: ["Category"]
     }),
   }),
 });
