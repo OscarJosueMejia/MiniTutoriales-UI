@@ -98,6 +98,37 @@ export const securityApi = createApi({
         },
       }),
     }),
+    changePass: builder.mutation({
+      query: (credentials) => ({
+        url: `changePassword`,
+        method: 'POST',
+        body:credentials,
+        headers: {
+          apikey: process.env.REACT_APP_API_KEY,
+        },
+      })
+    }),
+    getAll: builder.query({
+      query: () => ({
+        url: 'all',
+        method: 'getALL',
+        headers: {
+          apikey: process.env.REACT_APP_API_KEY,
+        },
+      })
+    }),
+    getById: builder.query({
+      query: (id) => ({
+        url: `profile/${id}`,
+        method: 'get',
+        params:{
+          id:'638c8e003373280b25b87f48'
+        },
+        headers: {
+          apikey: process.env.REACT_APP_API_KEY,
+        },
+      })
+    }),
   }),
 });
 
@@ -109,5 +140,6 @@ export const {
   useRecoveryChangePasswordMutation, 
   useVerifyAccountMutation,
   useUpdateUserStatusMutation,
-  useGetAllUsersQuery
+  useGetAllUsersQuery,
+  useChangePassMutation
 } = securityApi;

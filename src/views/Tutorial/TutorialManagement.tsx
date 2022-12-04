@@ -67,7 +67,7 @@ const TutorialManagement = () => {
             userId, 
           title:formValues.title,
           description:formValues.description, 
-          categoryId:'6355bf4a972277423bb7ddca', 
+          categoryId:'638715a091b5ed67eddd8579', 
           requirements:formValues.requirements, 
           steps:await uploadImagesFB(formValues.steps), 
           tags:formValues.tags

@@ -26,18 +26,17 @@ export const feedApi = createApi({
       })
     }),
     feedForLogged: builder.query({
-      query: (params:{page:number, userId:string}) => ({
-        url: `logged_user/${params.userId}`,
+      query: (page) => ({
+        url: `logged_user/638715a091b5ed67eddd8579`,
         method: 'get',
         params:{
-          page:params.page,
-          items:ITEMS_PER_PAGE
+          page,
+          items:5
         },
         headers: {
           apikey: process.env.REACT_APP_API_KEY,
         },
-      }),
-      providesTags: ["Feed"]
+      })
     }),
     getOne: builder.query({
       query: (params:{tutorialId:string, userId:string}) => ({

@@ -8,7 +8,7 @@ import { selectAuth } from '@store/Slices/securitySlice';
 import Admin from '@layouts/Admin/index';
 import Feed from '@views/Feed';
 import { Tutorial, TutorialManagement } from '@views/Tutorial';
-import {ProfileView, CommonProfileView} from '@views/Profile';
+import {ProfileView, CommonProfileView, ChangeView} from '@views/Profile';
 import AccessManager from '@views/UserAdmin/AccessManager';
 import UserLayout from '@layouts/User';
 import SignIn from '@views/Auth/SignIn';
@@ -17,6 +17,7 @@ import ValidateAccount from '@views/Auth/ValidateAccount';
 import SearchView from '@views/Search';
 import RecoveryPassword from '@views/Auth/RecoveryPassword';
 import {CategoryList, CategoryManagement, FeedByCategory} from '@views/Categorias/index';
+import TabNavigator from '@components/TabNavigator';
 
 
 const Routes = () => {
@@ -61,6 +62,22 @@ const Routes = () => {
           </Switch>
         }/>
         
+        <Route path="/find/*" element={
+          <Switch>
+            {/* <Route index element={<PrivateRoute><TutorialManagement/><TabNavigator /></PrivateRoute>}/> */}
+            <Route index element={<><SearchView/><TabNavigator tab="/find/" /></>}/>
+            <Route path="/*" element={<PageNotFound/>}/>
+          </Switch>
+        }/>
+
+        <Route path="/admin/*" element={
+          <Switch>
+            <Route index element={<PrivateRoute allowedRoles={["admin"]} ><EjemploAdmin/></PrivateRoute>}/>
+          </Switch>
+        }/>
+
+        <Route path="/*" element={<PageNotFound/>}/>
+        <Route path="*" element={<PageNotFound/>}/>
         <Route path="/admin/*" element={
           <Switch>
             <Route path='categorias/*' element={
@@ -96,6 +113,7 @@ const Routes = () => {
           <Switch>
             {/* <Route index element={<PrivateRoute><TutorialManagement/><TabNavigator /></PrivateRoute>}/> */}
             <Route index element={<UserLayout><ProfileView/></UserLayout>}/>
+            <Route path="changePassword" element={<><ChangeView/><TabNavigator tab="/user/changePassword" /></>}/>
             <Route path="/*" element={<PageNotFound/>}/>
           </Switch>
         }/>
