@@ -8,7 +8,7 @@ import { RootState, store } from '@store/store';
 //Components
 import Header from "@components/Header";
 import { ProfileInfo } from '@components/Profile';
-import { ContentLoadingIndicator } from "@components/Misc";
+import { CardSkeleton } from "@components/Misc";
 
 const CommonProfileView = () => {
     const Location = useLocation();
@@ -20,7 +20,7 @@ const CommonProfileView = () => {
     return (
     <>
       <Header title="Perfil del Usuario" />
-      {isLoading && data === undefined ? <ContentLoadingIndicator /> 
+      {isLoading && data === undefined ? <CardSkeleton /> 
       :
       <>
         <ProfileInfo userData={{name:data.userData.name, email:data.userData.email, avatar:data.userData.avatar}} uploadCount={ (data as FeedData).items.length}  />

@@ -9,7 +9,7 @@ import { Typography, Container, IconButton } from "@mui/material";
 import Header from "@components/Header";
 import { FeedLoader } from '@views/Feed/FeedLoader';
 import { CategoryCard } from "@components/Feed";
-import { ContentLoadingIndicator } from '@components/Misc';
+import { CardSkeleton, ContentLoadingIndicator } from '@components/Misc';
 import ReplayIcon from '@mui/icons-material/Replay';
 import { FeedData } from '@store/Slices/feedSlice';
 
@@ -52,8 +52,8 @@ const FeedByCategory = () => {
             <IconButton sx={{position:'relative', alignSelf:'center'}} onClick={()=>{refetch();}} ><ReplayIcon/></IconButton>
             </Container>
             <Container><Typography sx={{textAlign:'center', mt:2}}>{categoryDescription}</Typography></Container>
-            {dataForFeed !== undefined &&
-                <FeedLoader viewMode="MAIN"
+            {loadingFeed && dataForFeed === undefined ? <CardSkeleton />
+                : <FeedLoader viewMode="MAIN"
                     data={(dataForFeed as FeedData).items}
                     currentPage={currentPage}
                     setCurrentPage={setCurrentPage}

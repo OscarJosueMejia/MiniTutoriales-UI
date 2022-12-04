@@ -7,6 +7,7 @@ import Admin from '@layouts/Admin/index';
 import Feed from '@views/Feed';
 import { Tutorial, TutorialManagement } from '@views/Tutorial';
 import {ProfileView, CommonProfileView} from '@views/Profile';
+import AccessManager from '@views/UserAdmin/AccessManager';
 import TabNavigator from '@components/TabNavigator';
 import SignIn from '@views/Auth/SignIn';
 import SignUp from '@views/Auth/SignUp';
@@ -73,7 +74,8 @@ const Routes = () => {
 
         <Route path="/admin/*" element={
           <Switch>
-            <Route index element={<PrivateRoute allowedRoles={["admin"]} ><EjemploAdmin/></PrivateRoute>}/>
+            <Route index element={<PrivateRoute allowedRoles={["admin"]} ><CategoryList/></PrivateRoute>}/>
+            <Route path="accesslist" element={<PrivateRoute allowedRoles={["admin"]}><AccessManager/></PrivateRoute>}/>
           </Switch>
         }/>
 

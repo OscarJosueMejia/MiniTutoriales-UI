@@ -26,7 +26,7 @@ const Tutorial = () => {
   const [showDialog, setShowDialog] = useState(false);
 
   const currentUserId = (store.getState() as RootState).sec._id;
-  const currentUserName = 'Oscar Mejia';
+  const currentUserName = (store.getState() as RootState).sec.name;
   
   const { _id, viewMode } = Location.state as Partial<IFeedItem> & {viewMode:TViewMode};
   const {data, isLoading, isError, error} = useGetOneQuery({tutorialId:_id as string, userId:currentUserId});

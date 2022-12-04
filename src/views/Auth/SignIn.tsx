@@ -64,7 +64,7 @@ const SignIn = () => {
         setLoading(false);
       }
       dispatch(setSecData(data));
-      console.log(values);
+      console.log(data);
       if (values.rememberme[0] === "t") {
         localStorage.setItem("emailremember", values.email as string);
       } else {
