@@ -20,7 +20,7 @@ export const Comments = ({authorId, currentUserId, comments, handleComment}:ICom
               <TextField id="filled-textarea" multiline
               maxRows={10} label="Escribe un Comentario..." variant='standard' value={newComment} onChange={(e)=>{setNewComment(e.target.value)}} />
           </FormControl>
-          <Button sx={{ml:2}} variant='contained' disabled={newComment == ""} onClick={()=>{handleComment('ADD', newComment)}}>Agregar</Button>
+          <Button sx={{ml:2}} variant='contained' disabled={newComment == ""} onClick={()=>{handleComment('ADD', newComment); setNewComment("")}}>Agregar</Button>
         
         </CardContent>
           { comments !== undefined && comments.length > 0

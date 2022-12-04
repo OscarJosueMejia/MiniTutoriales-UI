@@ -1,3 +1,3 @@
 import ProfileInfo from "./ProfileInfo";
-
-export {ProfileInfo};
+import AccessManagerTable from "./AccessManagerTable";
+export {ProfileInfo, AccessManagerTable};

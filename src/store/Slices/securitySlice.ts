@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 
 export interface SecState {
-  username: string;
+  name: string;
   email: string;
   avatar: string;
   token: string;
@@ -13,7 +13,7 @@ export interface SecState {
 }
 
 const initialState: SecState = {
-  username: "",
+  name: "",
   email: "",
   avatar: "",
   token: "",
@@ -28,7 +28,7 @@ export const securitySlice = createSlice({
   initialState,
   reducers: {
     setSecData: (state, action: PayloadAction<SecState>) => {
-      state.username = action.payload.username;
+      state.name = action.payload.name;
       state.email = action.payload.email;
       state.avatar = action.payload.avatar;
       state.token = action.payload.token;
@@ -38,7 +38,7 @@ export const securitySlice = createSlice({
       state._newPassword = action.payload._newPassword;
     },
     resetSecData: (state) => {
-      state.username = "";
+      state.name = "";
       state.email = "";
       state.avatar = "";
       state.token = "";

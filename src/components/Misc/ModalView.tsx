@@ -27,7 +27,7 @@ export default function AlertDialog({isOpen, type, title, description, onDialogA
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
+        <DialogTitle id="alert-dialog-title" sx={{textAlign:'left'}}>
           {title}
         </DialogTitle>
         <DialogContent>

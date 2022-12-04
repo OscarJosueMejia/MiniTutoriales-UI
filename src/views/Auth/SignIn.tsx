@@ -16,8 +16,9 @@ import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "@store/Services/Security";
-import { setSecData } from "@store/Slices/securitySlice";
+import { SecState, setSecData } from "@store/Slices/securitySlice";
 import CircularProgress from "@mui/material/CircularProgress";
+import { LoadingButton } from '@mui/lab';
 
 function Copyright(props: any) {
   return (
@@ -64,13 +65,18 @@ const SignIn = () => {
         setLoading(false);
       }
       dispatch(setSecData(data));
-      console.log(values);
+
       if (values.rememberme[0] === "t") {
         localStorage.setItem("emailremember", values.email as string);
       } else {
         localStorage.removeItem("emailremember");
       }
-      Navigator("/admin");
+
+      if((data as SecState).rol === 'admin'){
+        Navigator("/admin");
+      }else{
+        Navigator("/home");
+      }
     },
   });
 
@@ -123,9 +129,16 @@ const SignIn = () => {
               control={<Checkbox id="rememberme" name="rememberme" color="primary" value="t" onChange={formik.handleChange} />}
               label="Recuérdame"
             />
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-              Iniciar Sesión &nbsp; {loading === true ? <CircularProgress color="inherit" /> : null}
-            </Button>
+            <LoadingButton
+              type="submit"
+              fullWidth
+              variant="contained"
+              loading={loading}
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Iniciar Sesión
+            </LoadingButton>
+
             {error && <p style={{ color: "red" }}>Credenciales Inválidas</p>}
             <Grid container>
               <Grid item xs>
@@ -139,7 +152,7 @@ const SignIn = () => {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link variant="body2" onClick={()=>{Navigator('/auth/signup')}}>
                   {"¿No tiene su cuenta? Registrarse"}
                 </Link>
               </Grid>

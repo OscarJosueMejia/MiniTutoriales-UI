@@ -13,7 +13,7 @@ const PageNotFound = () => {
             <Typography variant="h5" gutterBottom sx={{mt:5}}>
                 No se ha encontrado la página solicitada.
             </Typography>
-            <Button size='large' sx={{mt:5}} onClick={()=>{Navigator('/home')}}>
+            <Button size='large' sx={{mt:5}} onClick={()=>{Navigator('/auth/')}}>
                 Ir a la Página Principal
             </Button>
         </Container>

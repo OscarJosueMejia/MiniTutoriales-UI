@@ -19,7 +19,10 @@ const FeedContainer = ({data, handleReaction, viewMode}:IFeedContainerProps) => 
                     data.map(item=>{
                         return(<FeedCard key={item._id as string } itemData={item} handleReaction={handleReaction} viewMode={viewMode} />)
                     })
-                :<Typography variant="h6">No se encontraron Tutoriales</Typography>
+                :<Container sx={{mt:'3vh', display:'flex', justifyContent:'center', flexDirection:'column', alignItems:'center'}}> 
+                    <img src="https://cdn-icons-png.flaticon.com/512/7486/7486764.png" width={'100vw'}/>  
+                    <Typography variant="h6" mt='2vh' color='GrayText' >No se encontraron Tutoriales</Typography>
+                </Container>
                 }
             </Container>
         </Container>

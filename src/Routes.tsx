@@ -2,20 +2,36 @@ import { BrowserRouter as Router, Route, Routes as Switch, Navigate } from 'reac
 import PrivateRoute from '@components/PrivateRoute';
 import { PageNotFound } from '@components/Misc';
 
+import { useSelector } from 'react-redux';
+import { selectAuth } from '@store/Slices/securitySlice';
+
 import EjemploAdmin from '@views/EjemploAdmin';
 import Admin from '@layouts/Admin/index';
 import Feed from '@views/Feed';
 import { Tutorial, TutorialManagement } from '@views/Tutorial';
-import {ProfileView, CommonProfileView, ChangeView} from '@views/Profile';
-import TabNavigator from '@components/TabNavigator';
+import {ProfileView, CommonProfileView} from '@views/Profile';
+import AccessManager from '@views/UserAdmin/AccessManager';
+import UserLayout from '@layouts/User';
 import SignIn from '@views/Auth/SignIn';
 import SignUp from '@views/Auth/SignUp';
 import ValidateAccount from '@views/Auth/ValidateAccount';
 import SearchView from '@views/Search';
 import RecoveryPassword from '@views/Auth/RecoveryPassword';
 import {CategoryList, CategoryManagement, FeedByCategory} from '@views/Categorias/index';
+import TabNavigator from '@components/TabNavigator';
+
 
 const Routes = () => {
+
+  const user = useSelector(selectAuth);
+  if (user) {
+    const { token } = user;
+    if (token && window.location.pathname === "/auth") {
+      window.location.replace("/home");
+    }
+  }
+
+
   return (
     <Router >
       <Switch>
@@ -33,24 +49,16 @@ const Routes = () => {
 
         <Route path="/home/*" element={
           <Switch>
-            <Route index element={<><Feed/><TabNavigator tab="/home/" /></>}/>
-            <Route path="tutorial" element={<><Tutorial/><TabNavigator tab="/home/"/></>}/>
-            <Route path="profile" element={<><CommonProfileView /><TabNavigator tab="/home/" /></>}/>
+            <Route index element={<UserLayout><Feed/></UserLayout>}/>
+            <Route path="tutorial" element={<UserLayout><Tutorial/></UserLayout>}/>
+            <Route path="profile" element={<UserLayout><CommonProfileView/></UserLayout>}/>
             <Route path="/*" element={<PageNotFound/>}/>
           </Switch>
         }/>
 
         <Route path="/categories/*" element={
           <Switch>
-            <Route index element={<><FeedByCategory/><TabNavigator tab="/categories/" /></>}/>
-            <Route path="/*" element={<PageNotFound/>}/>
-          </Switch>
-        }/>
-
-        <Route path="/creator/*" element={
-          <Switch>
-            {/* <Route index element={<PrivateRoute><TutorialManagement/><TabNavigator /></PrivateRoute>}/> */}
-            <Route index element={<><TutorialManagement/><TabNavigator tab="/home/" /></>}/>
+            <Route index element={<UserLayout><FeedByCategory/></UserLayout>}/>
             <Route path="/*" element={<PageNotFound/>}/>
           </Switch>
         }/>
@@ -59,18 +67,6 @@ const Routes = () => {
           <Switch>
             {/* <Route index element={<PrivateRoute><TutorialManagement/><TabNavigator /></PrivateRoute>}/> */}
             <Route index element={<><SearchView/><TabNavigator tab="/find/" /></>}/>
-            <Route path="/*" element={<PageNotFound/>}/>
-          </Switch>
-        }/>
-
-        <Route path="/user/*" element={
-          <Switch>
-            {/* <Route index element={<PrivateRoute><TutorialManagement/><TabNavigator /></PrivateRoute>}/> */}
-            <Route index element={<><ProfileView/><TabNavigator tab="/user/" /></>}/>
-            <Route path="profile" element={<><CommonProfileView/><TabNavigator tab="/user/" /></>}/>
-            <Route path="changePassword" element={<><ChangeView/><TabNavigator tab="/user/changePassword" /></>}/>
-            <Route path="getALL" element={<><TabNavigator tab="/user/getALL" /></>}/>
-            <Route path="profile/:id" element={<><TabNavigator tab="/user/profile/:id" /></>}/>
             <Route path="/*" element={<PageNotFound/>}/>
           </Switch>
         }/>
@@ -90,9 +86,44 @@ const Routes = () => {
                 <Route path='list' element={<Admin><CategoryList/></Admin>}/>
                 <Route path='management' element={<Admin><CategoryManagement/></Admin>}/>
               </Switch>
-            }/>
+              }/>
+            <Route path="accesslist" element={<PrivateRoute allowedRoles={["admin"]}><AccessManager/></PrivateRoute>}/>
           </Switch>
         }/>
+
+        <Route path="/creator/*" element={
+          <Switch>
+            {/* <Route index element={<PrivateRoute><TutorialManagement/><TabNavigator /></PrivateRoute>}/> */}
+            <Route index element={<UserLayout><TutorialManagement/></UserLayout>}/>
+            <Route path="/*" element={<PageNotFound/>}/>
+          </Switch>
+        }/>
+        
+        <Route path="/find/*" element={
+          <Switch>
+            {/* <Route index element={<PrivateRoute><TutorialManagement/><TabNavigator /></PrivateRoute>}/> */}
+            <Route index element={<UserLayout><SearchView/></UserLayout>}/>
+            <Route path="/*" element={<PageNotFound/>}/>
+          </Switch>
+        }/>
+
+        <Route path="/user/*" element={
+          <Switch>
+            {/* <Route index element={<PrivateRoute><TutorialManagement/><TabNavigator /></PrivateRoute>}/> */}
+            <Route index element={<UserLayout><ProfileView/></UserLayout>}/>
+            <Route path="/*" element={<PageNotFound/>}/>
+          </Switch>
+        }/>
+
+        <Route path="/admin/*" element={
+          <Switch>
+            <Route index element={<PrivateRoute allowedRoles={["admin"]} ><CategoryList/></PrivateRoute>}/>
+            <Route path="*" element={<PageNotFound/>}/>
+          </Switch>
+        }/>
+
+        <Route path="*" element={<PageNotFound/>}/>
+
       </Switch>
       
     </Router>

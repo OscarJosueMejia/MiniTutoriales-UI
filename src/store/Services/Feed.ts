@@ -1,7 +1,7 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import { RootState } from "../store";
 
-const ITEMS_PER_PAGE = 10;
+export const ITEMS_PER_PAGE = 10;
 
 export const feedApi = createApi({
   reducerPath: 'feedApi',
@@ -81,10 +81,11 @@ export const feedApi = createApi({
     }),
     search: builder.query({
       query: (params:{search:string, userId:string}) => ({
-        url: `custom/${params.search}`,
+        url: `custom`,
         method: 'get',
         params:{
-          userId:params.userId
+          userId:params.userId,
+          search:params.search
         },
         headers: {
           apikey: process.env.REACT_APP_API_KEY,

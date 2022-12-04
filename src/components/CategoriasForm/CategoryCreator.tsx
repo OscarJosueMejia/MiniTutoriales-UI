@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useAddMutation } from "@store/Services/Category";
 import { useDispatch } from "react-redux";
 import { setCategoryData } from "@store/Slices/categorySlice";
+import { AlertDialog } from "@components/Misc";
 
 import { Box, Button, TextField, FormControl } from "@mui/material";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
@@ -26,7 +27,7 @@ export const CategoryCreator = () => {
   const Navigator = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-  const [add, { isLoading, status, error }] = useAddMutation();
+  const [add, { status, isError, error }] = useAddMutation();
 
   const formik = useFormik({
     initialValues: initialValues,
@@ -156,6 +157,14 @@ export const CategoryCreator = () => {
           </Button>
         </div>
       </Box>
+      {isError ? (
+        <AlertDialog
+          isOpen={isError}
+          type="ERROR"
+          title="Ups!"
+          description={(error as { data: { error: string } }).data.error}
+        />
+      ) : null}
     </Box>
   );
 };
