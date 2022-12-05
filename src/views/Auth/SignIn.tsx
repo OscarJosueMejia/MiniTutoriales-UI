@@ -73,7 +73,7 @@ const SignIn = () => {
       }
 
       if((data as SecState).rol === 'admin'){
-        Navigator("/admin");
+        Navigator("/admin/accesslist");
       }else{
         Navigator("/home");
       }

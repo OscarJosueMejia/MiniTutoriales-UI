@@ -10,7 +10,6 @@ const UserLayout = ({children, hideNavigator}: PropsWithChildren<IUserLayoutProp
     let currentRoute = window.location.pathname.substring(
         window.location.pathname.indexOf("/") , 
         window.location.pathname.lastIndexOf("/")+1);
-
     return(
         <PrivateRoute allowedRoles={['public']}>
         {children}

@@ -22,13 +22,13 @@ import TabNavigator from '@components/TabNavigator';
 
 const Routes = () => {
 
-  const user = useSelector(selectAuth);
-  if (user) {
-    const { token } = user;
-    if (token && window.location.pathname === "/auth") {
-      window.location.replace("/home");
-    }
-  }
+  // const user = useSelector(selectAuth);
+  // if (user) {
+  //   const { token } = user;
+  //   if (token && window.location.pathname === "/auth") {
+  //     window.location.replace("/home");
+  //   }
+  // }
 
 
   return (
@@ -113,7 +113,7 @@ const Routes = () => {
           <Switch>
             {/* <Route index element={<PrivateRoute><TutorialManagement/><TabNavigator /></PrivateRoute>}/> */}
             <Route index element={<UserLayout><ProfileView/></UserLayout>}/>
-            <Route path="changePassword" element={<><ChangeView/><TabNavigator tab="/user/changePassword" /></>}/>
+            <Route path="changePassword" element={<UserLayout><ChangeView/></UserLayout>}/>
             <Route path="/*" element={<PageNotFound/>}/>
           </Switch>
         }/>
