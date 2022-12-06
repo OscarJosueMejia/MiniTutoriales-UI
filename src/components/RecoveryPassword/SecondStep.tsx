@@ -55,7 +55,7 @@ const SecondStep = ({ email }: IProps) => {
         console.log(error);
       }
       dispatch(setSecData(data));
-      Navigator("/recovery-password", { state: { mode: "CST", email: email, pin: values.codigo } });
+      Navigator("/auth/recovery-password", { state: { mode: "CST", email: email, pin: values.codigo } });
     },
   });
 

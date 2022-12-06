@@ -79,7 +79,7 @@ const PasswordChange = ({ email, pin }: IProp) => {
         setErrorMsg(errorMessage.data.error);
       }
       dispatch(setSecData(data));
-      Navigator("/login");
+      Navigator("/auth");
     },
   });
 
@@ -126,7 +126,7 @@ const PasswordChange = ({ email, pin }: IProp) => {
             <Link
               sx={{ color: "red" }}
               onClick={() => {
-                Navigator("/login");
+                Navigator("/auth");
               }}
             >
               Inicio

@@ -52,7 +52,7 @@ const FirstStep = () => {
         console.log(error);
       }
       dispatch(setSecData(data));
-      Navigator("/recovery-password", { state: { mode: "SST", email: values.email } });
+      Navigator("/auth/recovery-password", { state: { mode: "SST", email: values.email } });
     },
   });
 
@@ -83,12 +83,12 @@ const FirstStep = () => {
         {error && <p style={{ color: "red" }}>Usuario no Encontrado</p>}
         <Grid container>
           <Grid item xs>
-            <Link href="#" variant="body2">
+            <Link variant="body2"  onClick={()=>{Navigator('/auth/signup')}}>
               Iniciar Sesión
             </Link>
           </Grid>
           <Grid item>
-            <Link href="#" variant="body2">
+            <Link variant="body2" onClick={()=>{Navigator('/auth/signup')}}>
               {"¿No tiene su cuenta? Registrarse"}
             </Link>
           </Grid>

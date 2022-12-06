@@ -144,7 +144,7 @@ const SignIn = () => {
               <Grid item xs>
                 <Link
                   onClick={() => {
-                    Navigator("/recovery-password", { state: { mode: "FST" } });
+                    Navigator("/auth/recovery-password", { state: { mode: "FST" } });
                   }}
                   variant="body2"
                 >
